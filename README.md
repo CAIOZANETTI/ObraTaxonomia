@@ -118,10 +118,20 @@ Recomendação de pastas:
 yaml/
   unidades.yaml
   router_macro.yaml
-  macro/
-    infraestrutura.yaml
-    edificacoes.yaml
+  geral/
+    terraplenagem.yaml
+    contencao_solo.yaml
+    fundacao.yaml
+    concreto_armado.yaml
+    estrutura_metalica.yaml
+    drenagem.yaml
+    urbanizacao.yaml
+    edificacao.yaml
+    arquitetura.yaml  
+  especiais/
+    obra_arte.yaml
     saneamento.yaml
+    oleo_gas.yaml
     eletrica.yaml
     mecanica.yaml
     obra_mar.yaml
