@@ -133,15 +133,15 @@ yaml/
     urbanizacao.yaml  
 sistemas/
     eletrica.yaml
-    hidraulica.yaml
+    drenagem.yaml
+    agua.yaml
+    esgoto.yaml
     mecanica.yaml
     incendio.yaml
     ar_comprimido.yaml
     climatizacao.yaml
 especiais/
     obra_arte.yaml
-    rede_enterrada.yaml
-    ete_eta.yaml
     oleo_gas.yaml
     obra_mar.yaml
     rodovia.yaml
