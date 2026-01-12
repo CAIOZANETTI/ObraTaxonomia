@@ -141,8 +141,12 @@ especiais/
     obra_arte.yaml
     saneamento.yaml
     oleo_gas.yaml
-    obra_mar.yaml
-    barragens.yaml
+    pier.yaml
+    rodovia.yaml
+    ferrovia.yaml
+    tuneis.yaml
+    canal.yaml
+    barragem.yaml
 tests/
   tests_end2end.yaml
 ```
