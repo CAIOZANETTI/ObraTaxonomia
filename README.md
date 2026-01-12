@@ -37,7 +37,7 @@ Uma taxonomia bem definida reduz erros caros (principalmente de unidade e fator)
 
 ---
 
-## 3. Conceitos principais do ObraLex
+## 3. Conceitos principais do Obra
 
 ### 3.1 Unidade normalizada
 
@@ -92,7 +92,7 @@ Exemplos de encadeamento (entendimento):
 * `barragem` → `vertedouro` → `concreto` → `concreto_massa_m3`
 * `cais` → `cortina` → `estaca prancha` → `estaca_prancha_m2`
 
-ObraLex foca em padronizar o nível 4 e 5, mas sem perder a visão do nível 1 a 3.
+Foca em padronizar o nível 4 e 5, mas sem perder a visão do nível 1 a 3.
 
 ---
 
@@ -104,7 +104,7 @@ Em memoriais, projetos e planilhas, é comum que a descrição do item traga (ex
 
 ### 5.2 Obras/estruturas típicas (exemplos)
 
-No nível de “obra” ou “estrutura”, aparecem empreendimentos e conjuntos típicos como edifícios e galpões industriais, pontes e viadutos, barragens e vertedouros, tanques e reservatórios, silos e armazéns, bases e fundações de equipamentos, cais e píeres, muros e contenções. Essa camada é útil para entendimento, rastreabilidade e organização do conhecimento (por exemplo, “viaduto” normalmente terá vigas, pilares, apoios e juntas), e permite construir encadeamentos do tipo **obra → sistema → elemento → método → classe canônica**. No ObraLex, a obra/estrutura pode entrar como metadado, enquanto a padronização para custo e integração é resolvida pela classe de unidade única.
+No nível de “obra” ou “estrutura”, aparecem empreendimentos e conjuntos típicos como edifícios e galpões industriais, pontes e viadutos, barragens e vertedouros, tanques e reservatórios, silos e armazéns, bases e fundações de equipamentos, cais e píeres, muros e contenções. Essa camada é útil para entendimento, rastreabilidade e organização do conhecimento (por exemplo, “viaduto” normalmente terá vigas, pilares, apoios e juntas), e permite construir encadeamentos do tipo **obra → sistema → elemento → método → classe canônica**. Obra/estrutura pode entrar como metadado, enquanto a padronização para custo e integração é resolvida pela classe de unidade única.
 
 ---
 
