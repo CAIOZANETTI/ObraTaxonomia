@@ -125,7 +125,9 @@ yaml/
     fundacao.yaml
     estrutura_concreto.yaml
     estrutura_metalica.yaml
-    edificacao.yaml
+    estrutura_madeira.yaml
+    fechamento.yaml
+    cobertura.yaml
     arquitetura.yaml
     urbanizacao.yaml  
 sistemas/
