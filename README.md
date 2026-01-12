@@ -181,34 +181,34 @@ units:
   vb: [vb, verba, global, pacote]
 ```
 
-### 7.2 `yaml/router_macro.yaml`
+### 7.2 `yaml/obras.yaml`
 
-Índice leve de roteamento por macro (pode ser expandido para EN/ES).
+Índice leve de roteamento por obra (pode ser expandido para EN/ES).
 
 ```yaml
 macros:
   obra_mar:
-    file: "macro/obra_mar.yaml"
+    file: "obra/obra_mar.yaml"
     route_keywords: [dragagem, cais, pier, estaca prancha, enrocamento]
 
   infraestrutura:
-    file: "macro/infraestrutura.yaml"
+    file: "obra/rodovia.yaml"
     route_keywords: [escavacao, aterro, concreto, armacao, formas, contencao, geotextil]
 
   edificacoes:
-    file: "macro/edificacoes.yaml"
+    file: "obra/edificacoes.yaml"
     route_keywords: [pintura, piso, porcelanato, forro, drywall, porta, janela]
 ```
 
-### 7.3 `yaml/macro/<macro>.yaml`
+### 7.3 `yaml/elemento.yaml`
 
-Cada macro contém classes com unidade única e sinônimos/subtipos.
+Cada elemento contém classes com unidade única e sinônimos/subtipos.
 
-#### Exemplo: `yaml/macro/infraestrutura.yaml`
+#### Exemplo: `yaml/elemento/estutura_concreto.yaml`
 
 ```yaml
 meta:
-  macro: infraestrutura
+  macro: estutura_concreto
 
 classes:
   concreto_m3:
@@ -217,7 +217,7 @@ classes:
 
   concreto_estrutural_m3:
     unit: m3
-    synonyms: [concreto estrutural, concreto armado, estrutural]
+    synonyms: [concreto estrutural, concreto armado, estrutural,fck, mpa]
 
   concreto_massa_m3:
     unit: m3
@@ -239,28 +239,23 @@ classes:
     unit: m3
     synonyms: [concreto para estaca, concreto de estaca, estaca escavada concretada, tubulão concretado]
 
-  pre_moldado_un:
-    unit: un
+  pre_moldado_m3:
+    unit: m3
     synonyms: [pré-moldado, pre moldado, pre-moldado, pré-fabricado, prefabricado, precast, painel, viga pré-moldada, laje pré-moldada]
 
-  armadura_kg:
+  armadura_passiva_kg:
     unit: kg
     synonyms: [armacao, armação, vergalhao, vergalhão, ca-50, ca50, corte e dobra, estribo]
 
-  geotextil_m2:
-    unit: m2
-    synonyms: [geotextil, geotêxtil, manta geotextil, bidim]
+  armadura_ativa_kg:
+    unit: kg
+    synonyms: [protensao, protensão, cordoalha]
 
-  contencao_solo_m2:
+  forma_m2:
     unit: m2
-    synonyms: [contencao, contenção, cortina, muro de arrimo, solo grampeado, tirante]
-    children:
-      jet_grouting:
-        synonyms: [jet grouting, jet-grouting, cortina de jet]
-      estaca_prancha:
-        synonyms: [estaca prancha, sheet pile]
-      concreto_projetado:
-        synonyms: [concreto projetado, shotcrete, talude em concreto projetado]
+    synonyms: [forma, tabua]
+
+  
 ```
 
 Regras:
