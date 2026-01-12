@@ -119,21 +119,26 @@ yaml/
   unidades.yaml
   router_macro.yaml
   geral/
+    demolicao.yaml
     terraplenagem.yaml
     contencao_solo.yaml
     fundacao.yaml
-    concreto_armado.yaml
+    estrutura_concreto.yaml
     estrutura_metalica.yaml
-    drenagem.yaml
-    urbanizacao.yaml
     edificacao.yaml
-    arquitetura.yaml  
-  especiais/
+    arquitetura.yaml
+    urbanizacao.yaml  
+sistemas/
+    eletrica.yaml
+    hidraulica.yaml
+    mecanica.yaml
+    incendio.yaml
+    ar_comprimido.yaml
+    climatizacao.yaml
+especiais/
     obra_arte.yaml
     saneamento.yaml
     oleo_gas.yaml
-    eletrica.yaml
-    mecanica.yaml
     obra_mar.yaml
     barragens.yaml
 tests/
