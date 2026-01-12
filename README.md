@@ -134,21 +134,22 @@ yaml/
     urbanizacao.yaml  
 sistemas/
     eletrica.yaml
-    agua.yaml
-    esgoto.yaml
     mecanica.yaml
     incendio.yaml
     ar_comprimido.yaml
     climatizacao.yaml
 especiais/
     obra_arte.yaml
-    oleo_gas.yaml
     obra_mar.yaml
     rodovia.yaml
     ferrovia.yaml
     tuneis.yaml
     canal.yaml
     barragem.yaml
+redes/
+    agua.yaml
+    esgoto.yaml
+    oleo_gas.yaml
 tests/
   tests_end2end.yaml
 ```
