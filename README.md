@@ -127,18 +127,19 @@ yaml/
     estrutura_concreto.yaml
     estrutura_metalica.yaml
     estrutura_madeira.yaml
+    urbanizacao.yaml
+  edificacao/
     fechamento.yaml
     impermeabilizacao.yaml
     cobertura.yaml
     acabamentos.yaml
-    urbanizacao.yaml  
-sistemas/
+  sistemas/
     eletrica.yaml
     mecanica.yaml
     incendio.yaml
     ar_comprimido.yaml
     climatizacao.yaml
-especiais/
+  especiais/
     obra_arte.yaml
     obra_mar.yaml
     rodovia.yaml
@@ -146,7 +147,7 @@ especiais/
     tuneis.yaml
     canal.yaml
     barragem.yaml
-redes/
+  redes/
     agua.yaml
     esgoto.yaml
     oleo_gas.yaml
