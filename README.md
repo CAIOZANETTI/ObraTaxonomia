@@ -108,9 +108,9 @@ No nível de “obra” ou “estrutura”, aparecem empreendimentos e conjuntos
 
 ---
 
-## 6. Estrutura do repositório
+## 6. Grupos do repositório
 
-O repositório é organizado para permitir evolução modular por macro-sistemas e, ao mesmo tempo, manter um núcleo único de normalização de unidades e roteamento. As pastas de `macro/` devem refletir os grandes conjuntos de engenharia que aparecem no orçamento e na documentação, como **infraestrutura, estrutura, fundação, contenção e arquitetura/edificações**, além de saneamento, elétrica, mecânica, obra marítima e barragens quando aplicável.
+O repositório é organizado para permitir evolução modular por macro-sistemas e, ao mesmo tempo, manter um núcleo único de normalização de unidades e roteamento. As pastas de `grupo/` devem refletir os grandes conjuntos de engenharia que aparecem no orçamento e na documentação, como **infraestrutura, estrutura, fundação, contenção e arquitetura/edificações**, além de saneamento, elétrica, mecânica, obra marítima e barragens quando aplicável.
 
 Recomendação de pastas:
 
@@ -127,22 +127,22 @@ yaml/
     estrutura_concreto.yaml
     estrutura_metalica.yaml
     estrutura_madeira.yaml
+    impermeabilizacao.yaml
+    pavimentacao.yaml
+    sinalizacao.yaml
     urbanizacao.yaml
   edificacao/
     fechamento.yaml
-    impermeabilizacao.yaml
+    esquadrias.yaml
     cobertura.yaml
     acabamentos.yaml
   sistemas/
     eletrica.yaml
     mecanica.yaml
     incendio.yaml
-    ar_comprimido.yaml
-    climatizacao.yaml
   especiais/
     obra_arte.yaml
     obra_mar.yaml
-    rodovia.yaml
     ferrovia.yaml
     tuneis.yaml
     canal.yaml
