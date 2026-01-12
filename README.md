@@ -128,7 +128,7 @@ yaml/
     estrutura_madeira.yaml
     fechamento.yaml
     cobertura.yaml
-    arquitetura.yaml
+    acabamentos.yaml
     urbanizacao.yaml  
 sistemas/
     eletrica.yaml
