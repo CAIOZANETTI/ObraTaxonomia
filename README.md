@@ -1,4 +1,4 @@
-# ObraTaxonomia — Repositório de Taxonomia da Engenharia Civil (Texto/Planilha → Chaves Canônicas)
+# ObraTaxonomia — Repositório de Taxonomia da Engenharia Civil
 
 ## 1. O que é este repositório
 
