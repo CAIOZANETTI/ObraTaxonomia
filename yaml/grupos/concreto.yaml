@@ -1,27 +1,617 @@
+meta:
+  dominio: concreto
+  versao: "0.3.0"
+  data:"16/01/2026"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # 1) GENÉRICO (BASE) — COM BLOQUEIOS FORTES PARA NÃO VIRAR “BURACO NEGRO”
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_geral_m3
+    unit: m3
+    contem:
+      - [concreto, concretagem, lancamento, lançamento]
+    ignorar:
+      - [tubo, tubulacao, tubulação, adutora, emissario, emissário, dn, pead, pvc, ppr, flange, conexao, conexão, junta]
+      - [artefato, manilha, aduela, anel, poste, mourão, bloco de concreto, bloco intertravado]
+      - [cbuq, asfalto, bgs, brita graduada, sinalizacao, sinalização]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_in_loco_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [in loco, moldado in loco, moldado no local, executado in loco]
+    ignorar:
+      - [pré-moldado, pre-moldado, precast, pré-fabricado, prefabricado]
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 2) SEPARAÇÃO MATERIAL x EXECUÇÃO (FORNECIMENTO / LANÇAMENTO)
+  # ---------------------------------------------------------------------------
+
   - apelido: concreto_fornecimento_m3
     unit: m3
     contem:
       - [concreto]
-      - [fornecimento, fornecer, fornecido, entrega, usina, usinado]
+      - [fornecimento, fornecer, fornecido, entrega, usina, usinado, central]
     ignorar:
-      - [lancamento, lançamento, concretagem, aplicar, aplicação, adensamento, vibracao, vibração]
-      - [bombeado, bomba, tremie, submerso]
+      - [lancamento, lançamento, concretagem, aplicar, aplicação, adensamento, vibracao, vibração, acabamento, sarrafeamento]
+      - [bombeamento, bombeado, bomba, tremie, submerso]
+      - [tubo, dn, pead, pvc]
 
   - apelido: concreto_lancamento_m3
     unit: m3
     contem:
       - [concreto, concretagem, lancamento, lançamento]
-      - [mao de obra, mão de obra, aplicacao, aplicação, espalhamento, adensamento, vibracao, vibração, acabamento]
+      - [mao de obra, mão de obra, aplicacao, aplicação, espalhamento, adensamento, vibracao, vibração, acabamento, sarrafeamento, nivelamento]
     ignorar:
-      - [fornecimento, fornecer, fornecido, entrega, usina, usinado]
-      - [pre-moldado, pré-moldado, precast]
-      - [tubo, tubulação, dn, pead, pvc]
+      - [fornecimento, fornecer, fornecido, entrega, usina, usinado, central]
+      - [pré-moldado, pre-moldado, precast, pré-fabricado]
+      - [tubo, dn, pead, pvc]
 
   - apelido: concreto_bombeamento_m3
     unit: m3
     contem:
       - [concreto]
-      - [bombeamento, bombeado, bomba de concreto, lancamento bombeado, lançamento bombeado]
+      - [bombeamento, bombeado, bomba de concreto, bomba, lancamento bombeado, lançamento bombeado]
     ignorar:
-      - [fornecimento, usina, usinado]
-      - [tubo, tubulação, dn, pead, pvc]
+      - [tubo, dn, pead, pvc]
+      - [pré-moldado, pre-moldado, precast]
+
+  - apelido: bombeamento_concreto_h
+    unit: h
+    contem:
+      - [bomba de concreto, bombeamento, bomba]
+      - [hora, h, hr]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_transporte_frete_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [frete, transporte, deslocamento, taxa de entrega, km]
+    ignorar:
+      - [lancamento, lançamento, concretagem]
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 3) ESTRUTURAL / FUNDAÇÃO SUPERFICIAL
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_estrutural_m3
+    unit: m3
+    contem:
+      - [concreto, concretagem, lancamento, lançamento]
+      - [viga, pilar, laje, bloco, radier, parede estrutural, muro estrutural]
+    ignorar:
+      - [piso, contrapiso, calçada, pavimento, paver]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_viga_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [viga, longarina, travessa, viga anel, viga anelar, baldrame, viga baldrame]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [piso, contrapiso]
+
+  - apelido: concreto_pilar_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [pilar, coluna]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_laje_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [laje, capeamento, capa estrutural]
+    ignorar:
+      - [contrapiso, regularizacao, regularização]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_parede_estrutura_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [parede estrutural, muro estrutural, parede de concreto]
+    ignorar:
+      - [alvenaria, bloco ceramico, bloco cerâmico]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_fundacao_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [sapata, bloco de coroamento, radier, baldrame, viga baldrame]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [piso, contrapiso]
+
+  - apelido: concreto_bloco_coroamento_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [bloco de coroamento, bloco coroamento, bloco]
+    ignorar:
+      - [bloco de concreto, artefato]
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 4) FUNDAÇÃO PROFUNDA (ESTACAS / TUBULÕES / BARRETES)
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_estaca_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [estaca, tubulão, tubulao, barrete, broca]
+    ignorar:
+      - [pré-moldada, pre-moldada, pre moldada, cravada]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_estaca_helice_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [estaca]
+      - [helice, hélice, helice continua, hélice contínua, cfa]
+    ignorar:
+      - [pré-moldada, pre-moldada]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_estaca_strauss_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [estaca]
+      - [strauss]
+    ignorar:
+      - [pré-moldada, pre-moldada]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_estaca_franki_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [estaca]
+      - [franki]
+    ignorar:
+      - [pré-moldada, pre-moldada]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_barrete_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [barrete]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_tubulao_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [tubulão, tubulao]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 5) PRÉ-MOLDADO / PRÉ-FABRICADO (ESTRUTURAL)
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_pre_moldado_m3
+    unit: m3
+    contem:
+      - [pré-moldado, pre-moldado, pre moldado, precast, pré-fabricado, prefabricado]
+      - [viga, laje, pilar, painel, placa]
+    ignorar:
+      - [in loco, moldado in loco, concretagem]
+      - [tubo, manilha, aduela, anel, dn]
+
+  - apelido: concreto_pre_moldado_montagem_un
+    unit: un
+    contem:
+      - [montagem, içamento, içar, guindaste, grua]
+      - [pré-moldado, pre-moldado, precast]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 6) DESEMPENHO / TRABALHABILIDADE / ADIÇÕES
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_cad_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [cad, alto desempenho, hpc, high performance]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [piso, contrapiso]
+
+  - apelido: concreto_auto_adensavel_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [autoadensavel, auto-adensavel, auto adensavel, caa, scc, self compacting]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_fluido_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [fluido, alta fluidez, slump flow, slumpflow]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_com_fibras_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [fibra, fibras, steel fiber, fibra de aço, polipropileno, macrofibra, microfibra]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_com_silica_ativa_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [silica ativa, sílica ativa, silica, sílica, microssilica, microssílica, silica fume]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_com_metacaulim_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [metacaulim, metakaolin]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_com_escoria_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [escoria, escória, alto-forno, alto forno, slag]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_com_cinza_volante_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [cinza volante, fly ash]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_impermeavel_baixa_permeabilidade_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [baixa permeabilidade, impermeavel, impermeável, estanqueidade, estanque, baixa absorcao, baixa absorção]
+    ignorar:
+      - [manta, membrana, primer, asfalto]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_com_cristalizante_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [cristalizante, cristalizacao, cristalização, xypex]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_resistente_sulfatos_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [sulfato, sulfatos, rs, resistente a sulfatos, resistente aos sulfatos]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_alta_resistencia_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [alta resistencia, alta resistência, hsc, high strength]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 7) AMBIENTES / MÉTODOS ESPECIAIS
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_submerso_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [submerso, tremie, tremi, underwater]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [piso, contrapiso]
+
+  - apelido: concreto_marinho_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [marinho, agua do mar, água do mar, ambiente marinho, cloreto, cloretos]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_massa_m3
+    unit: m3
+    contem:
+      - [concreto massa, concreto de massa, mass concrete]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [piso, contrapiso]
+
+  - apelido: concreto_compactado_rolo_ccr_m3
+    unit: m3
+    contem:
+      - [ccr, concreto compactado a rolo, concreto rolado, roller compacted concrete, rcc]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [cbuq, asfalto]
+
+  - apelido: concreto_projetado_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [projetado, shotcrete, gunite, gunitagem]
+    ignorar:
+      - [argamassa projetada]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_projetado_m2
+    unit: m2
+    contem:
+      - [concreto projetado, shotcrete, gunite, gunitagem]
+    ignorar:
+      - [argamassa projetada]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_projetado_via_umida_m2
+    unit: m2
+    contem:
+      - [concreto projetado, shotcrete]
+      - [via umida, via úmida, wet mix, wetmix]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_projetado_via_seca_m2
+    unit: m2
+    contem:
+      - [concreto projetado, shotcrete]
+      - [via seca, dry mix, drymix]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_revestimento_tunel_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [túnel, tunel]
+      - [revestimento, lining]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 8) “BARATOS” / PREPARAÇÃO / REGULARIZAÇÃO
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_magro_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [magro, lastro, limpeza, regularizacao, regularização, blinding]
+    ignorar:
+      - [concreto estrutural, concreto armado]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: lastro_concreto_m3
+    unit: m3
+    contem:
+      - [lastro]
+      - [concreto]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_ciclópico_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [ciclópico, ciclopico, pedra de mao, pedra de mão, matacao, matação]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 9) PISOS / CONTRAPISOS / PAVIMENTO RÍGIDO / DRENANTE
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_piso_industrial_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [piso industrial, piso, laje de piso, piso de concreto]
+    ignorar:
+      - [paver, asfalto, cbuq]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_piso_industrial_m2
+    unit: m2
+    contem:
+      - [piso industrial, piso de concreto, piso]
+      - [acabamento, polimento, desempeno, desempeno helicoidal, helicóptero, helicoptero]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [asfalto, cbuq]
+
+  - apelido: contrapiso_m3
+    unit: m3
+    contem:
+      - [contrapiso]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa]
+
+  - apelido: capeamento_concreto_m3
+    unit: m3
+    contem:
+      - [capeamento]
+      - [concreto]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: pavimento_rigido_concreto_m3
+    unit: m3
+    contem:
+      - [pavimento rigido, pavimento rígido, placa de concreto, concreto para pavimento]
+      - [concreto]
+    ignorar:
+      - [cbuq, asfalto]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: pavimento_rigido_concreto_m2
+    unit: m2
+    contem:
+      - [pavimento rigido, pavimento rígido, placa de concreto]
+    ignorar:
+      - [cbuq, asfalto]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_drenante_m3
+    unit: m3
+    contem:
+      - [concreto drenante, pervious concrete, permeavel, permeável]
+    ignorar:
+      - [asfalto, cbuq]
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 10) CONCRETOS “DE MASSA” ESTRUTURAL / ABRASÃO / REFRATÁRIO / ESPECIAIS
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_resistente_abrasao_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [abrasao, abrasão, desgaste, alta abrasao, alta abrasão]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_refratario_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [refratario, refratário, forno, alta temperatura]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_leve_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [leve, expanded clay, argila expandida, eps, isopor]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_pesado_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [pesado, barita, barita, magnetita]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: concreto_celular_m3
+    unit: m3
+    contem:
+      - [concreto celular, aerado, aac, concreto aerado]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 11) GANCHO POR FCK (CLASSES ESPECÍFICAS — ÚTEIS PARA TEXTO/PLANILHA)
+  # ---------------------------------------------------------------------------
+
+  - apelido: concreto_fck_m3
+    unit: m3
+    contem:
+      - [concreto, fck]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [pavimento, piso, contrapiso]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_fck_20_m3
+    unit: m3
+    contem:
+      - [concreto, fck, mpa]
+      - ["20", "20mpa", "fck20"]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_fck_25_m3
+    unit: m3
+    contem:
+      - [concreto, fck, mpa]
+      - ["25", "25mpa", "fck25"]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_fck_30_m3
+    unit: m3
+    contem:
+      - [concreto, fck, mpa]
+      - ["30", "30mpa", "fck30"]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_fck_35_m3
+    unit: m3
+    contem:
+      - [concreto, fck, mpa]
+      - ["35", "35mpa", "fck35"]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_fck_40_m3
+    unit: m3
+    contem:
+      - [concreto, fck, mpa]
+      - ["40", "40mpa", "fck40"]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_fck_45_m3
+    unit: m3
+    contem:
+      - [concreto, fck, mpa]
+      - ["45", "45mpa", "fck45"]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa, graute, grout]
+
+  - apelido: concreto_fck_50_m3
+    unit: m3
+    contem:
+      - [concreto, fck, mpa]
+      - ["50", "50mpa", "fck50"]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+      - [argamassa, graute, grout]
