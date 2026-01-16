@@ -1,0 +1,27 @@
+  - apelido: concreto_fornecimento_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [fornecimento, fornecer, fornecido, entrega, usina, usinado]
+    ignorar:
+      - [lancamento, lançamento, concretagem, aplicar, aplicação, adensamento, vibracao, vibração]
+      - [bombeado, bomba, tremie, submerso]
+
+  - apelido: concreto_lancamento_m3
+    unit: m3
+    contem:
+      - [concreto, concretagem, lancamento, lançamento]
+      - [mao de obra, mão de obra, aplicacao, aplicação, espalhamento, adensamento, vibracao, vibração, acabamento]
+    ignorar:
+      - [fornecimento, fornecer, fornecido, entrega, usina, usinado]
+      - [pre-moldado, pré-moldado, precast]
+      - [tubo, tubulação, dn, pead, pvc]
+
+  - apelido: concreto_bombeamento_m3
+    unit: m3
+    contem:
+      - [concreto]
+      - [bombeamento, bombeado, bomba de concreto, lancamento bombeado, lançamento bombeado]
+    ignorar:
+      - [fornecimento, usina, usinado]
+      - [tubo, tubulação, dn, pead, pvc]
