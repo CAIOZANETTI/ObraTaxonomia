@@ -124,9 +124,11 @@ yaml/
     contencao_solo.yaml
     drenagem.yaml
     fundacao.yaml
-    estrutura_concreto.yaml
-    estrutura_metalica.yaml
-    estrutura_madeira.yaml
+    concreto.yaml
+    forma.yaml
+    armadura.yaml
+    metalica.yaml
+    madeira.yaml
     impermeabilizacao.yaml
     pavimentacao.yaml
     sinalizacao.yaml
