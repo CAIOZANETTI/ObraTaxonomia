@@ -1,0 +1,208 @@
+meta:
+  dominio: equipamentos_terraplenagem
+  versao: "0.1.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # 1) ESCAVAÇÃO / CARGA / MOVIMENTAÇÃO DE TERRA
+  # ---------------------------------------------------------------------------
+
+  - apelido: escavadeira_h
+    unit: h
+    contem:
+      - [escavadeira]
+    ignorar:
+      - [mini, micro]
+      - [draga, balsa]
+
+  - apelido: mini_escavadeira_h
+    unit: h
+    contem:
+      - [mini escavadeira, mini-escavadeira, microescavadeira, micro escavadeira]
+    ignorar:
+      - [draga, balsa]
+
+  - apelido: retroescavadeira_h
+    unit: h
+    contem:
+      - [retroescavadeira, retro escavadeira]
+    ignorar:
+      - [escavadeira hidraulica, escavadeira hidráulica]
+      - [draga, balsa]
+
+  - apelido: pa_carregadeira_h
+    unit: h
+    contem:
+      - [pa carregadeira, pá carregadeira, carregadeira]
+    ignorar:
+      - [empilhadeira]
+      - [draga, balsa]
+
+  - apelido: mini_carregadeira_h
+    unit: h
+    contem:
+      - [mini carregadeira, skid steer, skidsteer, bobcat]
+    ignorar:
+      - [empilhadeira]
+      - [draga, balsa]
+
+  - apelido: trator_esteira_h
+    unit: h
+    contem:
+      - [trator de esteira, trator esteira, bulldozer, dozer, d6, d7, d8]
+    ignorar:
+      - [draga, balsa]
+
+  - apelido: trator_pneu_h
+    unit: h
+    contem:
+      - [trator de pneu, trator pneu, trator agricola, trator agrícola]
+    ignorar:
+      - [motoniveladora]
+      - [draga, balsa]
+
+  # ---------------------------------------------------------------------------
+  # 2) NIVELAMENTO / ACABAMENTO
+  # ---------------------------------------------------------------------------
+
+  - apelido: motoniveladora_h
+    unit: h
+    contem:
+      - [motoniveladora, patrol]
+    ignorar:
+      - [draga, balsa]
+
+  # ---------------------------------------------------------------------------
+  # 3) COMPACTAÇÃO
+  # ---------------------------------------------------------------------------
+
+  - apelido: rolo_compactador_liso_h
+    unit: h
+    contem:
+      - [rolo, rolo compactador]
+      - [liso]
+    ignorar:
+      - [pneu, carneiro, pe de carneiro, pé de carneiro]
+      - [draga, balsa]
+
+  - apelido: rolo_compactador_pe_de_carneiro_h
+    unit: h
+    contem:
+      - [rolo, rolo compactador]
+      - [carneiro, pe de carneiro, pé de carneiro]
+    ignorar:
+      - [liso, pneu]
+      - [draga, balsa]
+
+  - apelido: rolo_pneumatico_h
+    unit: h
+    contem:
+      - [rolo]
+      - [pneumatico, pneumático, pneu]
+    ignorar:
+      - [liso, carneiro, pe de carneiro, pé de carneiro]
+      - [draga, balsa]
+
+  - apelido: compactador_placa_h
+    unit: h
+    contem:
+      - [compactador]
+      - [placa, placa vibratoria, placa vibratória]
+    ignorar:
+      - [rolo]
+      - [draga, balsa]
+
+  - apelido: compactador_sapo_h
+    unit: h
+    contem:
+      - [compactador]
+      - [sapo, perereca, apiloamento, apiloar]
+    ignorar:
+      - [rolo]
+      - [draga, balsa]
+
+  # ---------------------------------------------------------------------------
+  # 4) PERFURAÇÃO / ROMPIMENTO (TERRAPLENAGEM E APOIO)
+  # ---------------------------------------------------------------------------
+
+  - apelido: rompedor_hidraulico_h
+    unit: h
+    contem:
+      - [rompedor, martelete, martelo hidraulico, martelo hidráulico, breaker]
+    ignorar:
+      - [martelete eletrico, martelete elétrico]
+      - [draga, balsa]
+
+  - apelido: perfuratriz_solo_h
+    unit: h
+    contem:
+      - [perfuratriz, perfuracao, perfuração]
+      - [solo, terra]
+    ignorar:
+      - [estaca, helice, hélice, cfa, tubulao, tubulão]
+      - [draga, balsa]
+
+  # ---------------------------------------------------------------------------
+  # 5) TRANSPORTE (OBRA) / APOIO DE MOVIMENTAÇÃO
+  # ---------------------------------------------------------------------------
+
+  - apelido: caminhao_basculante_h
+    unit: h
+    contem:
+      - [caminhao, caminhão]
+      - [basculante, cacamba, caçamba]
+    ignorar:
+      - [betoneira]
+      - [munck, guindauto]
+      - [frete, transporte]
+      - [draga, balsa]
+
+  - apelido: caminhao_pipa_h
+    unit: h
+    contem:
+      - [caminhao, caminhão]
+      - [pipa, tanque]
+    ignorar:
+      - [betoneira]
+      - [frete, transporte]
+      - [draga, balsa]
+
+  - apelido: caminhao_prancha_h
+    unit: h
+    contem:
+      - [caminhao prancha, caminhão prancha]
+    ignorar:
+      - [frete]
+      - [draga, balsa]
+
+  # ---------------------------------------------------------------------------
+  # 6) APOIO DE OBRA (COMUM EM TERRAPLENAGEM)
+  # ---------------------------------------------------------------------------
+
+  - apelido: motobomba_drenagem_h
+    unit: h
+    contem:
+      - [motobomba, bomba]
+      - [drenagem, rebaixamento, esgotamento]
+    ignorar:
+      - [bomba de concreto]
+      - [bomba de agua potavel, bomba de água potável]
+      - [draga, balsa]
+
+  - apelido: gerador_h
+    unit: h
+    contem:
+      - [gerador]
+    ignorar:
+      - [painel, quadro]
+      - [draga, balsa]
+
+  - apelido: compressor_ar_h
+    unit: h
+    contem:
+      - [compressor]
+      - [ar]
+    ignorar:
+      - [soprador]
+      - [draga, balsa]
