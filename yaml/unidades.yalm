@@ -1,0 +1,234 @@
+meta:
+  dominio: unidades
+  versao: "0.2.0"
+
+unidades:
+
+  # ---------------------------------------------------------------------------
+  # 1) VOLUME
+  # ---------------------------------------------------------------------------
+
+  m3:
+    simbolo: m3
+    sinonimos:
+      - m3
+      - m³
+      - metro cubico
+      - metro cúbico
+      - metros cubicos
+      - metros cúbicos
+      - mc
+      - m_cubico
+      - m cubico
+    conversoes:
+      yd3: 0.764555
+      ft3: 0.0283168
+
+  l:
+    simbolo: l
+    sinonimos:
+      - l
+      - litro
+      - litros
+      - lt
+    conversoes:
+      m3: 0.001
+
+  # ---------------------------------------------------------------------------
+  # 2) ÁREA
+  # ---------------------------------------------------------------------------
+
+  m2:
+    simbolo: m2
+    sinonimos:
+      - m2
+      - m²
+      - metro quadrado
+      - metro²
+      - metros quadrados
+      - mq
+      - m_quadrado
+      - m quadrado
+    conversoes:
+      ft2: 0.092903
+      yd2: 0.836127
+
+  # ---------------------------------------------------------------------------
+  # 3) COMPRIMENTO
+  # ---------------------------------------------------------------------------
+
+  m:
+    simbolo: m
+    sinonimos:
+      - m
+      - metro
+      - metros
+      - ml
+      - metro linear
+      - metros lineares
+    conversoes:
+      ft: 0.3048
+      km: 1000
+
+  km:
+    simbolo: km
+    sinonimos:
+      - km
+      - kilometro
+      - quilometro
+      - quilômetros
+      - kms
+    conversoes:
+      m: 1000
+
+  # ---------------------------------------------------------------------------
+  # 4) MASSA / PESO
+  # ---------------------------------------------------------------------------
+
+  kg:
+    simbolo: kg
+    sinonimos:
+      - kg
+      - quilo
+      - quilos
+      - quilograma
+      - quilogramas
+    conversoes:
+      t: 1000
+      lb: 0.453592
+
+  t:
+    simbolo: t
+    sinonimos:
+      - t
+      - ton
+      - tonelada
+      - toneladas
+      - tonelada metríca
+      - tonelada metrica
+    conversoes:
+      kg: 1000
+
+  # ---------------------------------------------------------------------------
+  # 5) UNIDADE / PEÇA
+  # ---------------------------------------------------------------------------
+
+  un:
+    simbolo: un
+    sinonimos:
+      - un
+      - und
+      - unidade
+      - unidades
+      - peça
+      - peças
+      - peca
+      - pcs
+      - pc
+    conversoes: {}
+
+  # ---------------------------------------------------------------------------
+  # 6) TEMPO
+  # ---------------------------------------------------------------------------
+
+  h:
+    simbolo: h
+    sinonimos:
+      - h
+      - hora
+      - horas
+      - hr
+      - hrs
+    conversoes:
+      min: 0.0166667
+      s: 0.000277778
+
+  dia:
+    simbolo: dia
+    sinonimos:
+      - dia
+      - dias
+      - diária
+      - diaria
+    conversoes:
+      h: 24
+
+  mes:
+    simbolo: mes
+    sinonimos:
+      - mes
+      - mês
+      - meses
+    conversoes: {}
+
+  # ---------------------------------------------------------------------------
+  # 7) PACOTE / GLOBAL / VERBA
+  # ---------------------------------------------------------------------------
+
+  vb:
+    simbolo: vb
+    sinonimos:
+      - vb
+      - verba
+      - global
+      - pacote
+      - lump sum
+      - ls
+    conversoes: {}
+
+  # ---------------------------------------------------------------------------
+  # 8) POTÊNCIA / ENERGIA (SISTEMAS)
+  # ---------------------------------------------------------------------------
+
+  kw:
+    simbolo: kW
+    sinonimos:
+      - kw
+      - kilowatt
+      - quilowatt
+      - k_w
+    conversoes:
+      w: 0.001
+
+  kva:
+    simbolo: kVA
+    sinonimos:
+      - kva
+      - kilovolt-ampere
+      - quilovolt-ampere
+    conversoes: {}
+
+  # ---------------------------------------------------------------------------
+  # 9) PRESSÃO / CARGA (OBRAS ESPECIAIS)
+  # ---------------------------------------------------------------------------
+
+  mca:
+    simbolo: mca
+    sinonimos:
+      - mca
+      - metro de coluna de agua
+      - metro coluna d'agua
+      - metros coluna de agua
+    conversoes:
+      bar: 10.197
+
+  bar:
+    simbolo: bar
+    sinonimos:
+      - bar
+      - bares
+    conversoes:
+      mca: 0.0980665
+
+  # ---------------------------------------------------------------------------
+  # 10) GENÉRICOS / NÃO CLASSIFICÁVEIS
+  # ---------------------------------------------------------------------------
+
+  n/a:
+    simbolo: n/a
+    sinonimos:
+      - nao aplicavel
+      - não aplicável
+      - sem unidade
+      - indefinido
+    conversoes: {}
