@@ -1,0 +1,213 @@
+meta:
+  dominio: materiais_saneamento
+  versao: "0.1.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # 1) TUBULAÇÕES
+  # ---------------------------------------------------------------------------
+
+  - apelido: tubo_agua_m
+    unit: m
+    contem:
+      - [tubo, tubulacao, tubulação]
+      - [agua, água, aducao, adução, distribuicao, distribuição]
+    ignorar:
+      - [esgoto, drenagem, oleo, gás, gas]
+      - [assentamento, montagem, solda]
+
+  - apelido: tubo_esgoto_m
+    unit: m
+    contem:
+      - [tubo, tubulacao, tubulação]
+      - [esgoto, sanitario, sanitário, efluente]
+    ignorar:
+      - [agua, água]
+      - [assentamento, montagem]
+
+  - apelido: tubo_drenagem_m
+    unit: m
+    contem:
+      - [tubo, tubulacao, tubulação]
+      - [drenagem, dreno]
+    ignorar:
+      - [agua pressurizada, esgoto]
+      - [assentamento, montagem]
+
+  - apelido: tubo_pead_m
+    unit: m
+    contem:
+      - [pead, polietileno]
+      - [tubo]
+    ignorar:
+      - [pvc, ferro, aco, aço]
+
+  - apelido: tubo_pvc_m
+    unit: m
+    contem:
+      - [pvc]
+      - [tubo]
+    ignorar:
+      - [pead, ferro, aço]
+
+  - apelido: tubo_aco_m
+    unit: m
+    contem:
+      - [tubo]
+      - [aco, aço, carbono, galvanizado]
+    ignorar:
+      - [pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 2) CONEXÕES
+  # ---------------------------------------------------------------------------
+
+  - apelido: conexao_un
+    unit: un
+    contem:
+      - [conexao, conexão, curva, joelho, te, tê, luva, reducao, redução]
+    ignorar:
+      - [valvula, válvula]
+      - [solda, montagem]
+
+  - apelido: conexao_pead_un
+    unit: un
+    contem:
+      - [conexao, conexão]
+      - [pead, eletrofusao, eletrofusão]
+    ignorar:
+      - [pvc, ferro, aço]
+
+  - apelido: conexao_pvc_un
+    unit: un
+    contem:
+      - [conexao, conexão]
+      - [pvc]
+    ignorar:
+      - [pead, ferro, aço]
+
+  - apelido: conexao_aco_un
+    unit: un
+    contem:
+      - [conexao, conexão, flange]
+      - [aco, aço]
+    ignorar:
+      - [pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 3) VÁLVULAS E REGISTROS
+  # ---------------------------------------------------------------------------
+
+  - apelido: valvula_un
+    unit: un
+    contem:
+      - [valvula, válvula]
+    ignorar:
+      - [registro]
+
+  - apelido: registro_un
+    unit: un
+    contem:
+      - [registro]
+    ignorar:
+      - [valvula, válvula]
+
+  - apelido: valvula_gaveta_un
+    unit: un
+    contem:
+      - [valvula gaveta, válvula gaveta]
+    ignorar:
+      - [borboleta, esfera]
+
+  - apelido: valvula_borboleta_un
+    unit: un
+    contem:
+      - [valvula borboleta, válvula borboleta]
+    ignorar:
+      - [gaveta, esfera]
+
+  - apelido: valvula_esfera_un
+    unit: un
+    contem:
+      - [valvula esfera, válvula esfera]
+    ignorar:
+      - [gaveta, borboleta]
+
+  - apelido: valvula_retencao_un
+    unit: un
+    contem:
+      - [valvula de retencao, válvula de retenção]
+    ignorar:
+      - [gaveta, esfera]
+
+  # ---------------------------------------------------------------------------
+  # 4) JUNTAS, FLANGES E ACESSÓRIOS
+  # ---------------------------------------------------------------------------
+
+  - apelido: junta_un
+    unit: un
+    contem:
+      - [junta, anel, vedacao, vedação]
+    ignorar:
+      - [parafuso, porca]
+
+  - apelido: flange_un
+    unit: un
+    contem:
+      - [flange]
+    ignorar:
+      - [junta]
+
+  - apelido: parafuso_un
+    unit: un
+    contem:
+      - [parafuso]
+    ignorar:
+      - [porca, arruela]
+
+  - apelido: porca_un
+    unit: un
+    contem:
+      - [porca]
+    ignorar:
+      - [parafuso]
+
+  - apelido: arruela_un
+    unit: un
+    contem:
+      - [arruela]
+    ignorar:
+      - [parafuso, porca]
+
+  # ---------------------------------------------------------------------------
+  # 5) PEÇAS ESPECIAIS DE REDE
+  # ---------------------------------------------------------------------------
+
+  - apelido: ventosa_un
+    unit: un
+    contem:
+      - [ventosa]
+    ignorar:
+      - [valvula, válvula]
+
+  - apelido: hidrante_un
+    unit: un
+    contem:
+      - [hidrante]
+    ignorar:
+      - [bomba, motor]
+
+  - apelido: caixa_registro_un
+    unit: un
+    contem:
+      - [caixa de registro, caixa registro]
+    ignorar:
+      - [caixa de passagem]
+
+  - apelido: caixa_passagem_un
+    unit: un
+    contem:
+      - [caixa de passagem]
+    ignorar:
+      - [caixa de registro]
