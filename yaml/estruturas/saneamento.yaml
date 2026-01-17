@@ -1,0 +1,176 @@
+meta:
+  dominio: saneamento_estruturas
+  versao: "0.1.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # TANQUES E CAIXAS
+  # ---------------------------------------------------------------------------
+
+  - apelido: tanque_concreto_m3
+    unit: m3
+    contem:
+      - [tanque]
+      - [concreto, estrutural, armado]
+    ignorar:
+      - [aco, metálico, fibra, frp]
+      - [bomba, motor, agitador]
+
+  - apelido: caixa_concreto_m3
+    unit: m3
+    contem:
+      - [caixa]
+      - [concreto, estrutural, armado]
+    ignorar:
+      - [fibra, plastica, plastico, polietileno]
+      - [bomba, motor]
+
+  - apelido: caixa_enterrada_concreto_m3
+    unit: m3
+    contem:
+      - [caixa]
+      - [enterrada, subterranea, subterrânea]
+      - [concreto]
+    ignorar:
+      - [fibra, plastica, plastico]
+
+  # ---------------------------------------------------------------------------
+  # DECANTADORES / FLOCULADORES / FLOTADORES
+  # ---------------------------------------------------------------------------
+
+  - apelido: decantador_concreto_m3
+    unit: m3
+    contem:
+      - [decantador, decantacao, decantação]
+      - [concreto, estrutural]
+    ignorar:
+      - [lamela, placa, equipamento, raspador]
+
+  - apelido: floculador_concreto_m3
+    unit: m3
+    contem:
+      - [floculador, floculacao, floculação]
+      - [concreto]
+    ignorar:
+      - [agitador, motor, eixo]
+
+  - apelido: flotador_concreto_m3
+    unit: m3
+    contem:
+      - [flotador, flotacao, flotação, daf]
+      - [concreto]
+    ignorar:
+      - [saturador, bomba, compressor]
+
+  # ---------------------------------------------------------------------------
+  # REATORES BIOLÓGICOS
+  # ---------------------------------------------------------------------------
+
+  - apelido: reator_anaerobio_concreto_m3
+    unit: m3
+    contem:
+      - [reator]
+      - [anaerobio, anaeróbio, uase, uast]
+      - [concreto]
+    ignorar:
+      - [midia, mídia, enchimento, difusor]
+
+  - apelido: reator_aerobio_concreto_m3
+    unit: m3
+    contem:
+      - [reator]
+      - [aerobio, aeróbio]
+      - [concreto]
+    ignorar:
+      - [soprador, difusor, bolha]
+
+  # ---------------------------------------------------------------------------
+  # FILTROS E LEITOS
+  # ---------------------------------------------------------------------------
+
+  - apelido: filtro_concreto_m3
+    unit: m3
+    contem:
+      - [filtro]
+      - [concreto]
+    ignorar:
+      - [areia, antracito, midia, mídia]
+
+  - apelido: leito_drenagem_concreto_m3
+    unit: m3
+    contem:
+      - [leito]
+      - [drenagem]
+      - [concreto]
+    ignorar:
+      - [tubo, dreno, brita]
+
+  # ---------------------------------------------------------------------------
+  # CANAIS, CALHAS E GALERIAS
+  # ---------------------------------------------------------------------------
+
+  - apelido: canal_concreto_m3
+    unit: m3
+    contem:
+      - [canal, canaleta]
+      - [concreto]
+    ignorar:
+      - [tubo, tubulacao, tubulação]
+
+  - apelido: calha_concreto_m3
+    unit: m3
+    contem:
+      - [calha]
+      - [concreto]
+    ignorar:
+      - [metalica, metálica, pvc]
+
+  - apelido: galeria_concreto_m3
+    unit: m3
+    contem:
+      - [galeria]
+      - [concreto]
+    ignorar:
+      - [tubo, aduela]
+
+  # ---------------------------------------------------------------------------
+  # BASES, PLATAFORMAS E FUNDAÇÕES DE UNIDADES
+  # ---------------------------------------------------------------------------
+
+  - apelido: base_equipamento_saneamento_m3
+    unit: m3
+    contem:
+      - [base]
+      - [equipamento, unidade]
+      - [concreto]
+    ignorar:
+      - [bomba, motor, painel]
+
+  - apelido: plataforma_operacional_concreto_m2
+    unit: m2
+    contem:
+      - [plataforma, passarela]
+      - [concreto]
+    ignorar:
+      - [metalica, metálica, grating]
+
+  # ---------------------------------------------------------------------------
+  # TAMPAS, PAREDES E DIVISÓRIAS
+  # ---------------------------------------------------------------------------
+
+  - apelido: parede_concreto_saneamento_m2
+    unit: m2
+    contem:
+      - [parede, divisoria, divisória]
+      - [concreto]
+    ignorar:
+      - [alvenaria, bloco]
+
+  - apelido: tampa_concreto_m2
+    unit: m2
+    contem:
+      - [tampa, laje]
+      - [concreto]
+    ignorar:
+      - [metalica, metálica, grelha]
