@@ -1,0 +1,238 @@
+meta:
+  dominio: elementos_estruturais
+  versao: "0.1.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # 1) GENÉRICO (ELEMENTO ESTRUTURAL)
+  # ---------------------------------------------------------------------------
+
+  - apelido: elemento_estrutural_un
+    unit: un
+    contem:
+      - [pilar, viga, laje, bloco, estaca, parede estrutural, muro, sapata, radier]
+    ignorar:
+      - [tubo, tubulacao, tubulação, adutora, dn, pead, pvc, ppr]
+      - [porta, janela, rodape, rodapé, forro, pintura, piso, revestimento]
+      - [bomba, motor, painel, valvula, válvula]
+
+  # ---------------------------------------------------------------------------
+  # 2) PILAR / COLUNA
+  # ---------------------------------------------------------------------------
+
+  - apelido: pilar_un
+    unit: un
+    contem:
+      - [pilar, coluna]
+    ignorar:
+      - [poste, mourao, mourão]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: pilar_m3
+    unit: m3
+    contem:
+      - [pilar, coluna]
+      - [concreto]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: pilar_m2
+    unit: m2
+    contem:
+      - [pilar, coluna]
+      - [forma, fôrma, cofragem]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 3) VIGA (BALDRAME / ANELAR / LONGARINA)
+  # ---------------------------------------------------------------------------
+
+  - apelido: viga_un
+    unit: un
+    contem:
+      - [viga, longarina, travessa]
+    ignorar:
+      - [viga w, i, perfil i, perfil w]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: viga_baldrame_un
+    unit: un
+    contem:
+      - [viga baldrame, baldrame]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: viga_anelar_un
+    unit: un
+    contem:
+      - [viga anel, viga anelar, viga de anel]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: viga_m3
+    unit: m3
+    contem:
+      - [viga, longarina, baldrame, anelar]
+      - [concreto]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: viga_m2
+    unit: m2
+    contem:
+      - [viga, longarina, baldrame, anelar]
+      - [forma, fôrma, cofragem]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 4) LAJE / PLACA / RADIER
+  # ---------------------------------------------------------------------------
+
+  - apelido: laje_un
+    unit: un
+    contem:
+      - [laje, placa, slab]
+    ignorar:
+      - [contrapiso, regularizacao, regularização]
+      - [steel deck, deck]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: laje_m3
+    unit: m3
+    contem:
+      - [laje, placa, capeamento, capa]
+      - [concreto]
+    ignorar:
+      - [contrapiso]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: laje_m2
+    unit: m2
+    contem:
+      - [laje]
+      - [forma, fôrma, cofragem]
+    ignorar:
+      - [steel deck, forma permanente]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: radier_un
+    unit: un
+    contem:
+      - [radier]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: radier_m3
+    unit: m3
+    contem:
+      - [radier]
+      - [concreto]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 5) BLOCO (COROAMENTO / FUNDAÇÃO)
+  # ---------------------------------------------------------------------------
+
+  - apelido: bloco_coroamento_un
+    unit: un
+    contem:
+      - [bloco de coroamento, bloco coroamento]
+    ignorar:
+      - [bloco de concreto, bloco ceramico, bloco cerâmico]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: bloco_fundacao_un
+    unit: un
+    contem:
+      - [bloco de fundacao, bloco de fundação, bloco]
+      - [fundacao, fundação]
+    ignorar:
+      - [bloco de concreto, bloco ceramico, bloco cerâmico]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: bloco_concreto_m3
+    unit: m3
+    contem:
+      - [bloco]
+      - [concreto]
+    ignorar:
+      - [bloco de concreto, bloco ceramico, bloco cerâmico]
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 6) ESTACAS / TUBULÕES / BARRETES
+  # ---------------------------------------------------------------------------
+
+  - apelido: estaca_un
+    unit: un
+    contem:
+      - [estaca, tubulao, tubulão, barrete]
+    ignorar:
+      - [estaca prancha, sheet pile]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: estaca_escavada_un
+    unit: un
+    contem:
+      - [estaca]
+      - [escavada, broca, trado]
+    ignorar:
+      - [estaca prancha]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: estaca_helice_un
+    unit: un
+    contem:
+      - [estaca]
+      - [helice, hélice, cfa, helice continua, hélice contínua]
+    ignorar:
+      - [estaca prancha]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: tubulao_un
+    unit: un
+    contem:
+      - [tubulao, tubulão]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  - apelido: barrete_un
+    unit: un
+    contem:
+      - [barrete]
+    ignorar:
+      - [tubo, dn, pead, pvc]
+
+  # ---------------------------------------------------------------------------
+  # 7) PAREDE / MURO / CONTENÇÃO (ELEMENTO)
+  # ---------------------------------------------------------------------------
+
+  - apelido: parede_estrutural_m2
+    unit: m2
+    contem:
+      - [parede]
+      - [estrutural, concreto, parede de concreto]
+    ignorar:
+      - [alvenaria, bloco, drywall]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: muro_concreto_m2
+    unit: m2
+    contem:
+      - [muro]
+      - [concreto, estrutural]
+    ignorar:
+      - [alambrado, cerca, gradil]
+      - [tubo, dn, pead, pvc]
+
+  - apelido: muro_arrimo_m2
+    unit: m2
+    contem:
+      - [muro de arrimo, arrimo]
+    ignorar:
+      - [alambrado, cerca, gradil]
+      - [tubo, dn, pead, pvc]
