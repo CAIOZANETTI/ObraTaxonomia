@@ -1,0 +1,222 @@
+meta:
+  dominio: mao_obra_direta
+  versao: "0.1.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # 1) APOIO / BASE
+  # ---------------------------------------------------------------------------
+
+  - apelido: servente_h
+    unit: h
+    contem:
+      - [servente, ajudante geral, auxiliar de obra]
+    ignorar:
+      - [vigia, porteiro, administrativo]
+
+  - apelido: ajudante_especializado_h
+    unit: h
+    contem:
+      - [ajudante especializado, ajudante tecnico, auxiliar tecnico]
+    ignorar:
+      - [servente]
+
+  # ---------------------------------------------------------------------------
+  # 2) CONCRETO / ESTRUTURA
+  # ---------------------------------------------------------------------------
+
+  - apelido: carpinteiro_h
+    unit: h
+    contem:
+      - [carpinteiro, carpintaria]
+    ignorar:
+      - [marceneiro]
+
+  - apelido: armador_h
+    unit: h
+    contem:
+      - [armador, armacao, armação]
+    ignorar:
+      - [soldador]
+
+  - apelido: pedreiro_h
+    unit: h
+    contem:
+      - [pedreiro]
+    ignorar:
+      - [mestre]
+
+  - apelido: operador_concreto_h
+    unit: h
+    contem:
+      - [concretagem, lancamento de concreto, lançamento de concreto]
+    ignorar:
+      - [fornecimento]
+
+  # ---------------------------------------------------------------------------
+  # 3) FUNDAÇÃO / TERRAPLENAGEM
+  # ---------------------------------------------------------------------------
+
+  - apelido: operador_escavadeira_h
+    unit: h
+    contem:
+      - [operador de escavadeira, operador escavadeira]
+    ignorar:
+      - [operador de guindaste]
+
+  - apelido: operador_maquinas_h
+    unit: h
+    contem:
+      - [operador de maquinas, operador de máquinas]
+    ignorar:
+      - [operador de guindaste]
+
+  - apelido: operador_rolo_h
+    unit: h
+    contem:
+      - [operador de rolo, operador rolo]
+    ignorar:
+      - [operador de escavadeira]
+
+  # ---------------------------------------------------------------------------
+  # 4) MONTAGEM / METÁLICA / SOLDAGEM
+  # ---------------------------------------------------------------------------
+
+  - apelido: soldador_h
+    unit: h
+    contem:
+      - [soldador, soldagem]
+    ignorar:
+      - [caldeireiro]
+
+  - apelido: caldeireiro_h
+    unit: h
+    contem:
+      - [caldeireiro]
+    ignorar:
+      - [soldador]
+
+  - apelido: montador_estrutura_metalica_h
+    unit: h
+    contem:
+      - [montador, montagem]
+      - [estrutura metalica, estrutura metálica]
+    ignorar:
+      - [montagem de tubulacao, montagem de tubulação]
+
+  # ---------------------------------------------------------------------------
+  # 5) SANEAMENTO / REDES
+  # ---------------------------------------------------------------------------
+
+  - apelido: encanador_h
+    unit: h
+    contem:
+      - [encanador, bombeiro hidraulico, bombeiro hidráulico]
+    ignorar:
+      - [eletricista]
+
+  - apelido: montador_tubulacao_h
+    unit: h
+    contem:
+      - [montador]
+      - [tubulacao, tubulação]
+    ignorar:
+      - [estrutura metalica]
+
+  - apelido: operador_rede_saneamento_h
+    unit: h
+    contem:
+      - [rede de agua, rede de água, rede de esgoto, saneamento]
+    ignorar:
+      - [drenagem]
+
+  # ---------------------------------------------------------------------------
+  # 6) ELÉTRICA / INSTRUMENTAÇÃO
+  # ---------------------------------------------------------------------------
+
+  - apelido: eletricista_h
+    unit: h
+    contem:
+      - [eletricista]
+    ignorar:
+      - [instrumentista]
+
+  - apelido: instrumentista_h
+    unit: h
+    contem:
+      - [instrumentista, instrumentacao, instrumentação]
+    ignorar:
+      - [eletricista]
+
+  # ---------------------------------------------------------------------------
+  # 7) MECÂNICA / EQUIPAMENTOS
+  # ---------------------------------------------------------------------------
+
+  - apelido: mecanico_h
+    unit: h
+    contem:
+      - [mecanico, mecânico]
+    ignorar:
+      - [eletricista]
+
+  - apelido: montador_mecanico_h
+    unit: h
+    contem:
+      - [montador mecanico, montador mecânico]
+    ignorar:
+      - [montador estrutural]
+
+  # ---------------------------------------------------------------------------
+  # 8) ACABAMENTOS
+  # ---------------------------------------------------------------------------
+
+  - apelido: pintor_h
+    unit: h
+    contem:
+      - [pintor, pintura]
+    ignorar:
+      - [revestimento]
+
+  - apelido: azulejista_h
+    unit: h
+    contem:
+      - [azulejista, revestimento ceramico, revestimento cerâmico]
+    ignorar:
+      - [pintura]
+
+  # ---------------------------------------------------------------------------
+  # 9) IÇAMENTO / OPERAÇÃO ESPECIAL
+  # ---------------------------------------------------------------------------
+
+  - apelido: operador_guindaste_h
+    unit: h
+    contem:
+      - [operador de guindaste, guindaste]
+    ignorar:
+      - [munck, guindauto]
+
+  - apelido: sinaleiro_h
+    unit: h
+    contem:
+      - [sinaleiro, rigger]
+    ignorar:
+      - [operador]
+
+  # ---------------------------------------------------------------------------
+  # 10) SUPERVISÃO DIRETA DE CAMPO
+  # ---------------------------------------------------------------------------
+
+  - apelido: mestre_obras_h
+    unit: h
+    contem:
+      - [mestre de obras, mestre obras]
+    ignorar:
+      - [engenheiro]
+
+  - apelido: encarregado_h
+    unit: h
+    contem:
+      - [encarregado]
+    ignorar:
+      - [mestre de obras]
