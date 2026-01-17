@@ -1,0 +1,145 @@
+meta:
+  dominio: obra
+  versao: "0.1.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # 1) EDIFICAÇÕES
+  # ---------------------------------------------------------------------------
+
+  - apelido: obra_edificacao_un
+    unit: un
+    contem:
+      - [edificacao, edificação, predio, prédio, edificio, edifício]
+    ignorar:
+      - [rodovia, ferrovia, barragem, ponte, viaduto]
+
+  - apelido: obra_galpao_un
+    unit: un
+    contem:
+      - [galpao, galpão, galpao industrial, galpão industrial]
+    ignorar:
+      - [armazem de graos, armazém de grãos]
+
+  - apelido: obra_armazem_graos_un
+    unit: un
+    contem:
+      - [armazem, armazém]
+      - [graos, grãos, soja, milho]
+    ignorar:
+      - [galpao, galpão]
+
+  # ---------------------------------------------------------------------------
+  # 2) INFRAESTRUTURA DE TRANSPORTE
+  # ---------------------------------------------------------------------------
+
+  - apelido: obra_rodovia_un
+    unit: un
+    contem:
+      - [rodovia, estrada, pista, duplicacao, duplicação]
+    ignorar:
+      - [ferrovia, aeroporto]
+
+  - apelido: obra_ferrovia_un
+    unit: un
+    contem:
+      - [ferrovia, linha ferrea, linha férrea, trilho]
+    ignorar:
+      - [rodovia]
+
+  - apelido: obra_aeroporto_un
+    unit: un
+    contem:
+      - [aeroporto, pista de pouso, terminal aeroportuario]
+    ignorar:
+      - [rodovia, ferrovia]
+
+  - apelido: obra_porto_un
+    unit: un
+    contem:
+      - [porto, terminal portuario, terminal portuário, cais, pier, píer]
+    ignorar:
+      - [hidrovia]
+
+  - apelido: obra_hidrovia_un
+    unit: un
+    contem:
+      - [hidrovia, navegacao interior, navegação interior, canal navegavel]
+    ignorar:
+      - [porto]
+
+  # ---------------------------------------------------------------------------
+  # 3) OBRAS DE ARTE E GRANDES ESTRUTURAS
+  # ---------------------------------------------------------------------------
+
+  - apelido: obra_barragem_un
+    unit: un
+    contem:
+      - [barragem, dique]
+    ignorar:
+      - [canal, reservatorio pequeno]
+
+  - apelido: obra_uhe_un
+    unit: un
+    contem:
+      - [uhe, usina hidreletrica, usina hidrelétrica]
+    ignorar:
+      - [pch]
+
+  - apelido: obra_pch_un
+    unit: un
+    contem:
+      - [pch, pequena central hidreletrica, pequena central hidrelétrica]
+    ignorar:
+      - [uhe]
+
+  - apelido: obra_canal_un
+    unit: un
+    contem:
+      - [canal, canalizacao, canalização]
+    ignorar:
+      - [rede, adutora]
+
+  # ---------------------------------------------------------------------------
+  # 4) ENERGIA
+  # ---------------------------------------------------------------------------
+
+  - apelido: obra_ute_un
+    unit: un
+    contem:
+      - [ute, usina termica, usina térmica]
+    ignorar:
+      - [uhe, pch]
+
+  - apelido: obra_eolica_un
+    unit: un
+    contem:
+      - [eolica, eólica, parque eolico, parque eólico, aerogerador]
+    ignorar:
+      - [solar]
+
+  - apelido: obra_solar_un
+    unit: un
+    contem:
+      - [solar, usina solar, parque solar, fotovoltaica, fotovoltaico]
+    ignorar:
+      - [eolica, eólica]
+
+  # ---------------------------------------------------------------------------
+  # 5) COMPLEXOS INDUSTRIAIS
+  # ---------------------------------------------------------------------------
+
+  - apelido: obra_industrial_un
+    unit: un
+    contem:
+      - [planta industrial, industria, industrial]
+    ignorar:
+      - [edificacao residencial]
+
+  - apelido: obra_terminal_logistico_un
+    unit: un
+    contem:
+      - [terminal logistico, terminal logístico]
+    ignorar:
+      - [porto]
