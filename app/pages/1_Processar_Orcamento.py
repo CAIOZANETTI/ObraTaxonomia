@@ -196,7 +196,19 @@ if uploaded_file:
                         return [''] * len(row)
 
                 st.subheader("Resultado")
-                st.dataframe(final_df.style.apply(highlight_unknown, axis=1), use_container_width=True)
+                
+                # Verificar se o dataframe é pequeno o suficiente para aplicar estilo
+                total_cells = final_df.shape[0] * final_df.shape[1]
+                max_cells = 262144  # Limite padrão do Pandas Styler
+                
+                if total_cells <= max_cells:
+                    # Aplicar estilo se o dataframe for pequeno
+                    st.dataframe(final_df.style.apply(highlight_unknown, axis=1), use_container_width=True)
+                else:
+                    # Exibir sem estilo se for muito grande
+                    st.warning(f"⚠️ Dataframe muito grande ({total_cells:,} células). Exibindo sem destaque visual para melhor performance.")
+                    st.dataframe(final_df, use_container_width=True)
+
                 
                 # --- Exportação de Desconhecidos (Sistema) ---
                 if count_unknown > 0:
