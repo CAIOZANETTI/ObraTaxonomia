@@ -138,6 +138,7 @@ O arquivo de saída é uma cópia não destrutiva do original. O sistema preserv
 *   `tax_apelido`: A chave única de classificação gerada.
 *   `tax_tipo`: Coluna extraída explicitamente (Material, Serviço, Equipamento, MO) para facilitar a análise de incidência de custos e carga tributária.
 *   `tax_confianca`: Semáforo de qualidade (`HIGH`, `LOW`, `UNKNOWN`, `UNIT_MISMATCH`).
+*   `tax_desconhecido`: **(Novo)** Coluna binária (`TRUE` ou `FALSE`) que sinaliza explicitamente os itens não identificados. Quando `TRUE`, serve como um gatilho de alerta imediato, permitindo filtrar rapidamente o "Refugo" para tratamento.
 *   `tax_validado`: Check booleano de auditoria (se o dado foi revisto por humano ou aceito automaticamente pela alta confiança).
 *   `tax_similares`: Lista JSON com as "segundas melhores opções" para auxiliar a correção manual rápida em casos de ambiguidade.
 
@@ -192,6 +193,7 @@ O fluxo foi desenhado para maximizar a produtividade humana, focando na gestão 
 3.  **Validação (Foco na Exceção)**:
     *   O utilizador ativa o filtro "Ver Pendentes".
     *   O sistema esconde os itens `VALID_HIGH` (que são a maioria, ~80%).
+    *   **Marcadores Visuais**: As linhas não reconhecidas (`tax_desconhecido = TRUE`) são destacadas com uma cor de fundo específica (ex: vermelho claro ou laranja) na interface, gritando visualmente a necessidade de atenção.
     *   O utilizador foca 100% da atenção em resolver `LOW`, `UNKNOWN` e `UNIT_MISMATCH`.
     *   Utiliza ferramentas de "Edição em Lote" para corrigir grupos de erros repetitivos.
 4.  **Exportação**: Baixa o Excel enriquecido para importar no BI ou devolver ao ERP.
