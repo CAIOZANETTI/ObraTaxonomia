@@ -13,8 +13,8 @@ O sistema é construído sobre uma stack moderna de Python, priorizando performa
 *   **Serialização**: [PyYAML](https://pyyaml.org/) (para leitura human-friendly das regras).
 *   **Armazenamento**: Filesystem local (CSV/Excel/YAML) - Sem dependência de banco de dados complexo para o MVP.
 
-### Árvore do Projeto (Estrutura Recomendada)
-A organização das pastas segue o princípio da separação de responsabilidades:
+### Árvore do Projeto (Estrutura Real)
+A organização das pastas segue o princípio da separação de responsabilidades e domínios de engenharia:
 
 ```text
 /ObraTaxonomia
@@ -26,15 +26,20 @@ A organização das pastas segue o princípio da separação de responsabilidade
 │   ├── builder.py             # Compilador de YAML -> Hash Map
 │   └── utils.py               # Helpers (Regex, Normalização)
 ├── yaml/                      # [Input Humano] Base de Conhecimento
-│   ├── unidades.yaml          # Dicionário de unidades
-│   └── grupos/                # Regras organizadas por domínio
-│       ├── concreto.yaml
-│       ├── aco.yaml
-│       └── ...
+│   ├── unidades/              # Definições de unidades e conversões
+│   ├── grupos/                # Agrupamentos de materiais (Concreto, Aço, etc.)
+│   ├── elementos/             # Elementos construtivos (Vigas, Pilares)
+│   ├── estruturas/            # Tipologias de estruturas
+│   ├── equipamentos/          # Maquinário e ferramentas
+│   ├── mao_obra/              # Categorias de trabalho humano
+│   ├── materiais/             # Insumos puros
+│   ├── obras/                 # Contextos de obras
+│   └── servico/               # Serviços compostos
 ├── data/
 │   ├── input/                 # (Temp) Uploads dos usuários
 │   └── unknowns/              # [Input Máquina] Log de erros para a IA
 │       ├── 20240118_refugo.csv
+│       ├── 20240119_pendencias.csv
 │       └── ...
 ├── artifacts/                 # [Output Build] Cache de performance
 │   └── taxonomy_hash.pkl      # Árvore de regras compilada (Pickle)
