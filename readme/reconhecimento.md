@@ -73,30 +73,26 @@ Os arquivos YAML representam o "Caderno de Critérios" da orçamentação. Eles 
 #### A. Schema das Regras (geral/*.yaml, edificacao/*.yaml)
 
 ```yaml
+```yaml
 regras:
-  - id: "conc_est_m3_v1"
-    apelido: "concreto_estrutural_m3"
+  - apelido: "concreto_estrutural_m3"
     unit: "m3"            # Unidade volumétrica (referência cruzada obrigatória com unidades.yaml)
-    tipo_item: "material" # IMPORTANTE: Define que é compra de insumo físico (Estoque)
     
-    # Critérios de Aceite (Match Required - Lógica AND entre linhas, OR dentro da linha)
-    # O item deve conter termos do Grupo 1 (Substantivo) E termos do Grupo 2 (Qualificador)
-    match_required:
-      - ["concreto", "usinado", "c25", "c30", "c-30", "c-40", "betão", "betao"] # Grupo 1: Material e Traço
-      - ["fck", "mpa", "bombeavel", "convencional", "armado"]                  # Grupo 2: Especificação Técnica
-    
+    # Critérios de Aceite (Lógica OR para termos na mesma lista, AND se houver múltiplas listas)
+    # Lista de termos que DEVEM estar presentes para o match.
+    contem:
+      - ["concreto", "usinado", "c25", "c30", "c-30", "c-40", "betão", "betao"] # Grupo 1: Material
+      - ["fck", "mpa", "bombeavel", "convencional", "armado"]                  # Grupo 2: Especificação
+
     # Critérios de Exclusão (Defesa Ativa - Hard Filter)
     # Se contiver QUALQUER um destes termos, a regra é descartada imediatamente.
     # Esta é a principal barreira contra a contaminação de dados.
-    match_exclude:
+    ignorar:
       - ["lancamento", "aplicacao", "sarrafeamento", "polimento", "acabamento"] # Evita Serviços
       - ["locacao", "bomba", "caminhao", "betoneira"]                           # Evita Equipamentos
       - ["aditivo", "superplastificante", "fibra", "sílica"]                    # Evita Insumos Químicos separados
       - ["teste", "ensaio", "rompimento", "slump", "laboratorio"]               # Evita Serviços de Controle Tecnológico
-    
-    # Peso da regra para desempate
-    # Regras específicas (ex: Concreto FCK) têm prioridade sobre regras genéricas (ex: Argamassa)
-    prioridade: 10
+```
 ```
 
 #### B. Schema de Unidades (unidades.yaml)
@@ -161,9 +157,9 @@ Antes de qualquer match, o texto e a unidade passam por limpeza para resolver pr
 Para cada linha do Excel, o motor executa os seguintes passos sequenciais:
 
 1.  **Filtro de Unidade (Otimização)**: Seleciona apenas as regras que atendem à unidade normalizada da linha. Se a linha é `kg`, o sistema ignora instantaneamente todas as regras de `m3` ou `m`. Isso reduz o espaço de busca em ~80%.
-2.  **Filtro de Exclusão (Defesa - Hard Filter)**: Se o texto contiver **qualquer** termo da lista `match_exclude` da regra, essa regra é descartada imediatamente, independentemente de quantos termos positivos ela tenha.
+2.  **Filtro de Exclusão (Defesa - Hard Filter)**: Se o texto contiver **qualquer** termo da lista `ignorar` da regra, essa regra é descartada imediatamente, independentemente de quantos termos positivos ela tenha.
     *   *Exemplo*: "Lançamento de Concreto" é eliminado da regra de material por conter "lançamento".
-3.  **Verificação de Requisitos (Soft Filter)**: Verifica se todos os grupos definidos em `match_required` foram satisfeitos. A lógica é: (Pelo menos um token do Grupo 1) AND (Pelo menos um token do Grupo 2).
+3.  **Verificação de Requisitos (Soft Filter)**: Verifica se todos os grupos definidos em `contem` foram satisfeitos. A lógica é: (Pelo menos um token do Grupo 1) AND (Pelo menos um token do Grupo 2).
 4.  **Cálculo de Score (Ranking)**:
     $$ Score = (Prioridade \times 100) + (TotalTokensMatch \times 10) $$
     *   *Lógica*: A prioridade define a "classe" de certeza. Regras específicas ganham de regras genéricas por uma ordem de grandeza (fator 100). Os tokens extras servem apenas para desempatar regras dentro da mesma prioridade.

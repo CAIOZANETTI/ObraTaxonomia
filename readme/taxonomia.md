@@ -116,45 +116,20 @@ Recomendação de pastas:
 
 ```text
 yaml/
-  unidades.yaml
-  router_macro.yaml
-  geral/
-    demolicao.yaml
-    terraplenagem.yaml
-    contencao_solo.yaml
-    drenagem.yaml
-    fundacao.yaml
-    concreto.yaml
-    forma.yaml
-    armadura.yaml
-    metalica.yaml
-    madeira.yaml
-    impermeabilizacao.yaml
-    pavimentacao.yaml
-    sinalizacao.yaml
-    urbanizacao.yaml
-  edificacao/
-    fechamento.yaml
-    esquadrias.yaml
-    cobertura.yaml
-    acabamentos.yaml
-  sistemas/
-    eletrica.yaml
-    mecanica.yaml
-    incendio.yaml
-  especiais/
-    obra_arte.yaml
-    obra_mar.yaml
-    ferrovia.yaml
-    tuneis.yaml
-    canal.yaml
-    barragem.yaml
-  redes/
-    agua.yaml
-    esgoto.yaml
-    oleo_gas.yaml
-tests/
-  tests_end2end.yaml
+  unidades/              # Definições de normalização e conversão
+  grupos/                # Agrupamentos de materiais (Concreto, Aço, etc.)
+  elementos/             # Elementos construtivos (Vigas, Pilares)
+  estruturas/            # Tipologias de estruturas
+  equipamentos/          # Maquinário e ferramentas
+  mao_obra/              # Categorias de trabalho humano
+  materiais/             # Insumos puros
+  obras/                 # Contextos de obras
+  servico/               # Serviços compostos
+data/
+  input/
+  unknowns/              # Log de refugo para IA
+artifacts/
+  taxonomy_hash.pkl
 ```
 
 ---
@@ -210,54 +185,33 @@ Cada elemento contém classes com unidade única e sinônimos/subtipos.
 
 ```yaml
 meta:
-  macro: estutura_concreto
+  dominio: concreto
+  versao: "0.3.0"
 
-classes:
-  concreto_m3:
+regras:
+  - apelido: concreto_geral_m3
     unit: m3
-    synonyms: [concreto, concretagem, lancamento de concreto, lançamento de concreto]
+    contem:
+      - [concreto, concretagem, lancamento, lançamento]
+    ignorar:
+      - [tubo, tubulacao, adutora, manilha]
+      - [bloco de concreto, bloco intertravado]
 
-  concreto_estrutural_m3:
+  - apelido: concreto_estrutural_m3
     unit: m3
-    synonyms: [concreto estrutural, concreto armado, estrutural,fck, mpa]
+    contem:
+      - [concreto, concretagem, lancamento]
+      - [viga, pilar, laje, bloco, radier, parede estrutural]
+    ignorar:
+      - [piso, contrapiso, calçada, pavimento]
 
-  concreto_massa_m3:
+  - apelido: concreto_fck_30_m3
     unit: m3
-    synonyms: [concreto massa, concreto de massa]
-
-  concreto_cad_m3:
-    unit: m3
-    synonyms: [concreto alto desempenho, cad, high performance concrete, hpc]
-
-  concreto_submerso_m3:
-    unit: m3
-    synonyms: [concreto submerso, underwater concrete, tremie]
-
-  concreto_fluido_m3:
-    unit: m3
-    synonyms: [concreto fluido, alta fluidez]
-
-  concreto_estacas_m3:
-    unit: m3
-    synonyms: [concreto para estaca, concreto de estaca, estaca escavada concretada, tubulão concretado]
-
-  pre_moldado_m3:
-    unit: m3
-    synonyms: [pré-moldado, pre moldado, pre-moldado, pré-fabricado, prefabricado, precast, painel, viga pré-moldada, laje pré-moldada]
-
-  armadura_passiva_kg:
-    unit: kg
-    synonyms: [armacao, armação, vergalhao, vergalhão, ca-50, ca50, corte e dobra, estribo]
-
-  armadura_ativa_kg:
-    unit: kg
-    synonyms: [protensao, protensão, cordoalha]
-
-  forma_m2:
-    unit: m2
-    synonyms: [forma, tabua]
-
-  
+    contem:
+      - [concreto, fck, mpa]
+      - ["30", "30mpa", "fck30"]
+    ignorar:
+      - [argamassa, graute]
 ```
 
 Regras:
@@ -310,21 +264,20 @@ Regra:
 
 ### 9.1 Saídas recomendadas
 
-* `unidade_norm`
-* `macro`
-* `classe` (primary_key)
-* `n2` (opcional)
-* `status` (`ok`, `unknown`, `unit_mismatch`, `unknown_unit`)
-* `debug` (opcional)
+*   `unidade_norm`
+*   `macro`
+*   `tax_apelido` (primary_key)
+*   `tax_tipo`
+*   `tax_desconhecido` (TRUE se não houve match, gatilho para IA)
+*   `tax_confianca`
 
 ### 9.2 Passos
 
 1. Normalizar texto do nome (lower, sem acento, sem pontuação).
 2. Normalizar unidade (e converter imperial → métrico quando aplicável).
-3. Roteamento de macro por palavras-chave.
-4. Filtrar classes por unidade (`classe.unit == unidade_norm`).
-5. Matching por sinônimos e, se existir, `children`.
-6. Registrar `unknown` e `unit_mismatch` para curadoria.
+3. Filtrar regras por unidade (`regra.unit == unidade_norm`).
+4. Matching por palavras-chave (`contem` e exclusão por `ignorar`).
+5. Se não houver match: marcar `tax_desconhecido = TRUE` e exportar para `data/unknowns/`.
 
 ### 9.3 Ingestão de documentos (memoriais, relatórios, PDFs)
 
