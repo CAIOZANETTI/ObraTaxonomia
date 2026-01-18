@@ -205,42 +205,29 @@ if uploaded_file:
                 # Selecionar colunas relevantes para exibição
                 display_cols = [col_desc, col_unit, 'tax_apelido', 'tax_tipo', 'tax_desconhecido']
                 
-                # Adicionar coluna de status visual
-                final_df['status_icon'] = final_df['tax_desconhecido'].apply(
-                    lambda x: '⚠️ Desconhecido' if x else '✓ Reconhecido'
-                )
+                # Status visual e categorização
+                def get_status_label(row):
+                    if row.get('tax_desconhecido', True):
+                        return '❌ Desconhecido'
+                    elif row.get('tax_incerto', False):
+                        return '⚠️ Incerto'
+                    else:
+                        return '✅ Conhecido'
+
+                final_df['status_icon'] = final_df.apply(get_status_label, axis=1)
+
+                # Tabs para organização
+                tab_known, tab_uncertain, tab_unknown = st.tabs([
+                    "✅ Conhecidos", 
+                    "⚠️ Sugestões/Incertos", 
+                    "❌ Desconhecidos"
+                ])
                 
-                # Filtros
-                st.markdown("#### 🔍 Filtros")
-                col_f1, col_f2, col_f3 = st.columns(3)
+                # Filtro global de busca
+                st.markdown("#### 🔍 Filtros Globais")
+                search_term = st.text_input("🔎 Buscar na descrição:", placeholder="Digite para filtrar em todas as abas...")
                 
-                with col_f1:
-                    filter_option = st.radio(
-                        "Exibir:",
-                        ["Todos", "Apenas Desconhecidos", "Apenas Reconhecidos"],
-                        horizontal=True
-                    )
-                with col_f2:
-                    search_term = st.text_input("🔎 Buscar na descrição:", placeholder="Digite para filtrar...")
-                with col_f3:
-                    st.metric("Itens Exibidos", len(final_df))
-                
-                # Aplicar filtros
-                filtered_df = final_df.copy()
-                
-                if filter_option == "Apenas Desconhecidos":
-                    filtered_df = filtered_df[filtered_df['tax_desconhecido'] == True]
-                elif filter_option == "Apenas Reconhecidos":
-                    filtered_df = filtered_df[filtered_df['tax_desconhecido'] == False]
-                
-                if search_term:
-                    mask = filtered_df[col_desc].astype(str).str.contains(search_term, case=False, na=False)
-                    filtered_df = filtered_df[mask]
-                
-                # Atualizar métrica de itens exibidos
-                col_f3.metric("Itens Exibidos", len(filtered_df))
-                
-                # Configurar colunas editáveis
+                # Configurar colunas editáveis (Comum a todas as abas)
                 column_config = {
                     col_desc: st.column_config.TextColumn(
                         "Descrição",
@@ -257,56 +244,129 @@ if uploaded_file:
                         "Apelido",
                         options=all_apelidos,
                         required=False,
-                        help="Selecione o apelido correto para este item",
+                        help="Selecione o apelido correto",
                         width="medium"
                     ),
                     'tax_tipo': st.column_config.TextColumn(
                         "Tipo",
                         disabled=True,
-                        width="small",
-                        help="Domínio/categoria do item"
+                        width="small"
                     ),
                     'status_icon': st.column_config.TextColumn(
                         "Status",
                         disabled=True,
                         width="small"
+                    ),
+                    'tax_score': st.column_config.ProgressColumn(
+                        "Confiança",
+                        min_value=0,
+                        max_value=100,
+                        format="%.0f%%"
                     )
                 }
                 
-                # Colunas a exibir
-                edit_cols = [col_desc, col_unit, 'tax_apelido', 'tax_tipo', 'status_icon']
+                edit_cols = [col_desc, col_unit, 'tax_apelido', 'tax_tipo', 'status_icon', 'tax_score']
                 
-                # Info para o usuário
-                st.info("💡 **Dica:** Você pode editar a coluna 'Apelido' clicando na célula. Itens desconhecidos aparecem com ⚠️.")
+                # Função auxiliar para renderizar editor em cada aba
+                def render_tab_editor(subset_df, key_suffix, help_text):
+                    st.info(help_text)
+                    
+                    # Aplicar busca
+                    if search_term:
+                        mask = subset_df[col_desc].astype(str).str.contains(search_term, case=False, na=False)
+                        current_df = subset_df[mask]
+                    else:
+                        current_df = subset_df
+
+                    st.metric("Itens nesta categoria", len(current_df))
+                    
+                    if len(current_df) > 0:
+                        return st.data_editor(
+                            current_df[edit_cols],
+                            column_config=column_config,
+                            use_container_width=True,
+                            num_rows="fixed",
+                            hide_index=True,
+                            key=f"editor_{key_suffix}",
+                            disabled=[col_desc, col_unit, 'tax_tipo', 'status_icon', 'tax_score']
+                        )
+                    else:
+                        st.success("Nenhum item nesta categoria! 🎉")
+                        return pd.DataFrame() # Retorna vazio
+
+                # --- Renderizar Abas ---
                 
-                # Tabela editável
-                edited_df = st.data_editor(
-                    filtered_df[edit_cols],
-                    column_config=column_config,
-                    use_container_width=True,
-                    num_rows="fixed",
-                    hide_index=True,
-                    key="classification_editor",
-                    disabled=[col_desc, col_unit, 'tax_tipo', 'status_icon']
-                )
+                all_editors = []
+                
+                # 1. Conhecidos
+                with tab_known:
+                    df_known = final_df[
+                        (final_df['tax_desconhecido'] == False) & 
+                        (final_df['tax_incerto'] == False)
+                    ]
+                    edited_known = render_tab_editor(
+                        df_known, 
+                        "known", 
+                        "Itens identificados com alta confiança (Match Exato)."
+                    )
+                    if not edited_known.empty: all_editors.append(edited_known)
+
+                # 2. Incertos
+                with tab_uncertain:
+                    df_uncertain = final_df[
+                        (final_df['tax_desconhecido'] == False) & 
+                        (final_df['tax_incerto'] == True)
+                    ]
+                    edited_uncertain = render_tab_editor(
+                        df_uncertain, 
+                        "uncertain", 
+                        "💡 O sistema sugeriu apelidos similares. Por favor confirme ou corrija."
+                    )
+                    if not edited_uncertain.empty: all_editors.append(edited_uncertain)
+
+                # 3. Desconhecidos
+                with tab_unknown:
+                    df_unknown = final_df[final_df['tax_desconhecido'] == True]
+                    edited_unknown = render_tab_editor(
+                        df_unknown, 
+                        "unknown", 
+                        "⚠️ Itens que não foram encontrados. Necessário classificar manualmente."
+                    )
+                    if not edited_unknown.empty: all_editors.append(edited_unknown)
+
+                # Consolidar edições
+                if all_editors:
+                    # Juntar o que foi editado (apenas visualização das abas) com o resto do dataframe original
+                    # Mas o st.data_editor retorna apenas as linhas que foram passadas para ele.
+                    # Precisamos reconstruir um DF único de edições para comparar.
+                    
+                    edited_full = pd.concat(all_editors)
+
                 
                 # Detectar mudanças
                 changes_made = False
                 corrections = []
                 
-                for idx in edited_df.index:
-                    original_apelido = filtered_df.loc[idx, 'tax_apelido']
-                    edited_apelido = edited_df.loc[idx, 'tax_apelido']
-                    
-                    if original_apelido != edited_apelido:
-                        changes_made = True
-                        corrections.append({
-                            'index': idx,
-                            'descricao': filtered_df.loc[idx, col_desc],
-                            'unidade': filtered_df.loc[idx, col_unit],
-                            'apelido_original': original_apelido,
-                            'apelido_corrigido': edited_apelido
-                        })
+                if 'edited_full' in locals() and not edited_full.empty:
+                    for idx in edited_full.index:
+                        # Verificar se o índice existe no original (segurança)
+                        if idx in final_df.index:
+                            original_apelido = final_df.loc[idx, 'tax_apelido']
+                            edited_apelido = edited_full.loc[idx, 'tax_apelido']
+                            
+                            # Tratar NaN misturados com None/Empty
+                            if pd.isna(original_apelido): original_apelido = ""
+                            if pd.isna(edited_apelido): edited_apelido = ""
+                            
+                            if str(original_apelido) != str(edited_apelido):
+                                changes_made = True
+                                corrections.append({
+                                    'index': idx,
+                                    'descricao': final_df.loc[idx, col_desc],
+                                    'unidade': final_df.loc[idx, col_unit],
+                                    'apelido_original': original_apelido,
+                                    'apelido_corrigido': edited_apelido
+                                })
                 
                 # Se houver mudanças, mostrar botão para aplicar
                 if changes_made:
@@ -338,7 +398,9 @@ if uploaded_file:
                                     if matching_rule:
                                         final_df.loc[idx, 'tax_tipo'] = matching_rule['dominio']
                                         final_df.loc[idx, 'tax_desconhecido'] = False
-                                        final_df.loc[idx, 'status_icon'] = '✓ Reconhecido'
+                                        final_df.loc[idx, 'tax_incerto'] = False # Confirmado, não é mais incerto
+                                        final_df.loc[idx, 'tax_score'] = 100 # Confirmed
+                                        
                             
                             # Salvar correções para aprendizado
                             corrections_dir = os.path.join(os.getcwd(), 'data', 'corrections')
