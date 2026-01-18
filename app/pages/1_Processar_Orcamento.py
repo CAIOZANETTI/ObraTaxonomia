@@ -195,19 +195,167 @@ if uploaded_file:
                     else:
                         return [''] * len(row)
 
-                st.subheader("Resultado")
+                # --- Interface de Validação Interativa ---
+                st.subheader("📝 Validação de Classificações")
                 
-                # Verificar se o dataframe é pequeno o suficiente para aplicar estilo
-                total_cells = final_df.shape[0] * final_df.shape[1]
-                max_cells = 262144  # Limite padrão do Pandas Styler
+                # Obter lista de todos os apelidos disponíveis
+                all_apelidos = sorted(list(set([rule['apelido'] for rule in engine.rules])))
                 
-                if total_cells <= max_cells:
-                    # Aplicar estilo se o dataframe for pequeno
-                    st.dataframe(final_df.style.apply(highlight_unknown, axis=1), use_container_width=True)
-                else:
-                    # Exibir sem estilo se for muito grande
-                    st.warning(f"⚠️ Dataframe muito grande ({total_cells:,} células). Exibindo sem destaque visual para melhor performance.")
-                    st.dataframe(final_df, use_container_width=True)
+                # Preparar dados para edição
+                # Selecionar colunas relevantes para exibição
+                display_cols = [col_desc, col_unit, 'tax_apelido', 'tax_tipo', 'tax_desconhecido']
+                
+                # Adicionar coluna de status visual
+                final_df['status_icon'] = final_df['tax_desconhecido'].apply(
+                    lambda x: '⚠️ Desconhecido' if x else '✓ Reconhecido'
+                )
+                
+                # Filtros
+                st.markdown("#### 🔍 Filtros")
+                col_f1, col_f2, col_f3 = st.columns(3)
+                
+                with col_f1:
+                    filter_option = st.radio(
+                        "Exibir:",
+                        ["Todos", "Apenas Desconhecidos", "Apenas Reconhecidos"],
+                        horizontal=True
+                    )
+                with col_f2:
+                    search_term = st.text_input("🔎 Buscar na descrição:", placeholder="Digite para filtrar...")
+                with col_f3:
+                    st.metric("Itens Exibidos", len(final_df))
+                
+                # Aplicar filtros
+                filtered_df = final_df.copy()
+                
+                if filter_option == "Apenas Desconhecidos":
+                    filtered_df = filtered_df[filtered_df['tax_desconhecido'] == True]
+                elif filter_option == "Apenas Reconhecidos":
+                    filtered_df = filtered_df[filtered_df['tax_desconhecido'] == False]
+                
+                if search_term:
+                    mask = filtered_df[col_desc].astype(str).str.contains(search_term, case=False, na=False)
+                    filtered_df = filtered_df[mask]
+                
+                # Atualizar métrica de itens exibidos
+                col_f3.metric("Itens Exibidos", len(filtered_df))
+                
+                # Configurar colunas editáveis
+                column_config = {
+                    col_desc: st.column_config.TextColumn(
+                        "Descrição",
+                        disabled=True,
+                        width="large",
+                        help="Descrição original do item"
+                    ),
+                    col_unit: st.column_config.TextColumn(
+                        "Unidade",
+                        disabled=True,
+                        width="small"
+                    ),
+                    'tax_apelido': st.column_config.SelectboxColumn(
+                        "Apelido",
+                        options=all_apelidos,
+                        required=False,
+                        help="Selecione o apelido correto para este item",
+                        width="medium"
+                    ),
+                    'tax_tipo': st.column_config.TextColumn(
+                        "Tipo",
+                        disabled=True,
+                        width="small",
+                        help="Domínio/categoria do item"
+                    ),
+                    'status_icon': st.column_config.TextColumn(
+                        "Status",
+                        disabled=True,
+                        width="small"
+                    )
+                }
+                
+                # Colunas a exibir
+                edit_cols = [col_desc, col_unit, 'tax_apelido', 'tax_tipo', 'status_icon']
+                
+                # Info para o usuário
+                st.info("💡 **Dica:** Você pode editar a coluna 'Apelido' clicando na célula. Itens desconhecidos aparecem com ⚠️.")
+                
+                # Tabela editável
+                edited_df = st.data_editor(
+                    filtered_df[edit_cols],
+                    column_config=column_config,
+                    use_container_width=True,
+                    num_rows="fixed",
+                    hide_index=True,
+                    key="classification_editor",
+                    disabled=[col_desc, col_unit, 'tax_tipo', 'status_icon']
+                )
+                
+                # Detectar mudanças
+                changes_made = False
+                corrections = []
+                
+                for idx in edited_df.index:
+                    original_apelido = filtered_df.loc[idx, 'tax_apelido']
+                    edited_apelido = edited_df.loc[idx, 'tax_apelido']
+                    
+                    if original_apelido != edited_apelido:
+                        changes_made = True
+                        corrections.append({
+                            'index': idx,
+                            'descricao': filtered_df.loc[idx, col_desc],
+                            'unidade': filtered_df.loc[idx, col_unit],
+                            'apelido_original': original_apelido,
+                            'apelido_corrigido': edited_apelido
+                        })
+                
+                # Se houver mudanças, mostrar botão para aplicar
+                if changes_made:
+                    st.success(f"✓ {len(corrections)} alteração(ões) detectada(s)!")
+                    
+                    # Mostrar preview das correções
+                    with st.expander("📋 Ver Correções"):
+                        corrections_preview = pd.DataFrame(corrections)
+                        st.dataframe(corrections_preview, use_container_width=True)
+                    
+                    col_btn1, col_btn2 = st.columns(2)
+                    
+                    with col_btn1:
+                        if st.button("💾 Aplicar Correções", type="primary", use_container_width=True):
+                            # Aplicar correções ao dataframe original
+                            for correction in corrections:
+                                idx = correction['index']
+                                new_apelido = correction['apelido_corrigido']
+                                
+                                # Atualizar apelido
+                                final_df.loc[idx, 'tax_apelido'] = new_apelido
+                                
+                                # Atualizar tipo e status baseado no novo apelido
+                                if new_apelido:
+                                    matching_rule = next(
+                                        (r for r in engine.rules if r['apelido'] == new_apelido),
+                                        None
+                                    )
+                                    if matching_rule:
+                                        final_df.loc[idx, 'tax_tipo'] = matching_rule['dominio']
+                                        final_df.loc[idx, 'tax_desconhecido'] = False
+                                        final_df.loc[idx, 'status_icon'] = '✓ Reconhecido'
+                            
+                            # Salvar correções para aprendizado
+                            corrections_dir = os.path.join(os.getcwd(), 'data', 'corrections')
+                            os.makedirs(corrections_dir, exist_ok=True)
+                            
+                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                            corrections_file = os.path.join(corrections_dir, f"{timestamp}_corrections.csv")
+                            
+                            corrections_df = pd.DataFrame(corrections)
+                            corrections_df.to_csv(corrections_file, index=False, encoding='utf-8-sig')
+                            
+                            st.success(f"✓ Correções aplicadas com sucesso! Salvas em `{os.path.basename(corrections_file)}`")
+                            st.rerun()
+                    
+                    with col_btn2:
+                        if st.button("↩️ Descartar Alterações", use_container_width=True):
+                            st.rerun()
 
                 
                 # --- Exportação de Desconhecidos (Sistema) ---

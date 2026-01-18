@@ -31,7 +31,9 @@ def setup_project_directories(base_dir=None):
         'data/output/csv_extracted', # CSVs extraídos de XLSX
         'data/unknowns',             # Itens não reconhecidos (para aprendizado)
         'data/processed',            # Itens já processados/arquivados
+        'data/corrections',          # Correções manuais do usuário
     ]
+
     
     created = []
     
@@ -51,7 +53,7 @@ def setup_project_directories(base_dir=None):
             print(f"[+]  {dir_path:30s} (criado)")
         
         # Criar .gitkeep para diretórios vazios importantes
-        if dir_path in ['data/unknowns', 'data/processed']:
+        if dir_path in ['data/unknowns', 'data/processed', 'data/corrections']:
             gitkeep_path = os.path.join(full_path, '.gitkeep')
             if not os.path.exists(gitkeep_path):
                 Path(gitkeep_path).touch()
@@ -89,7 +91,9 @@ def verify_structure(base_dir=None):
         'data/output/csv_extracted',
         'data/unknowns',
         'data/processed',
+        'data/corrections',
     ]
+
     
     missing = []
     

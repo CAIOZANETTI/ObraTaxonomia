@@ -72,6 +72,60 @@ class ClassifierEngine:
                 'tax_apelido': apelido,
                 'tax_tipo': tipo,
                 'tax_desconhecido': desconhecido
-            })
+            })\
             
         return pd.DataFrame(results)
+    
+    def get_similar_matches(self, description, unit, top_n=5):
+        """
+        Retorna os N apelidos mais similares para uma descrição.
+        Útil para sugestões quando não há match exato.
+        
+        Args:
+            description: Descrição do item
+            unit: Unidade do item
+            top_n: Número de sugestões a retornar
+            
+        Returns:
+            List[Dict]: Lista de dicionários com apelido, tipo e score
+        """
+        desc_norm = normalize_text(description)
+        unit_norm = normalize_text(unit)
+        
+        scores = []
+        
+        for rule in self.rules:
+            # Filtro de unidade (relaxado para sugestões)
+            unit_match = rule['unit'] == unit_norm
+            
+            # Calcular score de similaridade
+            score = 0
+            
+            # Bonus se unidade bate
+            if unit_match:
+                score += 10
+            
+            # Contar termos em comum
+            for group in rule['contem']:
+                for term in group:
+                    if term in desc_norm:
+                        score += 2
+            
+            # Penalizar se tem termos ignorados
+            for ignore_group in rule['ignorar']:
+                for term in ignore_group:
+                    if f" {term} " in f" {desc_norm} ":
+                        score -= 5
+            
+            if score > 0:
+                scores.append({
+                    'apelido': rule['apelido'],
+                    'tipo': rule['dominio'],
+                    'score': score,
+                    'unit_match': unit_match
+                })
+        
+        # Ordenar por score e retornar top N
+        scores.sort(key=lambda x: (x['score'], x['unit_match']), reverse=True)
+        return scores[:top_n]
+
