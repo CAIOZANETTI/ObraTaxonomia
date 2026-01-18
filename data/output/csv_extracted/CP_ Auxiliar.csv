@@ -1,0 +1,85 @@
+﻿4-1196,Unnamed: 1,Unnamed: 2,Unnamed: 3,Unnamed: 4,Unnamed: 5,Unnamed: 6,Unnamed: 7,Unnamed: 8,Unnamed: 9,Unnamed: 10,Unnamed: 11,Unnamed: 12
+Cod. Composicao,Descricao Completa,Unid. Comp,Prod. Equipe,Perc. Ferramenta,Cod. Insumo,Qtde Equip.,Indice,Indice Improdutivo,DMT (Transp),Consumo (Transp),Unid. Insumo,Desc. Insumo
+CA0001,CUADRILLA ESCAVACION 1 Turno per dia,H,1,,XXXX,,0.03,,,,H,CAPATAZ
+,,,,,XXXX,,0.06999999999999999,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.3,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.6,,,,H,AYUDANTE
+CA0002,CUADRILLA ESCAVACION 2 Turno por dia,,,,XXXX,,0.03,,,,H,CAPATAZ
+,,,,,XXXX,,0.06999999999999999,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.3,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.6,,,,H,AYUDANTE
+CA0003,CUADRILLA CONCRETO 1 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.2,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.3,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.4,,,,H,AYUDANTE
+CA0004,CUADRILLA CONCRETO 2 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.2,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.3,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.4,,,,H,AYUDANTE
+CA0005,CUADRILLA FORMALETA 1 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.3,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.3,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.3,,,,H,AYUDANTE
+CA0006,CUADRILLA FORMALETA 2 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.3,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.3,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.3,,,,H,AYUDANTE
+CA0007,CUADRILLA ACERO 1 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.2,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.4,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.3,,,,H,AYUDANTE
+CA0008,CUADRILLA ACERO 2 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.2,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.4,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.3,,,,H,AYUDANTE
+CA0009,CUADRILLA VARIOS 1 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.2,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.2,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.5,,,,H,AYUDANTE
+CA0010,CUADRILLA VARIOS 2 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.2,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.2,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.5,,,,H,AYUDANTE
+CA0010,CUADRILLA VARIOS 2 Turno por dia,,,,XXXX,,0.1,,,,H,CAPATAZ
+,,,,,XXXX,,0.2,,,,H,MAESTRO 1°
+,,,,,XXXX,,0.2,,,,H,MAESTRO 2°
+,,,,,XXXX,,0.5,,,,H,AYUDANTE
+CA0015,M / S Formaleta,,,,,,,,,,,
+,,,,,CA0005,,0.13513886207562262,,,,,CUADRILLA FORMALETA 1 Turno por dia
+,,,,,XXXX,,0.000675694310378113,0.00045046287358540876,,,,CAMION PLATAFORMA CON GRUA 5 TON
+,,,,,XXXX,,0.001351388620756226,0.0009009257471708175,,,,Grua su pneumatico 35 ton
+,,,,,XXXX,,0.002702777241512452,0.001801851494341635,,,,Fork . Lift
+,,,,,XXXX,,0.007883100287744653,,,,,OPERADOR DE EQUIP. PESADO 1 turno por dia
+,,,,,CA0052,,0.001351388620756226,,,,,AQUA
+,,,,,XXXX,,0.0003919027000193055,,,,,COMPRESOR DIESEL 11 MC/MIN
+,,,,,XXXX,,6.0812487934030175e-05,,,,,Saldadora diesel 550 AMP
+,,,,,XXXX,,0.0005860613916544858,,,,,Madera comun
+CA0016,CURING,,,,,,,,,,,
+,,,,,CA0006,,0.08,,,,,CUADRILLA FORMALETA 2 Turno por dia
+,,,,,XXXX,,0.0035,0.0015,,,,Grua su pneumatico 35 ton
+,,,,,XXXX,,0.014,0.006,,,,Fork . Lift
+,,,,,XXXX,,0.025,,,,,OPERADOR DE EQUIP. PESADO 1 turno por dia
+,,,,,CA0052,,0.2,,,,,AQUA
+,,,,,XXXX,,0.017,0.007285714285714288,,,,CAMION PARA AQUA 18000 LIT
+,,,,,XXXXX,,0.02428571428571429,,,,,OPERADOR DE EQUIP. PESADO 2 turno por dia
+,,,,,XXXX,,0.021,,,,,COMPRESOR DIESEL 11 MC/MIN
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+CA0050,ENERGIA ELECTRICA,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+CA0051,ILLUMINAZIONE,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+CA0052,AQUA,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+CA0053,DEWATERING,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+CA0053,DEWATERING,,,,,,,,,,,
