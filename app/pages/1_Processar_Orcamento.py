@@ -59,26 +59,97 @@ uploaded_file = st.file_uploader("Carregue seu arquivo Excel (.xlsx)", type=["xl
 if uploaded_file:
     try:
 
-        # Lê todas as abas (sheet_name=None retorna um dict: 'NomeAba': DataFrame)
-        sheets_dict = pd.read_excel(uploaded_file, sheet_name=None)
+
+        # Lê todas as abas sem assumir header (header=None) para podermos procurar a linha correta
+        sheets_dict = pd.read_excel(uploaded_file, sheet_name=None, header=None)
         
         all_sheets = []
-        for sheet_name, sheet_df in sheets_dict.items():
-            # Adiciona coluna identificadora da aba
+        found_standard_cols = False
+        
+        # Palavras-chave para detecção
+        desc_keywords = ['descricao', 'descrição', 'discriminacao', 'discriminação', 'especificacao', 'servico', 'item']
+        unit_keywords = ['unid', 'unidade', 'und', 'un.', 'un']
+
+        progress_text = "Processando abas e detectando colunas..."
+        my_bar = st.progress(0, text=progress_text)
+        
+        for i, (sheet_name, raw_df) in enumerate(sheets_dict.items()):
+            # Atualiza barra de progresso
+            my_bar.progress((i + 1) / len(sheets_dict), text=f"Lendo aba: {sheet_name}")
+
+            # Heurística: Procurar linha de cabeçalho nas primeiras 20 linhas
+            header_idx = -1
+            
+            # Percorre linhas para encontrar keywords
+            for r_idx in range(min(len(raw_df), 20)):
+                row_vals = raw_df.iloc[r_idx].astype(str).str.lower().tolist()
+                
+                has_desc = any(k in " ".join(row_vals) for k in desc_keywords)
+                has_unit = any(k in " ".join(row_vals) for k in unit_keywords)
+                
+                # Se achou ambos na mesma linha, bingo! É o header.
+                if has_desc and has_unit:
+                    header_idx = r_idx
+                    break
+            
+            if header_idx != -1:
+                # Promove a linha a cabeçalho
+                raw_df.columns = raw_df.iloc[header_idx] # Define nomes das colunas
+                sheet_df = raw_df.iloc[header_idx+1:].copy() # Pega dados abaixo
+                sheet_df.reset_index(drop=True, inplace=True)
+                
+                # Renomeia colunas para um padrão interno (facilita concatenação)
+                new_map = {}
+                for col in sheet_df.columns:
+                    c_str = str(col).lower()
+                    if any(k in c_str for k in desc_keywords) and 'System_Descricao' not in new_map.values():
+                        new_map[col] = 'System_Descricao'
+                    elif any(k == c_str.strip() or k + '.' in c_str for k in unit_keywords) and 'System_Unidade' not in new_map.values():
+                        new_map[col] = 'System_Unidade'
+                
+                sheet_df.rename(columns=new_map, inplace=True)
+                found_standard_cols = True
+            else:
+                # Se não achou header, mantém como está (será Unnamed: 0, etc)
+                sheet_df = raw_df
+            
+            # Adiciona identificador da aba
             sheet_df['sheet_name'] = sheet_name
+            
+            # Garante que as colunas padrão existam (mesmo que vazias) para o concat não quebrar
+            if 'System_Descricao' not in sheet_df.columns:
+                sheet_df['System_Descricao'] = None 
+            if 'System_Unidade' not in sheet_df.columns:
+                sheet_df['System_Unidade'] = None
+
             all_sheets.append(sheet_df)
             
-        # Consolida tudo num único DataFrame
+        my_bar.empty()
+
+        # Consolida
         df = pd.concat(all_sheets, ignore_index=True)
         
-        st.write(f"Arquivo carregado com sucesso! Encontradas {len(sheets_dict)} abas: {list(sheets_dict.keys())}")
-        st.write("Prévia do Arquivo Consolidado:", df.head())
+        st.success(f"Arquivo carregado! {len(sheets_dict)} abas processadas.")
         
-        # Seleção de Colunas
+        # Pré-seleção inteligente nos dropdowns
         cols = df.columns.tolist()
-        c1, c2 = st.columns(2)
-        col_desc = c1.selectbox("Selecione a coluna de DESCRIÇÃO", cols, index=0 if len(cols)>0 else None)
-        col_unit = c2.selectbox("Selecione a coluna de UNIDADE", cols, index=1 if len(cols)>1 else None)
+        
+        idx_desc = 0
+        idx_unit = 1
+        
+        if 'System_Descricao' in cols:
+            idx_desc = cols.index('System_Descricao')
+        if 'System_Unidade' in cols:
+            idx_unit = cols.index('System_Unidade')
+            
+        col_desc = c1.selectbox("Selecione a coluna de DESCRIÇÃO", cols, index=idx_desc)
+        col_unit = c2.selectbox("Selecione a coluna de UNIDADE", cols, index=idx_unit)
+        
+        # Warning se a detecção falhou
+        if not found_standard_cols:
+            st.warning("⚠️ Não detectamos automaticamente os cabeçalhos 'Descrição' e 'Unidade'. Verifique se selecionou as colunas corretas acima.")
+        else:
+            st.info("ℹ️ Detectamos automaticamente as colunas de Descrição e Unidade nas abas.")
         
         if st.button("🚀 Iniciar Classificação"):
             with st.spinner("Classificando itens..."):
