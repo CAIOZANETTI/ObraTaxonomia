@@ -32,6 +32,17 @@ if selected_file:
     
     st.dataframe(df, use_container_width=True)
     
+    # Botão de download
+    csv_data = df.to_csv(index=False).encode('utf-8-sig')
+    st.download_button(
+        label="⬇️ Baixar CSV de Desconhecidos",
+        data=csv_data,
+        file_name=os.path.basename(selected_file),
+        mime="text/csv",
+        help="Baixar este arquivo CSV para análise offline",
+        use_container_width=True
+    )
+    
     st.markdown("### Ação Requerida")
     st.info("""
     Este arquivo deve ser processado pelo **Agente Antigravity**.
