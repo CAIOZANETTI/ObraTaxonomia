@@ -43,19 +43,56 @@ O arquivo deve ser leve, contendo apenas o necessário para o contexto da IA:
 
 O agente utiliza um prompt especializado para "limpar" essa base. A lógica de operação é:
 
-> **Papel**: Você é um Engenheiro de Custos Sênior e Arquiteto de Taxonomia.
+> **Prompt para o Agente Antigravity**
 >
-> **Entrada**: Uma lista de pares `descrição | unidade` que falharam na classificação.
-> **Contexto**: O conteúdo atual dos arquivos na pasta `yaml/`.
+> **Role**: Você é o **Guardião da Taxonomia**. Sua missão é analisar itens desconhecidos e expandir a base de conhecimento YAML sem criar duplicatas ou regras frágeis.
 >
-> **Tarefa**:
-> 1. Analise cada item desconhecido.
-> 2. Tente encontrar uma `classe` existente nos YAMLs que seja semanticamente equivalente.
->    - Se encontrar: Sugira adicionar o termo à lista `match_required` ou `synonyms` dessa classe.
->    - Se a unidade for incompatível (ex: Classificar "Cimento (saco)" em uma regra de "kg"): Sugira uma estratégia de conversão ou alerta.
-> 3. Se o item for totalmente novo (ex: uma tecnologia nova de impermeabilização), sugira o esqueleto de uma **nova regra YAML**, definindo `id`, `política de busca` e `tipo`.
+> **Task**: Processar o arquivo de entrada (CSV de itens desconhecidos) e gerar snippets YAML para atualização.
 >
-> **Saída Esperada**: Um relatório de alteração (Diff) para os arquivos YAML.
+> **Regras de Leitura (Estrutura YAML Existente)**:
+> Ao ler os arquivos na pasta `yaml/`, observe estritamente o seguinte schema:
+> ```yaml
+> regras:
+>   - apelido: "nome_padronizado_unidade"
+>     unit: "unidade"
+>     contem:
+>       - ["termo1", "termo2"] # Grupo de sinônimos (Lógica OR dentro da lista, AND entre listas)
+>     ignorar:
+>       - ["termo_proibido"]   # Exclusão explícita
+> ```
+>
+> **Passo a Passo da Execução**:
+>
+> 1.  **Ler o Input**: Carregue o CSV de itens desconhecidos (`descricao` | `unidade`).
+> 2.  **Buscar Similaridade (Fuzzy Search)**:
+>     *   Para cada item, verifique se já existe um `apelido` semanticamente idêntico nos arquivos YAML existentes.
+>     *   *Exemplo*: Se o item é "Concreto Bombeável" e já existe `concreto_bombeamento_m3`, **NÃO** crie uma nova regra. Apenas sugira adicionar "bombeável" na lista `contem`.
+> 3.  **Detectar Novos Conceitos**:
+>     *   Se o item for um material/serviço totalmente novo (ex: "Manta Geotêxtil Bidim"), crie uma nova entrada completa.
+>     *   Defina um `apelido` no padrão `substantivo_qualificador_unidade` (ex: `geotextil_bidim_m2`).
+>     *   Preencha `contem` com as palavras-chave mais óbvias.
+>     *   Preencha `ignorar` com termos que possam causar confusão (ex: ignorar "asfalto" se for manta de impermeabilização de laje).
+> 4.  **Validar Unidade**:
+>     *   O `apelido` DEVE terminar com a unidade canônica (`_m3`, `_m2`, `_kg`, `_un`, `_vb`, `_h`).
+>     *   Se o input tem unidade "saco" ou "lata", converta mentalmente para a unidade de engenharia (ex: Cimento é `_kg`, Tinta é `_l`) e anote a necessidade de conversão no comentário.
+>
+> **Output Esperado**:
+> Gere um bloco de código Markdown com as alterações sugeridas no formato Diff ou Append:
+>
+> ```yaml
+> # Arquivo: yaml/grupos/impermeabilizacao.yaml
+> # Adicionar à regra existente: manta_asfaltica_m2
+> contem:
+>   - [ ... , "manta aluminizada" ] # Novo termo descoberto
+>
+> # Nova Regra Sugerida:
+> - apelido: manta_liquida_pu_m2
+>   unit: m2
+>   contem:
+>     - ["manta liquida", "poliuretano", "pu"]
+>   ignorar:
+>     - ["asfalto"]
+> ```
 
 ## 4. Benefícios do Modelo
 
