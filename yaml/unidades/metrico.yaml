@@ -1,0 +1,266 @@
+meta:
+  dominio: unidades
+  versao: "0.2.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # VOLUMES
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_m3
+    unit: m3
+    contem:
+      - [m3, "m³", "m^3", "m**3", metro cubico, metro cúbico, metros cubicos, metros cúbicos, mc]
+      - [cubic, cubic meter, cubic metre]
+    ignorar:
+      - [m2, "m²", "m^2", m]
+
+  - apelido: unidade_l
+    unit: l
+    contem:
+      - [l, lt, litro, litros]
+    ignorar:
+      - [ml]
+
+  - apelido: unidade_ml
+    unit: ml
+    contem:
+      - [ml, mililitro, mililitros]
+    ignorar:
+      - [l, lt, litro]
+
+  # ---------------------------------------------------------------------------
+  # ÁREAS
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_m2
+    unit: m2
+    contem:
+      - [m2, "m²", "m^2", "m**2", metro quadrado, metros quadrados]
+      - [square meter, square metre, sqm]
+    ignorar:
+      - [m3, "m³", m]
+
+  # ---------------------------------------------------------------------------
+  # COMPRIMENTOS
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_m
+    unit: m
+    contem:
+      - [m, metro, metros, ml, metro linear, metros lineares]
+      - [meter, metre]
+    ignorar:
+      - [mm, cm, km]
+
+  - apelido: unidade_mm
+    unit: mm
+    contem:
+      - [mm, milimetro, milímetro, milimetros, milímetros]
+    ignorar:
+      - [m, cm]
+
+  - apelido: unidade_cm
+    unit: cm
+    contem:
+      - [cm, centimetro, centímetro, centimetros, centímetros]
+    ignorar:
+      - [m, mm]
+
+  - apelido: unidade_km
+    unit: km
+    contem:
+      - [km, quilometro, quilômetro, kilometro, kilómetros, quilômetros]
+    ignorar:
+      - [m, cm, mm]
+
+  # ---------------------------------------------------------------------------
+  # QUANTIDADES
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_un
+    unit: un
+    contem:
+      - [un, und, unidade, unidades, peca, peça, pecas, peças, pc, pcs]
+      - [unit, units]
+    ignorar:
+      - [vb]
+
+  - apelido: unidade_vb
+    unit: vb
+    contem:
+      - [vb, verba, global, pacote, lump sum, lumpsum]
+    ignorar:
+      - [un, und, unidade]
+
+  # ---------------------------------------------------------------------------
+  # MASSA / PESO
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_kg
+    unit: kg
+    contem:
+      - [kg, quilo, quilos, quilograma, quilogramas]
+      - [kilogram, kilograms]
+    ignorar:
+      - [t, ton, tonelada, lb]
+
+  - apelido: unidade_t
+    unit: t
+    contem:
+      - [t, ton, tonelada, toneladas, ton., tonn]
+      - [metric ton, tonne, tonnes]
+    ignorar:
+      - [kg, lb]
+
+  - apelido: unidade_g
+    unit: g
+    contem:
+      - [g, grama, gramas]
+    ignorar:
+      - [kg, t]
+
+  # ---------------------------------------------------------------------------
+  # TEMPO
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_h
+    unit: h
+    contem:
+      - [h, hora, horas, hr, hrs]
+      - [hour, hours]
+    ignorar:
+      - [dia, mes, mês]
+
+  - apelido: unidade_dia
+    unit: dia
+    contem:
+      - [dia, dias, diária, diaria]
+    ignorar:
+      - [h, mes, mês]
+
+  - apelido: unidade_mes
+    unit: mes
+    contem:
+      - [mes, mês, meses]
+      - [month, months]
+    ignorar:
+      - [h, dia]
+
+  # ---------------------------------------------------------------------------
+  # PRESSÃO / FORÇA (comum em ensaios e especificações)
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_mpa
+    unit: mpa
+    contem:
+      - [mpa, mega pascal, megapascals]
+    ignorar:
+      - [pa, kpa, bar]
+
+  - apelido: unidade_kpa
+    unit: kpa
+    contem:
+      - [kpa, kilo pascal, kilopascal]
+    ignorar:
+      - [mpa, pa]
+
+  - apelido: unidade_bar
+    unit: bar
+    contem:
+      - [bar]
+    ignorar:
+      - [mpa, kpa]
+
+  # ---------------------------------------------------------------------------
+  # ENERGIA / POTÊNCIA / ELÉTRICA
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_kw
+    unit: kw
+    contem:
+      - [kw, kilo watt, kilowatt]
+    ignorar:
+      - [kva]
+
+  - apelido: unidade_kva
+    unit: kva
+    contem:
+      - [kva]
+    ignorar:
+      - [kw]
+
+  - apelido: unidade_v
+    unit: v
+    contem:
+      - [v, volt, volts]
+    ignorar:
+      - [kv]
+
+  - apelido: unidade_kv
+    unit: kv
+    contem:
+      - [kv, kilo volt, kilovolt]
+    ignorar:
+      - [v]
+
+  - apelido: unidade_a
+    unit: a
+    contem:
+      - [a, ampere, amperes, amp, amps]
+    ignorar:
+      - [ma]
+
+  - apelido: unidade_ma
+    unit: ma
+    contem:
+      - [ma, miliampere, miliamperes]
+    ignorar:
+      - [a, ampere]
+
+  # ---------------------------------------------------------------------------
+  # IMPERIAL (para conversão no pipeline antes de classificar)
+  # ---------------------------------------------------------------------------
+
+  - apelido: unidade_ft
+    unit: ft
+    contem:
+      - [ft, feet, pe, pé]
+    ignorar:
+      - [m]
+
+  - apelido: unidade_in
+    unit: in
+    contem:
+      - [in, inch, inches, polegada, polegadas, "''"]
+    ignorar:
+      - [mm, cm]
+
+  - apelido: unidade_yd
+    unit: yd
+    contem:
+      - [yd, yard, yards, jarda, jardas]
+    ignorar:
+      - [m]
+
+  - apelido: unidade_ft2
+    unit: ft2
+    contem:
+      - [ft2, "ft²", "ft^2", sqft, square foot, square feet, pe2, pé2]
+    ignorar:
+      - [m2, "m²"]
+
+  - apelido: unidade_yd3
+    unit: yd3
+    contem:
+      - [yd3, "yd³", "yd^3", cubic yard, cubic yards]
+    ignorar:
+      - [m3, "m³"]
+
+  - apelido: unidade_lb
+    unit: lb
+    contem:
+      - [lb, lbs, libra, libras, pound, pounds]
+    ignorar:
+      - [kg, t]
