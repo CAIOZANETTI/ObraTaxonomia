@@ -58,7 +58,7 @@ class ClassifierEngine:
         else:
             return None, None, True
 
-    def process_dataframe(self, df, col_desc='descricao', col_unit='unidade'):
+    def process_dataframe(self, df, col_desc='descricao', col_unit='unidade', threshold=8):
         """
         Processa um DataFrame inteiro.
         """
@@ -67,12 +67,33 @@ class ClassifierEngine:
             desc = str(row[col_desc]) if col_desc in df.columns else ""
             unit = str(row[col_unit]) if col_unit in df.columns else ""
             
+            # 1. Tentativa de Match Exato (Strict)
             apelido, tipo, desconhecido = self.classify_row(desc, unit)
+            incerto = False
+            score = 100 # Score máximo para match exato
+            
+            # 2. Tentativa de Fuzzy Match (se falhou exato)
+            if desconhecido:
+                matches = self.get_similar_matches(desc, unit, top_n=1)
+                if matches and matches[0]['score'] >= threshold:
+                    # Encontrou um candidato bom (Incerto/Sugestão)
+                    best = matches[0]
+                    apelido = best['apelido']
+                    tipo = best['tipo']
+                    desconhecido = False # Não é totalmente desconhecido, é incerto
+                    incerto = True
+                    score = best['score']
+                else:
+                    # Realmente desconhecido
+                    score = matches[0]['score'] if matches else 0
+            
             results.append({
                 'tax_apelido': apelido,
                 'tax_tipo': tipo,
-                'tax_desconhecido': desconhecido
-            })\
+                'tax_desconhecido': desconhecido,
+                'tax_incerto': incerto,
+                'tax_score': score
+            })
             
         return pd.DataFrame(results)
     
