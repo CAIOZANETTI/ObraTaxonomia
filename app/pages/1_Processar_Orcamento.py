@@ -94,7 +94,20 @@ if uploaded_file:
             
             if header_idx != -1:
                 # Promove a linha a cabeçalho
-                raw_df.columns = raw_df.iloc[header_idx] # Define nomes das colunas
+                cols_raw = raw_df.iloc[header_idx].fillna('Unnamed').astype(str).tolist()
+                
+                # Deduplicar nomes de colunas (Ex: 'Data', 'Data' -> 'Data', 'Data_1')
+                seen = {}
+                cols_dedup = []
+                for c in cols_raw:
+                    if c not in seen:
+                        seen[c] = 0
+                        cols_dedup.append(c)
+                    else:
+                        seen[c] += 1
+                        cols_dedup.append(f"{c}_{seen[c]}")
+                
+                raw_df.columns = cols_dedup # Define nomes das colunas limpos
                 sheet_df = raw_df.iloc[header_idx+1:].copy() # Pega dados abaixo
                 sheet_df.reset_index(drop=True, inplace=True)
                 
