@@ -38,12 +38,41 @@ except Exception as e:
     st.stop()
 
 # --- Upload ---
+with st.expander("ℹ️ Instruções e Modelo de Planilha"):
+    st.markdown("""
+    Para o melhor funcionamento, sua planilha deve conter pelo menos duas colunas principais:
+    1.  **Descrição**: O texto principal do item (Ex: `Conc. Est. fck 30 mpa`).
+    2.  **Unidade**: A unidade de medida (Ex: `m3`, `un`, `kg`).
+    
+    *A ordem das colunas não importa, você poderá selecioná-las após o upload.*
+    """)
+    
+    # Exemplo visual
+    example_df = pd.DataFrame([
+        {"Codigo": "001", "Descricao": "Concreto FCK 30MPa Bombeado", "Unidade": "m3", "Preco": 450.00},
+        {"Codigo": "002", "Descricao": "Armação CA-50 10mm", "Unidade": "kg", "Preco": 12.50},
+    ])
+    st.table(example_df)
+
 uploaded_file = st.file_uploader("Carregue seu arquivo Excel (.xlsx)", type=["xlsx"])
 
 if uploaded_file:
     try:
-        df = pd.read_excel(uploaded_file)
-        st.write("Prévia do Arquivo:", df.head())
+
+        # Lê todas as abas (sheet_name=None retorna um dict: 'NomeAba': DataFrame)
+        sheets_dict = pd.read_excel(uploaded_file, sheet_name=None)
+        
+        all_sheets = []
+        for sheet_name, sheet_df in sheets_dict.items():
+            # Adiciona coluna identificadora da aba
+            sheet_df['sheet_name'] = sheet_name
+            all_sheets.append(sheet_df)
+            
+        # Consolida tudo num único DataFrame
+        df = pd.concat(all_sheets, ignore_index=True)
+        
+        st.write(f"Arquivo carregado com sucesso! Encontradas {len(sheets_dict)} abas: {list(sheets_dict.keys())}")
+        st.write("Prévia do Arquivo Consolidado:", df.head())
         
         # Seleção de Colunas
         cols = df.columns.tolist()
@@ -90,8 +119,12 @@ if uploaded_file:
                     filename = f"{timestamp}_unknowns.csv"
                     filepath = os.path.join(unknowns_dir, filename)
                     
-                    # Salva apenas colunas relevantes para o agente
-                    export_df = unknowns[[col_desc, col_unit]].copy()
+                    # Salva colunas relevantes para o agente
+                    cols_to_export = [col_desc, col_unit]
+                    if 'sheet_name' in unknowns.columns:
+                        cols_to_export.append('sheet_name')
+                        
+                    export_df = unknowns[cols_to_export].copy()
                     export_df['arquivo_origem'] = uploaded_file.name
                     export_df.to_csv(filepath, index=False)
                     
