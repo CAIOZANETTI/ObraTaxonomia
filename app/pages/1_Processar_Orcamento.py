@@ -154,9 +154,13 @@ if uploaded_file:
             idx_desc = cols.index('System_Descricao')
         if 'System_Unidade' in cols:
             idx_unit = cols.index('System_Unidade')
-            
+        
+        # Criar layout de colunas para os selectbox
+        c1, c2 = st.columns(2)
+        
         col_desc = c1.selectbox("Selecione a coluna de DESCRIÇÃO", cols, index=idx_desc)
         col_unit = c2.selectbox("Selecione a coluna de UNIDADE", cols, index=idx_unit)
+
         
         # Warning se a detecção falhou
         if not found_standard_cols:
