@@ -1,0 +1,154 @@
+meta:
+  dominio: servicos_escavacao
+  versao: "0.1.0"
+
+regras:
+
+  # ---------------------------------------------------------------------------
+  # 1) ESCAVAÇÃO (GENÉRICO)
+  # ---------------------------------------------------------------------------
+
+  - apelido: escavacao_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação, escavar]
+    ignorar:
+      - [bota-fora, botafora, transporte, frete]
+      - [reaterro, reaterro, compactacao, compactação]
+      - [demolicao, demolição]
+      - [tunel, túnel, subterranea, subterrânea]
+
+  # ---------------------------------------------------------------------------
+  # 2) ESCAVAÇÃO POR MATERIAL
+  # ---------------------------------------------------------------------------
+
+  - apelido: escavacao_solo_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [solo, terra]
+    ignorar:
+      - [rocha, matacao, matacão, riprap]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  - apelido: escavacao_solo_mole_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [solo mole, lama, turfa, argila mole]
+    ignorar:
+      - [rocha]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  - apelido: escavacao_rocha_alterada_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [rocha alterada, rocha decomposta, sapa, saprolito, saprólito]
+    ignorar:
+      - [rocha sã, rocha dura]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  - apelido: escavacao_rocha_sa_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [rocha sa, rocha sã, rocha dura, matacao, matacão]
+    ignorar:
+      - [rocha alterada, saprolito, saprólito]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  # ---------------------------------------------------------------------------
+  # 3) ESCAVAÇÃO POR MÉTODO / CONDIÇÃO
+  # ---------------------------------------------------------------------------
+
+  - apelido: escavacao_mecanica_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [mecanica, mecânica, com escavadeira, retroescavadeira]
+    ignorar:
+      - [manual]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  - apelido: escavacao_manual_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [manual, a mao, à mão]
+    ignorar:
+      - [mecanica, mecânica]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  - apelido: escavacao_com_rompedor_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [rompedor, martelete, breaker]
+    ignorar:
+      - [explosivo, detonacao, detonação]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  - apelido: escavacao_com_desmonte_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [desmonte, explosivo, detonacao, detonação, fogo]
+    ignorar:
+      - [rompedor, martelete]
+      - [subterranea, subterrânea, tunel, túnel]
+
+  # ---------------------------------------------------------------------------
+  # 4) ESCAVAÇÃO POR AMBIENTE (CÉU ABERTO / SUBTERRÂNEA)
+  # ---------------------------------------------------------------------------
+
+  - apelido: escavacao_ceu_aberto_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [ceu aberto, céu aberto, vala, trinchera, trincheira, corte]
+    ignorar:
+      - [subterranea, subterrânea, tunel, túnel]
+
+  - apelido: escavacao_subterranea_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [subterranea, subterrânea, tunel, túnel, galerias, galeria]
+    ignorar:
+      - [ceu aberto, céu aberto, vala, trincheira]
+
+  # ---------------------------------------------------------------------------
+  # 5) ESCAVAÇÃO EM ROCHA SUBTERRÂNEA (CASO COMUM EM TÚNEIS)
+  # ---------------------------------------------------------------------------
+
+  - apelido: escavacao_subterranea_rocha_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [subterranea, subterrânea, tunel, túnel]
+      - [rocha]
+    ignorar:
+      - [solo mole, lama, turfa]
+
+  - apelido: escavacao_subterranea_solo_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [subterranea, subterrânea, tunel, túnel]
+      - [solo, terra]
+    ignorar:
+      - [rocha]
+
+  # ---------------------------------------------------------------------------
+  # 6) ESCAVAÇÃO “MOLE” (TERMO DE PLANILHA, SEM SOLO MENCIONADO)
+  # ---------------------------------------------------------------------------
+
+  - apelido: escavacao_mole_m3
+    unit: m3
+    contem:
+      - [escavacao, escavação]
+      - [mole]
+    ignorar:
+      - [rocha]
+      - [subterranea, subterrânea, tunel, túnel]
