@@ -8,61 +8,27 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 1. CONFIG & DICTIONARY ---
-
-st.title("🕵️ Detecção de Cabeçalhos e Mapeamento de Colunas")
-
-# Dicionário de Sinônimos (Fixo/Editável via código por enquanto)
-CANDIDATOS = {
-    "descricao": [
-        "descricao", "descrição", "item", "itens", "servico", "serviço",
-        "produto", "nome", "especificacao", "especificação", "material", "insumo",
-        "discriminacao", "discriminação"
-    ],
-    "unidade": [
-        "un", "und", "unid", "unidade", "u.m", "um", "un. med", "un_med", "medida"
-    ],
-    "quantidade": [
-        "qtd", "qtde", "quantidade", "quantidades", "quant", "qnt", "qte", "volume"
-    ],
-    "preco_unitario": [
-        "preco unit", "preço unit", "preco unitario", "preço unitário",
-        "p.u", "pu", "valor unit", "vl unit", "unitario", "unitário"
-    ],
-    "preco_total": [
-        "preco total", "preço total", "total", "valor total", "vl total",
-        "subtotal", "parcial", "valor", "montante"
-    ]
-}
-
-# --- Sidebar Controls ---
-st.sidebar.header("Configurações de Detecção")
-max_scan_lines = st.sidebar.slider("Máx. linhas para varrer", 20, 300, 80)
-score_threshold = st.sidebar.slider("Score mínimo para aceitar", 0.0, 1.0, 0.55, step=0.05)
-strategy = st.sidebar.selectbox("Estratégia", [
-    "Somente palavras-chave",
-    "Palavras-chave + validação por tipo (número/moeda)", # Placeholder logic
-])
-
-
 # --- IMPORTS ---
 import sys
 import os
 
-# Add scripts to path if needed (though running from root usually works, Streamlit pages are weird)
+# Add scripts to path if needed
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../scripts')))
 
 try:
     from header_utils import detect_header, CANDIDATOS
 except ImportError:
-    # Fallback to local import if structure differs (e.g. deployed)
-    # or simple hacky import
     sys.path.append('scripts')
     from header_utils import detect_header, CANDIDATOS
 
 # --- UI LOGIC ---
 
-# --- UI LOGIC ---
+st.title("🕵️ Detecção de Cabeçalhos e Mapeamento de Colunas")
+
+# Dicionário (Legacy/Ref for now)
+if 'CANDIDATOS' not in locals():
+    # Only if not imported
+    CANDIDATOS = {}
 
 if 'df_all' not in st.session_state:
     st.warning("Por favor, faça o upload do arquivo na Página 1.")
@@ -74,12 +40,12 @@ grouped = df_all.groupby('aba')
 
 st.header(f"Processando {len(sheets)} abas...")
 
-# Sidebar Config
-with st.sidebar:
-    st.header("Configurações de Detecção")
+# Configuração Simplificada (Expander)
+with st.expander("⚙️ Configurações Avançadas (Opcional)"):
     max_scan = st.slider("Máx. linhas para varrer", 10, 100, 50)
     score_thresh = st.slider("Score minimo para aceitar", 0.0, 1.0, 0.55)
-    strategy = st.selectbox("Estratégia", ["Híbrida (Keywords + Conteúdo)", "Somente palavras-chave"])
+    # Strategy is implicit now (Hybrid fallback)
+    # strategy = st.selectbox("Estratégia", ["Híbrida (Keywords + Conteúdo)", "Somente palavras-chave"])
 
 if st.button("🚀 Executar Detecção Automática", type="primary"):
     results = {}
