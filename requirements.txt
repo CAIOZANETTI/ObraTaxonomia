@@ -5,3 +5,6 @@ plotly
 openpyxl
 altair
 watchdog
+xlrd
+unidecode
+numpy
