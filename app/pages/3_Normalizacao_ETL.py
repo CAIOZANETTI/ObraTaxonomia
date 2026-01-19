@@ -402,16 +402,16 @@ if 'df_norm' in st.session_state:
     st.write("Preview Dados Normalizados:")
     st.dataframe(st.session_state['df_norm'].head(50))
     
-    # Downloads
-    csv = st.session_state['df_norm'].to_csv(index=False).encode('utf-8')
-    log_json = json.dumps(st.session_state['etl_log'], indent=2).encode('utf-8')
-    
-    c1, c2 = st.columns(2)
-    c1.download_button("⬇️ Baixar CSV Normalizado", csv, "master_normalizado.csv", "text/csv")
-    c2.download_button("⬇️ Baixar Log de ETL (JSON)", log_json, "etl_log.json", "application/json")
-    
     # Reset Button
     if st.button("↩️ Resetar (Descartar ETL)"):
         del st.session_state['df_norm']
         del st.session_state['etl_log']
         st.rerun()
+
+    st.success("✅ Dados normalizados e prontos para a próxima etapa!")
+    st.info("O DataFrame normalizado foi salvo na memória do sistema (Session State). Você pode avançar para a página de Classificação (futura) ou baixar os arquivos abaixo para auditoria.")
+
+    with st.expander("📥 Downloads Opcionais (Auditoria)"):
+        c1, c2 = st.columns(2)
+        c1.download_button("⬇️ Baixar CSV Normalizado", csv, "master_normalizado.csv", "text/csv")
+        c2.download_button("⬇️ Baixar Log de ETL (JSON)", log_json, "etl_log.json", "application/json")
