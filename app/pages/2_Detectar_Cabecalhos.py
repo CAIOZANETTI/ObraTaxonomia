@@ -163,187 +163,195 @@ def detect_header(df, max_lines, threshold):
         
         # Bônus ou penalidade de tipo (placeholder simplificado)
         # Se selecionado na UI, poderiamos inspecionar linhas abaixo (i+1 a i+5) 
-        # para ver se 'quantidade' é numero, etc.
+    best_mapping = {}
+    
+    # 1. Explicit Header Scan
+    limit = min(max_scan_lines, len(df))
+    
+    for i in range(limit):
+        row = df.iloc[i]
+        score = calculate_row_score(row)
         
         if score > best_score:
             best_score = score
-            best_idx = i
+            best_row_idx = i
             
-    # Validar threshold
-    status = "ok"
-    if best_score < threshold:
-        status = "nao_detectado"
-        if best_score < 0.1: # Muito ruim
-             best_idx = 0 # Fallback para primeira linha ou None
-        # Mesmo não detectado, retornamos o "melhor" palpite marcando status
-        
-    # Fazer mapeamento usando a linha vencedora
-    if best_idx is not None:
-        header_vals = df.iloc[best_idx].astype(str).tolist()
-        mapping = map_columns(header_vals)
-    else:
-        mapping = {}
-        
-    return {
-        "header_row": best_idx,
+    # 2. Decision Logic
+    final_output = {
+        "header_row_idx": best_row_idx,
         "score": best_score,
-        "map": mapping,
-        "status": status
+        "mapping": {},
+        "method": "keyword_scan"
     }
 
+    if best_score >= score_threshold:
+        # Keyword Success
+        header_row = df.iloc[best_row_idx]
+        best_mapping = map_columns(header_row)
+        final_output["mapping"] = best_mapping
+    else:
+        # Fallback: Inference from Data Patterns
+        # Assuming no header row, so data starts at 0
+        inferred_map = infer_columns_from_data(df)
+        
+        # Requirements for acceptance: Must have at least Description found
+        if 'descricao' in inferred_map:
+            # Construct a "virtual" mapping
+            # The map_columns expects { "Header Name": "Standard" }
+            # But here we have { ColumnIndex/Name: "Standard" }
+            # Since we assume NO header row, we map the Column Name directly.
+            
+            # Check if we should use row 0 or None? 
+            # If we say header_row_idx = -1, it means "No Header, use default cols".
+            
+            final_output["header_row_idx"] = 0 # Data starts at 0 (or strictly speaking -1 but lets use 0 as "first row of block")
+            # Wait, if data starts at 0, header is theoretical.
+            # Page logic uses df.iloc[header_row_idx+1:].
+            # If we want to include row 0 in data, we should set header_row_idx = -1.
+            final_output["header_row_idx"] = -1 
+            final_output["score"] = 0.6 # Synthetic confidence
+            final_output["method"] = "content_inference"
+            
+            # Invert mapping for consistency: { "Col Name": "Standard" }
+            # The inferred_map is already { "Col Name": "Standard" }.
+            # But the UI expects mapping keys to be values of a header row.
+            # If header is -1, keys are the column names (0, 1... or 'A', 'B'...).
+            final_output["mapping"] = inferred_map
 
-# --- 3. MAIN LOGIC ---
+    return final_output
 
-if 'df_all' not in st.session_state or st.session_state['df_all'] is None:
-    st.warning("⚠️ Nenhum arquivo carregado. Por favor, vá para a Página 1 e faça o upload.")
+# --- UI LOGIC ---
+
+if 'df_all' not in st.session_state:
+    st.warning("Por favor, faça o upload do arquivo na Página 1.")
     st.stop()
 
 df_all = st.session_state['df_all']
-unique_sheets = df_all['aba'].unique()
+sheets = df_all['aba'].unique().tolist()
+grouped = df_all.groupby('aba')
 
-st.info(f"Processando {len(unique_sheets)} abas...")
+st.header(f"Processando {len(sheets)} abas...")
 
-# Store results
-if 'header_detection' not in st.session_state:
-    st.session_state['header_detection'] = {}
+# Sidebar Config
+with st.sidebar:
+    st.header("Configurações de Detecção")
+    max_scan = st.slider("Máx. linhas para varrer", 10, 100, 50)
+    score_thresh = st.slider("Score minimo para aceitar", 0.0, 1.0, 0.55)
+    strategy = st.selectbox("Estratégia", ["Híbrida (Keywords + Conteúdo)", "Somente palavras-chave"])
 
-detection_results = {}
-structured_dfs = []
-
-# Botão para (re)detectar
-if st.button("🔄 Executar Detecção Automática", type="primary"):
-    with st.spinner("Analisando abas..."):
-        for aba in unique_sheets:
-            df_sheet = df_all[df_all['aba'] == aba].copy()
-            # Reset index para garantir que iloc bata com "varias linhas"
-            df_sheet.reset_index(drop=True, inplace=True)
-            
-            res = detect_header(df_sheet, max_scan_lines, score_threshold)
-            detection_results[aba] = res
-        
-        st.session_state['header_detection'] = detection_results
-        st.success("Detecção concluída!")
-
-# Se nao tiver resultados ainda, tenta rodar ou pede
-if not st.session_state['header_detection']:
-    st.write("Clique acima para iniciar.")
-else:
-    # Exibir result em Expanders
+if st.button("🚀 Executar Detecção Automática", type="primary"):
+    results = {}
+    structured_dfs = []
     
-    full_clean_data = [] # Para gerar o df_structured final
+    progress_bar = st.progress(0)
     
-    for aba in unique_sheets:
-        res = st.session_state['header_detection'].get(aba, {})
-        status = res.get('status', 'n/a')
-        score = res.get('score', 0)
-        h_row = res.get('header_row', -1)
+    for i, sheet in enumerate(sheets):
+        df_sheet = grouped.get_group(sheet)
         
-        icon = "✅" if status == 'ok' else "❌"
-        title = f"{icon} Aba: {aba} (Linha {h_row}, Score {score:.2f})"
+        # Reset index
+        df_sheet = df_sheet.reset_index(drop=True)
+        # Drop 'aba' col for detection
+        df_det = df_sheet.drop(columns=['aba'], errors='ignore')
         
-        with st.expander(title):
-            c1, c2 = st.columns([1, 2])
+        # Detect
+        det_result = detect_header(df_det, max_scan_lines=max_scan, score_threshold=score_thresh)
+        results[sheet] = det_result
+        
+        # Process and Store
+        header_idx = det_result['header_row_idx']
+        mapping = det_result['mapping']
+        
+        # Use header_idx + 1 for data start, unless it's -1 (inference mode)
+        if header_idx == -1:
+            data_start = 0
+            # Rename columns based on mapping directly
+            # mapping keys are current column names
+            df_struct = df_det.iloc[data_start:].copy()
+            # Normalize column names?
+            # We want to rename matched cols to std, others leave as is
+            rename_dict = {k: v for k, v in mapping.items()}
+            df_struct.rename(columns=rename_dict, inplace=True)
             
-            with c1:
-                st.write(f"**Status:** {status}")
-                st.write(f"**Linha Cabeçalho:** {h_row}")
-                st.metric("Score", f"{score:.2f}")
-                
-            with c2:
-                st.write("**Mapeamento Encontrado:**")
-                st.json(res.get('map', {}))
-                
-            # Preview (Data interpreted)
-            if h_row is not None and h_row >= 0:
-                df_sheet_raw = df_all[df_all['aba'] == aba].reset_index(drop=True)
-                
-                # Create "structured" view for this sheet
-                # Use row at h_row as columns
-                # Only keep rows > h_row
-                
-                try:
-                    cols = df_sheet_raw.iloc[h_row].astype(str).tolist()
-                    # De-duplicate cols
-                    seen = {}
-                    final_cols = []
-                    for c in cols:
-                        if c not in seen:
-                            seen[c] = 0
-                            final_cols.append(c)
-                        else:
-                            seen[c] += 1
-                            final_cols.append(f"{c}_{seen[c]}")
-                            
-                    df_view = df_sheet_raw.iloc[h_row+1:].copy()
-                    df_view.columns = final_cols
-                    
-                    st.write("Preview (5 primeiras linhas de dados):")
-                    st.dataframe(df_view.head(5), hide_index=True)
-                
-                    # Add to full structure
-                    # Create normalized columns based on map
-                    mapping = res.get('map', {})
-                    # Add standard columns
-                    # We need to map from 'Original Name' -> 'Standard Field'
-                    # The dict is {Standard: Original}
-                    
-                    # Invert mapping (assuming 1-to-1 in map logic mostly, but check duplicates)
-                    inv_map = {v: k for k, v in mapping.items() if v is not None}
-                    
-                    # Select only mapped cols and rename
-                    # Note: cols in df_view are the strings found in row h_row.
-                    
-                    # Filter columns that are in the map
-                    cols_to_keep = []
-                    rename_dict = {}
-                    
-                    for col in df_view.columns:
-                        if col in inv_map:
-                            field_name = inv_map[col]
-                            rename_dict[col] = field_name
-                            cols_to_keep.append(col)
-                    
-                    df_std = df_view[cols_to_keep].rename(columns=rename_dict).copy()
-                    df_std['aba'] = aba # Keep aba
-                    
-                    # Ensure all 5 keys exist
-                    for k in CANDIDATOS.keys():
-                        if k not in df_std.columns:
-                            df_std[k] = None
-                            
-                    # Reorder
-                    df_std = df_std[['aba', 'descricao', 'unidade', 'quantidade', 'preco_unitario', 'preco_total']]
-                    full_clean_data.append(df_std)
+        else:
+            data_start = header_idx + 1
+            df_struct = df_det.iloc[data_start:].copy()
+            
+            # Rename columns based on Header Row Values
+            header_vals = df_det.iloc[header_idx].astype(str).tolist()
+            current_cols = df_det.columns.tolist()
+            
+            # Create a rename dict: { CurrentColName: StandardName }
+            # Mapping is { HeaderValue: StandardName }
+            # Need to map CurrentCol -> HeaderValue -> StandardName
+            
+            final_rename = {}
+            for col_idx, col_name in enumerate(current_cols):
+                if col_idx < len(header_vals):
+                    h_val = header_vals[col_idx]
+                    if h_val in mapping:
+                        final_rename[col_name] = mapping[h_val]
+                    else:
+                        final_rename[col_name] = h_val # Use header value as name
+            
+            df_struct.rename(columns=final_rename, inplace=True)
+            
+        # Re-inject 'aba'
+        df_struct['aba'] = sheet
+        structured_dfs.append(df_struct)
+        
+        progress_bar.progress((i + 1) / len(sheets))
+        
+    st.session_state['detection_results'] = results
+    st.session_state['df_structured'] = pd.concat(structured_dfs, ignore_index=True)
+    st.success("Detecção concluída!")
 
-                except Exception as e:
-                    st.error(f"Erro ao gerar preview: {e}")
-
-    # Summary Table
-    st.divider()
-    st.subheader("Resumo Final")
+# --- RESULTS DISPLAY ---
+if 'detection_results' in st.session_state:
+    results = st.session_state['detection_results']
     
     summary_data = []
-    for aba, res in st.session_state['header_detection'].items():
-        m = res.get('map', {})
-        row = {
-            'Aba': aba,
-            'Header Row': res.get('header_row'),
-            'Score': f"{res.get('score', 0):.2f}",
-            'Descricao': m.get('descricao'),
-            'Unidade': m.get('unidade'),
-            'Qtd': m.get('quantidade'),
-            'PrecoResult': m.get('preco_total')
-        }
-        summary_data.append(row)
     
+    for sheet in sheets:
+        res = results.get(sheet)
+        if not res: continue
+        
+        score = res['score']
+        method = res.get('method', 'keyword_scan')
+        is_success = score >= score_thresh or method == 'content_inference'
+        icon = "✅" if is_success else "❌"
+        
+        with st.expander(f"{icon} Aba: {sheet} (Linha {res['header_row_idx']}, Score {score:.2f}, Método: {method})"):
+            c1, c2 = st.columns([1, 2])
+            
+            c1.write(f"**Status:** {'Detectado' if is_success else 'Falha'}")
+            c1.write(f"**Linha Cabeçalho:** {res['header_row_idx']}")
+            c1.metric("Score", f"{score:.2f}")
+            
+            c2.write("**Mapeamento Encontrado:**")
+            c2.json(res['mapping'])
+            
+            st.write("Preview (5 primeiras linhas de dados):")
+            # Show preview from df_structured filtered
+            if 'df_structured' in st.session_state:
+                df_s = st.session_state['df_structured']
+                st.dataframe(df_s[df_s['aba'] == sheet].head(5))
+                
+        # Summary row
+        mapping = res['mapping']
+        summary_data.append({
+            "Aba": sheet,
+            "Header Row": res['header_row_idx'],
+            "Method": method,
+            "Score": round(score, 2),
+            "Descricao": next((k for k,v in mapping.items() if v=='descricao'), None),
+            "Unidade": next((k for k,v in mapping.items() if v=='unidade'), None),
+            "Qtd": next((k for k,v in mapping.items() if v=='quantidade'), None),
+            "PrecoResult": next((k for k,v in mapping.items() if v=='preco_unitario'), None),
+        })
+
+    st.divider()
+    st.subheader("Resumo Geral")
     st.dataframe(pd.DataFrame(summary_data))
     
-    # Save Structured DF
-    if full_clean_data:
-        df_structured_final = pd.concat(full_clean_data, ignore_index=True)
-        st.session_state["df_structured"] = df_structured_final
-        st.write(f"Total de linhas extraídas: {len(df_structured_final)}")
-        
-        if not df_structured_final.empty:
-            csv = df_structured_final.to_csv(index=False).encode('utf-8')
-            st.download_button("⬇️ Baixar Dados Estruturados (CSV)", csv, "dados_estruturados.csv", "text/csv")
+    if st.button("Confirmar e Avançar para ETL"):
+        st.switch_page("pages/3_Normalizacao_ETL.py")
