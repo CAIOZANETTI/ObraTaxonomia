@@ -331,6 +331,10 @@ if uploaded_file:
             mime="text/csv",
             type="primary"
         )
+        
+    st.divider()
+    if st.button("Avançar para Detecção de Cabeçalhos ➡️", type="primary"):
+        st.switch_page("pages/2_Detectar_Cabecalhos.py")
     else:
         st.warning("Nenhum dado válido consolidado para download.")
 

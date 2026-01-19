@@ -411,7 +411,20 @@ if 'df_norm' in st.session_state:
     st.success("✅ Dados normalizados e prontos para a próxima etapa!")
     st.info("O DataFrame normalizado foi salvo na memória do sistema (Session State). Você pode avançar para a página de Classificação (futura) ou baixar os arquivos abaixo para auditoria.")
 
+    # Prepare downloads
+    csv = st.session_state['df_norm'].to_csv(index=False).encode('utf-8')
+    log_json = json.dumps(st.session_state['etl_log'], indent=2).encode('utf-8')
+
     with st.expander("📥 Downloads Opcionais (Auditoria)"):
         c1, c2 = st.columns(2)
         c1.download_button("⬇️ Baixar CSV Normalizado", csv, "master_normalizado.csv", "text/csv")
         c2.download_button("⬇️ Baixar Log de ETL (JSON)", log_json, "etl_log.json", "application/json")
+        
+    st.divider()
+    c_back, c_next = st.columns([1, 4])
+    if c_back.button("⬅️ Voltar para Detecção"):
+        st.switch_page("pages/2_Detectar_Cabecalhos.py")
+        
+    # Placeholder for Next Step (Classification)
+    # if c_next.button("Avançar para Classificação ➡️", type="primary"):
+    #     st.switch_page("pages/4_Classificacao.py")

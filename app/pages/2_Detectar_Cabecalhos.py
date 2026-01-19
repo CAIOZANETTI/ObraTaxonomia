@@ -195,5 +195,8 @@ if 'detection_results' in st.session_state:
     st.subheader("Resumo Geral")
     st.dataframe(pd.DataFrame(summary_data))
     
-    if st.button("Confirmar e Avançar para ETL"):
+    if st.button("Confirmar e Avançar para ETL ➡️", type="primary"):
         st.switch_page("pages/3_Normalizacao_ETL.py")
+        
+    if st.button("⬅️ Voltar para Upload"):
+        st.switch_page("pages/1_Processar_Orcamento.py")
