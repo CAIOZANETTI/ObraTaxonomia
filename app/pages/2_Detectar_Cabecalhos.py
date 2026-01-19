@@ -137,15 +137,31 @@ if st.button("🚀 Executar Detecção Automática", type="primary"):
             
             df_struct.rename(columns=final_rename, inplace=True)
             
-        # Re-inject 'aba'
-        df_struct['aba'] = sheet
+        # Deduplicate columns to avoid InvalidIndexError in pd.concat
+        # (If header row had duplicate values, or if we ignored some columns)
+        cols = pd.Series(df_struct.columns)
+        for dup in cols[cols.duplicated()].unique(): 
+            cols[cols == dup] = [f"{dup}_{i}" for i in range(sum(cols == dup))]
+        df_struct.columns = cols
+        
+        # Re-inject 'aba' at start
+        df_struct.insert(0, 'aba', sheet)
         structured_dfs.append(df_struct)
         
         progress_bar.progress((i + 1) / len(sheets))
         
     st.session_state['detection_results'] = results
-    st.session_state['df_structured'] = pd.concat(structured_dfs, ignore_index=True)
-    st.success("Detecção concluída!")
+    
+    # Safe Concat
+    if structured_dfs:
+        try:
+            st.session_state['df_structured'] = pd.concat(structured_dfs, ignore_index=True)
+            st.success("Detecção concluída!")
+        except Exception as e:
+            st.error(f"Erro ao consolidar dados: {e}")
+            st.session_state['df_structured'] = None
+    else:
+        st.warning("Nenhum dado estruturado gerado.")
 
 # --- RESULTS DISPLAY ---
 if 'detection_results' in st.session_state:
@@ -162,21 +178,29 @@ if 'detection_results' in st.session_state:
         is_success = score >= score_thresh or method == 'content_inference'
         icon = "✅" if is_success else "❌"
         
-        with st.expander(f"{icon} Aba: {sheet} (Linha {res['header_row_idx']}, Score {score:.2f}, Método: {method})"):
+        # UI Tweak: Removed Score as requested
+        with st.expander(f"{icon} Aba: {sheet} (Linha Cab: {res['header_row_idx']}, Método: {method})"):
             c1, c2 = st.columns([1, 2])
             
             c1.write(f"**Status:** {'Detectado' if is_success else 'Falha'}")
             c1.write(f"**Linha Cabeçalho:** {res['header_row_idx']}")
-            c1.metric("Score", f"{score:.2f}")
+            # c1.metric("Score", f"{score:.2f}") # Removed
             
             c2.write("**Mapeamento Encontrado:**")
             c2.json(res['mapping'])
             
             st.write("Preview (5 primeiras linhas de dados):")
             # Show preview from df_structured filtered
-            if 'df_structured' in st.session_state:
+            if 'df_structured' in st.session_state and st.session_state['df_structured'] is not None:
                 df_s = st.session_state['df_structured']
-                st.dataframe(df_s[df_s['aba'] == sheet].head(5))
+                # Safeguard against string/int type mismatch in 'aba'
+                try:
+                    df_preview = df_s[df_s['aba'] == sheet].head(5)
+                    st.dataframe(df_preview)
+                except:
+                    st.warning("Não foi possível filtrar o preview.")
+            else:
+                st.warning("Preview indisponível (Erro na consolidação).")
                 
         # Summary row
         mapping = res['mapping']
@@ -184,7 +208,7 @@ if 'detection_results' in st.session_state:
             "Aba": sheet,
             "Header Row": res['header_row_idx'],
             "Method": method,
-            "Score": round(score, 2),
+            # "Score": round(score, 2), # Removed
             "Descricao": next((k for k,v in mapping.items() if v=='descricao'), None),
             "Unidade": next((k for k,v in mapping.items() if v=='unidade'), None),
             "Qtd": next((k for k,v in mapping.items() if v=='quantidade'), None),
