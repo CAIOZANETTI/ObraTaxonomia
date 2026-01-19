@@ -268,75 +268,99 @@ if uploaded_file:
                 else:
                     st.session_state['csv_all_bytes'] = None
 
-
+    
     # --- EXIBIÇÃO ---
     
     # 1. Expanders por Aba
-    st.subheader("Detalhamento por Aba")
+    st.subheader("Seleção e Detalhamento por Aba")
+    st.info("Desmarque as caixas para ignorar abas indesejadas na consolidação.")
+    
+    selected_sheets = []
     
     if st.session_state['sheets_info']:
+        # Ensure selection state exists
+        if 'sheet_selection' not in st.session_state:
+            st.session_state['sheet_selection'] = {s: True for s in st.session_state['sheets_info']}
+            
         for s_name, info in st.session_state['sheets_info'].items():
             status = info['status']
             icon = "✅" if status == 'ok' else "⚠️" if status == 'empty' else "❌"
             
+            # Checkbox for selection (default True for OK sheets)
+            # Use specific key to persist state
+            is_ok = (status == 'ok')
+            default_val = is_ok # Default checked only if OK
+            
+            # Update selection from session state logic if needed, but st.checkbox with key handles it
+            
+            c_check, c_expander = st.columns([0.05, 0.95])
+            
+            with c_check:
+                # Disable if not OK? No, maybe user wants to inspect error but not select.
+                # Only include in final DF if selected AND status is OK.
+                is_selected = st.checkbox("Incluir", value=default_val, key=f"sel_{s_name}", label_visibility="collapsed")
+            
+            if is_selected and status == 'ok':
+                selected_sheets.append(s_name)
+
             label = f"{icon} {s_name} (L:{info['rows']} x C:{info['cols']})"
             
-            with st.expander(label):
-                c1, c2, c3 = st.columns(3)
-                c1.markdown(f"**Status:** {status.upper()}")
-                c2.markdown(f"**Linhas:** {info['rows']}")
-                c3.markdown(f"**Colunas:** {info['cols']}")
-                
-                st.caption(f"Método de leitura usado: {info.get('read_method')}")
-                
-                if status == 'error':
-                    st.error(f"Erro: {info.get('error_msg')}")
-                elif status == 'ok':
-                    st.dataframe(info['df_head'], use_container_width=True)
-                elif status == 'empty':
-                    st.warning("Aba vazia.")
+            with c_expander:
+                with st.expander(label):
+                    c1, c2, c3 = st.columns(3)
+                    c1.markdown(f"**Status:** {status.upper()}")
+                    c2.markdown(f"**Linhas:** {info['rows']}")
+                    c3.markdown(f"**Colunas:** {info['cols']}")
+                    
+                    st.caption(f"Método de leitura usado: {info.get('read_method')}")
+                    
+                    if status == 'error':
+                        st.error(f"Erro: {info.get('error_msg')}")
+                    elif status == 'ok':
+                        st.dataframe(info['df_head'], use_container_width=True)
+                    elif status == 'empty':
+                        st.warning("Aba vazia.")
+
+    # RE-CONSOLIDATE based on selection
+    # We do this every rerun to ensure df_all matches selection
+    final_dfs = []
+    for s_name in selected_sheets:
+        info = st.session_state['sheets_info'].get(s_name)
+        if info and info['df_full'] is not None:
+             d = info['df_full'].copy()
+             d['aba'] = s_name
+             final_dfs.append(d)
+             
+    if final_dfs:
+        st.session_state['df_all'] = pd.concat(final_dfs, ignore_index=True, sort=False)
+    else:
+        st.session_state['df_all'] = pd.DataFrame()
 
     # 2. Tabela Resumo
     st.divider()
-    st.subheader("Resumo do Arquivo")
+    st.subheader("Resumo do Arquivo (Consolidado)")
     if st.session_state['df_resumo_abas'] is not None:
-        st.dataframe(
-            st.session_state['df_resumo_abas'], 
-            hide_index=True,
-            use_container_width=True
-        )
+        # Update summary with selection status?
+        # Maybe just show stats of df_all
+        pass
 
     # 3. Totais e Métricas
     if st.session_state['df_all'] is not None:
         total_rows = len(st.session_state['df_all'])
         total_cols = len(st.session_state['df_all'].columns)
         
-        counts = pd.DataFrame(st.session_state['sheets_info'].values())['status'].value_counts()
-        ok_count = counts.get('ok', 0)
-        empty_count = counts.get('empty', 0)
-        error_count = counts.get('error', 0)
-        
         st.write(f"**Total de linhas no CSV consolidado:** {total_rows}")
         st.write(f"**Total de colunas no CSV consolidado:** {total_cols}")
-        st.write(f"**Contagem de abas:** ✅ OK: {ok_count} | ⚠️ Empty: {empty_count} | ❌ Error: {error_count}")
+        st.write(f"**Abas selecionadas:** {len(selected_sheets)} de {len(st.session_state['sheets_info'])}")
 
-    # 4. Download
+    # 4. Navigation (Download Removed)
     st.divider()
-    if st.session_state['csv_all_bytes']:
-        file_label = uploaded_file.name.rsplit('.', 1)[0]
-        st.download_button(
-            label="⬇️ Baixar CSV Consolidado Bruto",
-            data=st.session_state['csv_all_bytes'],
-            file_name=f"{file_label}__consolidado_bruto.csv",
-            mime="text/csv",
-            type="primary"
-        )
-        
-    st.divider()
-    if st.button("Avançar para Detecção de Cabeçalhos ➡️", type="primary"):
-        st.switch_page("pages/2_Detectar_Cabecalhos.py")
+    
+    if not st.session_state['df_all'].empty:
+        if st.button("Avançar para Detecção de Cabeçalhos ➡️", type="primary"):
+            st.switch_page("pages/2_Detectar_Cabecalhos.py")
     else:
-        st.warning("Nenhum dado válido consolidado para download.")
+        st.warning("Selecione pelo menos uma aba válida para prosseguir.")
 
 else:
     # Reset state se remover arquivo
