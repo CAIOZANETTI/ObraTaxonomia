@@ -1,0 +1,60 @@
+{
+  "collisions": {},
+  "errors": [
+    {
+      "file": "concreto.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "elementos/concreto.yaml"
+    },
+    {
+      "file": "saneamento.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "estruturas/saneamento.yaml"
+    },
+    {
+      "file": "armadura.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "grupos/armadura.yaml"
+    },
+    {
+      "file": "concreto.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "grupos/concreto.yaml"
+    },
+    {
+      "file": "direta.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "mao_obra/direta.yaml"
+    },
+    {
+      "file": "obras.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "obras/obras.yaml"
+    },
+    {
+      "file": "escavacao.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "servico/escavacao.yaml"
+    },
+    {
+      "file": "metrico.yaml",
+      "item": "meta",
+      "msg": "Missing required fields: ['nome']",
+      "path": "unidades/metrico.yaml"
+    }
+  ],
+  "stats": {
+    "error": 8,
+    "ok": 0,
+    "total_read": 8,
+    "warn": 0
+  },
+  "warnings": []
+}
