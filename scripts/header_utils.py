@@ -104,6 +104,11 @@ def infer_columns_from_data(df):
     used_cols = set()
     
     # 1. DESCRIÇÃO
+    # Heurística Refinada:
+    # - Texto longo
+    # - Alta variabilidade (não é categoria repetida como "Insumo")
+    # - Espaços presentes (frases)
+    
     text_cols = []
     for col in sample.columns:
         s = sample[col].astype(str)
@@ -111,10 +116,28 @@ def infer_columns_from_data(df):
         is_numeric = pd.to_numeric(sample[col], errors='coerce').notnull().mean() > 0.8
         mean_len = s.str.len().mean()
         
-        if not is_numeric and mean_len > 15:
-            text_cols.append((col, mean_len))
+        # Uniqueness check (Description usually varies, Categories repeat)
+        n_unique = s.nunique()
+        uniqueness = n_unique / len(s) if len(s) > 0 else 0
+        
+        # Penalize low uniqueness (categories)
+        # Penalize very short text
+        
+        if not is_numeric and mean_len > 10:
+            # Score combinando Comprimento e Unicidade
+            # Descrições reais (VIBRO...) tem len~50, unique~1.0 -> Score 50
+            # Categorias (Insumo) tem len~6, unique~0.1 -> Score 0.6
+            
+            # Se muito repetido, penaliza forte
+            if uniqueness < 0.3:
+                calc_score = mean_len * 0.1
+            else:
+                calc_score = mean_len * 1.0
+                
+            text_cols.append((col, calc_score))
             
     if text_cols:
+        # Pick highest score
         best_desc = sorted(text_cols, key=lambda x: x[1], reverse=True)[0][0]
         # Map: ColName -> 'descricao'
         mapping[best_desc] = 'descricao'
@@ -134,6 +157,10 @@ def infer_columns_from_data(df):
         match_rate = valid.apply(lambda x: x in known_units).mean()
         mean_len = valid.str.len().mean()
         
+        # Kill switch for long columns (Unit cannot be 50 chars)
+        if mean_len > 10:
+            continue
+            
         score = match_rate * 2.0
         if mean_len < 6: score += 0.5
         
@@ -151,9 +178,15 @@ def infer_columns_from_data(df):
     for col in sample.columns:
         if col in used_cols: continue
         score = is_potential_code(sample[col])
-        if score > best_code_score and score > 0.7:
+        if score > best_code_score and score > 0.6:
             best_code_score = score
             best_code = col
+            
+    if best_code:
+        # Check collision? No, used_cols check handles it.
+        # Maybe map code to something?
+        # mapping[best_code] = 'codigo' # Not standard yet
+        pass
     
     # 4. QUANTIDADE / PRECO
     numeric_cols = []
