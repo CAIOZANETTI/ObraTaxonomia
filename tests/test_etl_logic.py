@@ -86,8 +86,8 @@ def test_etl():
     df_norm = normalize_colnames(df)
     print("Cols:", df_norm.columns.tolist())
     assert "item_descricao" in df_norm.columns
-    assert "unidade_un" in df_norm.columns
-    assert "unnamed_5" in df_norm.columns
+    assert "unidade_(un)" in df_norm.columns
+    assert "unnamed:_5" in df_norm.columns
     
     # 2. Strings
     # Test normalization on item_descricao
@@ -101,14 +101,14 @@ def test_etl():
     print("Drop suggestions:", drop_sug)
     # unnamed_5 is 100% null ? yes.
     # constante is unique? yes.
-    assert "unnamed_5" in drop_sug
+    assert "unnamed:_5" in drop_sug
     assert "constante" in drop_sug
     
     # 4. Parse Numbers
     # Qtd. -> "1.000,50" -> 1000.5
     df_parsed = parse_numbers(df_norm)
-    print("Qtd parsed:", df_parsed['qtd_'].tolist())
-    assert df_parsed['qtd_'][0] == 1000.5
+    print("Qtd parsed:", df_parsed['qtd.'].tolist())
+    assert df_parsed['qtd.'][0] == 1000.5
     assert df_parsed['preco_unit'][0] == 450.0
 
 if __name__ == "__main__":
