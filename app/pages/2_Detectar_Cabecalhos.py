@@ -134,12 +134,44 @@ if 'detection_results' in st.session_state:
     results = st.session_state['detection_results']
     
     st.divider()
-    st.subheader("Validação e Revisão")
+    st.subheader("Validação e Seleção")
     
-    # Slider para preview
+    # 1. Determine suggestions (Logic moved up)
+    suggested_sheets = []
+    all_sheets_options = []
+    
+    # Pre-calc suggestions to use in Pills
+    for sheet in sheets:
+        res = results.get(sheet)
+        if not res: continue
+        all_sheets_options.append(sheet)
+        
+        score = res['score']
+        method = res.get('method', 'keyword_scan')
+        if score >= score_thresh or method == 'content_inference':
+            suggested_sheets.append(sheet)
+
+    st.info("O sistema sugeriu automaticamente as abas com boa detecção. Confirme abaixo as que deseja processar.")
+
+    # Pills Widget (TOP)
+    selected_pills = st.pills(
+        "Abas para Processar:",
+        options=all_sheets_options,
+        selection_mode="multi",
+        default=suggested_sheets,
+        key="pills_selection"
+    )
+    
+    st.write(f"**Selecionadas:** {len(selected_pills)} de {len(all_sheets_options)}")
+    st.divider()
+    
+    # Slider
     preview_rows = st.slider("Linhas de Preview por aba", min_value=3, max_value=50, value=5)
     
     summary_data = []
+    
+    # Use selected_pills to filter display? Or show all with status?
+    # Better to show all so user can manually check "Falha" ones and decide to add them back in Pills if they want.
     
     for sheet in sheets:
         res = results.get(sheet)
@@ -150,24 +182,23 @@ if 'detection_results' in st.session_state:
         is_success = score >= score_thresh or method == 'content_inference'
         icon = "✅" if is_success else "❌"
         
-        # UI Tweak: Removed Score as requested
-        with st.expander(f"{icon} Aba: {sheet} (Linha Cab: {res['header_row_idx']}, Método: {method})"):
+        # Highlight if selected in pills
+        # Add visual cue if selected
+        is_selected = sheet in selected_pills
+        sel_icon = "🔵" if is_selected else "⚪"
+        
+        with st.expander(f"{sel_icon} {icon} Aba: {sheet} (Linha Cab: {res['header_row_idx']}, Método: {method})"):
             c1, c2 = st.columns([1, 2])
             
             c1.write(f"**Status:** {'Detectado' if is_success else 'Falha'}")
+            c1.write(f"**Selecionado p/ ETL:** {'Sim' if is_selected else 'Não'}")
             c1.write(f"**Linha Cabeçalho:** {res['header_row_idx']}")
-            # c1.metric("Score", f"{score:.2f}") # Removed
             
             c2.write("**Mapeamento Encontrado:**")
-            # c2.json(res['mapping']) # replaced by cleaner list
             
             mapping = res['mapping']
-            # Invert mapping for display: Field -> Source Column
-            # Handle possible duplicate values if any (though mapping is usually 1:1 for target)
-            inv_map = {}
-            for k, v in mapping.items():
-                # k is header val, v is field
-                inv_map[v] = k
+            # Now mapping is {SourceVal: Field}, so invert for display
+            inv_map = {v: k for k, v in mapping.items()} # Field -> SourceVal
                 
             display_fields = {
                 'descricao': 'Descrição',
@@ -185,17 +216,15 @@ if 'detection_results' in st.session_state:
             c2.markdown(txt_md)
             
             st.write(f"Preview ({preview_rows} primeiras linhas):")
-            # Show preview from df_structured filtered
             if 'df_structured' in st.session_state and st.session_state['df_structured'] is not None:
                 df_s = st.session_state['df_structured']
-                # Safeguard against string/int type mismatch in 'aba'
                 try:
                     df_preview = df_s[df_s['aba'] == sheet].head(preview_rows)
                     st.dataframe(df_preview)
                 except:
-                    st.warning("Não foi possível filtrar o preview.")
+                    st.warning("Preview indisponível.")
             else:
-                st.warning("Preview indisponível (Erro na consolidação).")
+                st.warning("Preview indisponível.")
                 
         # Summary row
         mapping = res['mapping']
@@ -210,64 +239,24 @@ if 'detection_results' in st.session_state:
             "PrecoResult": next((k for k,v in mapping.items() if v=='preco_unitario'), None),
         })
 
-    # --- SELECTION & VALIDATION ---
-    st.divider()
-    st.subheader("Validação e Seleção Final")
-    
-    # 1. Determine suggestions
-    suggested_sheets = []
-    all_sheets_options = []
-    
-    for sheet in sheets:
-        res = results.get(sheet)
-        if not res: continue
-        all_sheets_options.append(sheet)
-        
-        # Suggest keeping if detected (success)
-        score = res['score']
-        method = res.get('method', 'keyword_scan')
-        if score >= score_thresh or method == 'content_inference':
-            suggested_sheets.append(sheet)
-            
-    st.info("O sistema sugeriu automaticamente as abas com boa detecção. Ajuste confirme abaixo as que deseja processar.")
-    
-    # 2. Pills Widget
-    # Note: st.pills matches user request "pill"
-    # selection_mode="multi" allows filtering
-    
-    selected_pills = st.pills(
-        "Abas para Confirmar:",
-        options=all_sheets_options,
-        selection_mode="multi",
-        default=suggested_sheets,
-        key="pills_selection"
-    )
-    
-    st.write(f"**Selecionadas:** {len(selected_pills)} de {len(all_sheets_options)}")
-    
-    # 3. Action Buttons
     st.divider()
     
+    # Action Buttons (Logic adjusted to use selected_pills)
     if st.button("Confirmar e Avançar para ETL ➡️", type="primary"):
         if not selected_pills:
             st.warning("Selecione pelo menos uma aba para continuar.")
         else:
-            # Filter df_structured based on selection
             if 'df_structured' in st.session_state and st.session_state['df_structured'] is not None:
                 final_df = st.session_state['df_structured']
-                # Filter rows where 'aba' is in selected_pills
                 final_df = final_df[final_df['aba'].isin(selected_pills)]
-                
-                # Update session state with filtered version
                 st.session_state['df_structured'] = final_df
                 
                 if final_df.empty:
-                    st.warning("O DataFrame resultante está vazio.")
+                    st.warning("Dataframe resultante vazio.")
                 else:
                     st.switch_page("pages/3_Normalizacao_ETL.py")
             else:
-                st.error("Erro: DataFrame estruturado não encontrado.")
+                st.error("Erro no dataframe estruturado.")
                 
-        
     if st.button("⬅️ Voltar para Upload"):
         st.switch_page("pages/1_Processar_Orcamento.py")

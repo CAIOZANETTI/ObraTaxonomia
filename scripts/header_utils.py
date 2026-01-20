@@ -82,7 +82,10 @@ def map_columns(header_row_values):
         candidates = [c for c in col_scores if c['field'] == target and c['idx'] not in used_cols]
         if candidates:
             chosen = candidates[0]
-            res_map[target] = header_row_values[chosen['idx']]
+            # OLD: res_map[target] = header_row_values[chosen['idx']]
+            # NEW: Return {SourceVal: Field} to match inference and renaming logic
+            source_val = header_row_values[chosen['idx']]
+            res_map[source_val] = target
             used_cols.add(chosen['idx'])
             
     return res_map
