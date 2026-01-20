@@ -275,6 +275,17 @@ if uploaded_file:
     st.subheader("Seleção e Detalhamento por Aba")
     st.info("Desmarque as caixas para ignorar abas indesejadas na consolidação.")
     
+    # Callbacks for Select/Deselect All
+    def set_all_selection(val):
+        for s_name in st.session_state['sheets_info']:
+            st.session_state[f"sel_{s_name}"] = val
+            
+    c_btn1, c_btn2, c_void = st.columns([1, 1, 4])
+    if c_btn1.button("✅ Marcar Todas"):
+        set_all_selection(True)
+    if c_btn2.button("❌ Desmarcar Todas"):
+        set_all_selection(False)
+    
     selected_sheets = []
     
     if st.session_state['sheets_info']:

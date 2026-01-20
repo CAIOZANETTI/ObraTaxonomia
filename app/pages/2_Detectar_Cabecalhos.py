@@ -133,6 +133,12 @@ if st.button("🚀 Executar Detecção Automática", type="primary"):
 if 'detection_results' in st.session_state:
     results = st.session_state['detection_results']
     
+    st.divider()
+    st.subheader("Validação e Revisão")
+    
+    # Slider para preview
+    preview_rows = st.slider("Linhas de Preview por aba", min_value=3, max_value=50, value=5)
+    
     summary_data = []
     
     for sheet in sheets:
@@ -153,15 +159,38 @@ if 'detection_results' in st.session_state:
             # c1.metric("Score", f"{score:.2f}") # Removed
             
             c2.write("**Mapeamento Encontrado:**")
-            c2.json(res['mapping'])
+            # c2.json(res['mapping']) # replaced by cleaner list
             
-            st.write("Preview (5 primeiras linhas de dados):")
+            mapping = res['mapping']
+            # Invert mapping for display: Field -> Source Column
+            # Handle possible duplicate values if any (though mapping is usually 1:1 for target)
+            inv_map = {}
+            for k, v in mapping.items():
+                # k is header val, v is field
+                inv_map[v] = k
+                
+            display_fields = {
+                'descricao': 'Descrição',
+                'unidade': 'Unidade',
+                'quantidade': 'Quantidade',
+                'preco_unitario': 'Preço Unit.',
+                'preco_total': 'Preço Total'
+            }
+            
+            txt_md = ""
+            for field_key, field_label in display_fields.items():
+                found_col = inv_map.get(field_key, "---")
+                txt_md += f"- **{field_label}**: `{found_col}`\n"
+            
+            c2.markdown(txt_md)
+            
+            st.write(f"Preview ({preview_rows} primeiras linhas):")
             # Show preview from df_structured filtered
             if 'df_structured' in st.session_state and st.session_state['df_structured'] is not None:
                 df_s = st.session_state['df_structured']
                 # Safeguard against string/int type mismatch in 'aba'
                 try:
-                    df_preview = df_s[df_s['aba'] == sheet].head(5)
+                    df_preview = df_s[df_s['aba'] == sheet].head(preview_rows)
                     st.dataframe(df_preview)
                 except:
                     st.warning("Não foi possível filtrar o preview.")
