@@ -210,12 +210,64 @@ if 'detection_results' in st.session_state:
             "PrecoResult": next((k for k,v in mapping.items() if v=='preco_unitario'), None),
         })
 
+    # --- SELECTION & VALIDATION ---
     st.divider()
-    st.subheader("Resumo Geral")
-    st.dataframe(pd.DataFrame(summary_data))
+    st.subheader("Validação e Seleção Final")
+    
+    # 1. Determine suggestions
+    suggested_sheets = []
+    all_sheets_options = []
+    
+    for sheet in sheets:
+        res = results.get(sheet)
+        if not res: continue
+        all_sheets_options.append(sheet)
+        
+        # Suggest keeping if detected (success)
+        score = res['score']
+        method = res.get('method', 'keyword_scan')
+        if score >= score_thresh or method == 'content_inference':
+            suggested_sheets.append(sheet)
+            
+    st.info("O sistema sugeriu automaticamente as abas com boa detecção. Ajuste confirme abaixo as que deseja processar.")
+    
+    # 2. Pills Widget
+    # Note: st.pills matches user request "pill"
+    # selection_mode="multi" allows filtering
+    
+    selected_pills = st.pills(
+        "Abas para Confirmar:",
+        options=all_sheets_options,
+        selection_mode="multi",
+        default=suggested_sheets,
+        key="pills_selection"
+    )
+    
+    st.write(f"**Selecionadas:** {len(selected_pills)} de {len(all_sheets_options)}")
+    
+    # 3. Action Buttons
+    st.divider()
     
     if st.button("Confirmar e Avançar para ETL ➡️", type="primary"):
-        st.switch_page("pages/3_Normalizacao_ETL.py")
+        if not selected_pills:
+            st.warning("Selecione pelo menos uma aba para continuar.")
+        else:
+            # Filter df_structured based on selection
+            if 'df_structured' in st.session_state and st.session_state['df_structured'] is not None:
+                final_df = st.session_state['df_structured']
+                # Filter rows where 'aba' is in selected_pills
+                final_df = final_df[final_df['aba'].isin(selected_pills)]
+                
+                # Update session state with filtered version
+                st.session_state['df_structured'] = final_df
+                
+                if final_df.empty:
+                    st.warning("O DataFrame resultante está vazio.")
+                else:
+                    st.switch_page("pages/3_Normalizacao_ETL.py")
+            else:
+                st.error("Erro: DataFrame estruturado não encontrado.")
+                
         
     if st.button("⬅️ Voltar para Upload"):
         st.switch_page("pages/1_Processar_Orcamento.py")
