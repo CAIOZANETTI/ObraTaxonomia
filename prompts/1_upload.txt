@@ -1,0 +1,91 @@
+você é um desenvolvedor sênior de produto (ux + engenharia) especializado em streamlit e sistemas de dados para engenharia. redesenhe a primeira página do app (upload e conversão) com foco em clareza, padronização e uso no celular.
+
+contexto funcional
+- esta página recebe planilhas excel (.xlsx ou .xls).
+- o formato padrão esperado da planilha é fixo e obrigatório:
+  - codigo
+  - nome
+  - qtd
+  - unid
+- o objetivo da página é gerar um csv bruto consolidado a partir das abas válidas do excel.
+
+objetivo de produto
+- deixar claro para o usuário qual é o formato aceito antes do upload.
+- reduzir erro humano.
+- deixar a experiência profissional, técnica e direta.
+- zero marketing, zero ruído visual.
+
+requisitos de ui/ux (mobile-first)
+1) estrutura da página
+   - título curto no topo.
+   - descrição objetiva em uma linha.
+   - bloco “formato esperado” logo abaixo, com 4 colunas listadas verticalmente.
+   - uploader grande e central.
+   - microtexto de suporte (formatos e limite).
+   - seção de exemplos.
+   - seção de resultado no final.
+
+2) textos obrigatórios (sempre em minúsculas)
+   - título: “upload e conversão”
+   - descrição: “envie uma planilha excel no formato padrão para gerar um csv consolidado.”
+   - subtítulo do formato: “formato obrigatório da planilha”
+   - lista:
+     - codigo → identificador do item
+     - nome → descrição do item
+     - qtd → quantidade
+     - unid → unidade de medida
+   - aviso discreto: “abas sem esse formato serão ignoradas.”
+
+3) uploader
+   - label: “selecione um arquivo excel”
+   - aceitar apenas xlsx e xls
+   - limite: 200 mb
+   - estado vazio: “nenhum arquivo carregado.”
+   - erro de formato: “planilha fora do padrão esperado.”
+
+4) validação técnica
+   - ao ler cada aba:
+     - verificar se as quatro colunas existem (case insensitive).
+     - permitir colunas extras, mas ignorá-las no consolidado.
+     - se faltar qualquer uma das quatro colunas, a aba deve ser ignorada.
+   - registrar abas válidas e inválidas.
+
+5) exemplos (três)
+   - seção: “exemplos de planilha”
+   - botões:
+     1) “exemplo simples” → 2 abas, colunas exatamente: codigo, nome, qtd, unid
+     2) “exemplo com colunas extras” → inclui preço, observação, categoria
+     3) “exemplo com abas inválidas” → algumas abas sem o padrão
+   - os exemplos devem ser gerados via pandas e excel em memória.
+   - permitir carregar o exemplo diretamente no fluxo (sem download).
+
+6) resultado
+   - mensagem de status:
+     - “lendo planilha…”
+     - “validando formato…”
+     - “csv gerado com sucesso.”
+   - métricas:
+     - abas válidas
+     - abas ignoradas
+     - linhas consolidadas
+   - preview:
+     - st.dataframe com até 20 linhas
+   - download:
+     - botão “baixar csv”
+
+requisitos técnicos (python + streamlit)
+- funções obrigatórias:
+  - validate_sheet(df) -> bool
+  - normalize_columns(df) -> df (apenas lower + strip)
+  - consolidate_sheets(dict_sheets) -> df
+- usar st.cache_data para leitura e consolidação.
+- adicionar coluna “aba” no csv final.
+- não fazer etl avançado nesta etapa (sem conversão de unidade, sem normalização semântica).
+- falhar de forma silenciosa para abas inválidas, mas registrar no resumo.
+
+entregáveis
+- código completo em streamlit (um arquivo .py).
+- comentários curtos e técnicos.
+- nenhuma string em maiúscula.
+- layout limpo, funcional e profissional.
+- foco em engenharia de dados, não em design decorativo.
