@@ -1,0 +1,123 @@
+PROMPT — LIMPEZA DO CÓDIGO (REPO)
+REMOVER CÓDIGO MORTO, SIMPLIFICAR ESTRUTURA, DEIXAR LEVE E INTUITIVO
+RESTRIÇÃO CRÍTICA: NÃO MEXER EM DADOS (NÃO ALTERAR NEM APAGAR YAML/XLSX/CSV/TXT). NÃO TOCAR EM data/, yaml/, assets/ DE DADOS. A LIMPEZA É SÓ DE CÓDIGO.
+
+Você é um engenheiro de software responsável por “limpar” e simplificar um projeto Python + Streamlit. O objetivo é reduzir complexidade e remover partes não utilizadas, mantendo o comportamento do app e sem tocar em arquivos de dados.
+
+1. OBJETIVO
+
+1) Remover código que não está sendo utilizado (dead code).
+2) Simplificar a estrutura do projeto para ficar intuitiva.
+3) Reduzir dependências e imports desnecessários.
+4) Garantir que o app continue rodando e o fluxo principal continue intacto (Página 0_teste → Página 1_upload_conversao → demais páginas).
+5) Não mexer em dados: nada de editar, mover, renomear, apagar ou reformatar YAML/XLSX/CSV/TXT (nem dentro de pastas de dados).
+
+2. RESTRIÇÕES (OBRIGATÓRIO)
+
+2.1) Proibido tocar em dados
+
+* NÃO modificar, excluir, mover ou renomear qualquer arquivo com extensão: `.yaml`, `.yml`, `.xlsx`, `.xls`, `.csv`, `.txt`.
+* NÃO modificar diretórios que contenham dados (ex.: `data/`, `yaml/`, `datasets/`, `samples/`).
+* Se existir código misturado com dados no mesmo diretório, você pode reorganizar apenas o código, mas sem mover/alterar os dados.
+
+2.2) Limpeza permitida
+
+* Pode deletar diretórios e arquivos de código (.py) não usados.
+* Pode reorganizar módulos Python e `pages/` do Streamlit.
+* Pode atualizar `requirements.txt`/`pyproject.toml` apenas removendo dependências comprovadamente não utilizadas.
+* Pode criar um `src/` ou `core/` e mover código para lá, desde que o app continue funcionando.
+
+3. PROCESSO (OBRIGATÓRIO)
+
+Siga exatamente esta metodologia:
+
+3.1) Mapear o fluxo real do app
+
+1. Identificar entrypoint (ex.: `streamlit run app.py`).
+2. Listar páginas Streamlit efetivamente usadas:
+
+   * `pages/0_teste.py`
+   * `pages/1_upload_conversao.py`
+   * demais páginas existentes
+3. Encontrar quais módulos essas páginas importam (grafo de dependências).
+
+3.2) Detectar código morto
+
+1. Procurar arquivos Python que não são importados por nenhum caminho do entrypoint.
+2. Procurar funções/classes nunca chamadas (heurística estática).
+3. Procurar páginas Streamlit “antigas” que não fazem parte do fluxo atual.
+4. Procurar duplicações (mesma função repetida em arquivos diferentes).
+
+3.3) Consolidar o núcleo
+Mover a lógica reutilizável para um núcleo simples, por exemplo:
+
+* `src/core/io_excel.py` (ler bytes, listar abas, ler aba)
+* `src/core/consolidate.py` (concat e CSV bytes)
+* `src/core/state.py` (helpers para session_state: set/reset chaves)
+* `src/core/utils.py` (hash, truncate, etc.)
+
+As páginas devem ficar “finas” (só UI e chamadas ao core).
+
+3.4) Remover o que não serve
+
+1. Deletar módulos não utilizados.
+2. Deletar scripts experimentais que não são importados.
+3. Deletar páginas duplicadas/antigas.
+4. Remover imports não usados e prints de debug.
+
+3.5) Atualizar dependências (opcional, mas recomendado)
+
+1. Identificar libs não utilizadas (ex.: `numpy` se não for usado, etc.).
+2. Remover do arquivo de dependências.
+3. Garantir que as libs necessárias para `.xlsx` e `.xls` continuem:
+
+   * pandas
+   * openpyxl (xlsx)
+   * xlrd (xls) se você realmente precisa ler `.xls`
+   * streamlit
+
+4) REGRAS DE ORGANIZAÇÃO FINAL (OBRIGATÓRIO)
+
+4.1) Estrutura alvo (exemplo)
+
+* `app.py` (entrypoint)
+* `pages/0_teste.py`
+* `pages/1_upload_conversao.py`
+* `pages/...` (apenas páginas usadas)
+* `src/core/` (apenas o essencial)
+* `README.md` curto explicando fluxo e estrutura
+* Pastas de dados intactas: `data/`, `yaml/` (não tocar)
+
+4.2) Padrões de código
+
+1. Funções puras no core (sem Streamlit).
+2. Streamlit só nas páginas (UI + session_state).
+3. Sem variáveis globais para dados mutáveis.
+4. Logs e erros com mensagens curtas e úteis.
+
+5) OUTPUTS (OBRIGATÓRIO)
+
+Você deve entregar:
+
+1. Uma lista objetiva de arquivos/diretórios de CÓDIGO que serão removidos (com motivo).
+2. Uma lista de arquivos/diretórios de CÓDIGO que serão mantidos (com motivo).
+3. Um plano de reorganização (mover/renomear arquivos .py) sem tocar em dados.
+4. Um checklist de validação após a limpeza:
+
+   1. `streamlit run app.py` funciona
+   2. Página 0 lista `data/excel`
+   3. Página 0 injeta session_state
+   4. Página 1 detecta session_state e gera CSV bruto
+   5. downloads funcionam
+
+6) LIMITES (IMPORTANTE)
+
+1. Não criar “features novas”. O foco é limpeza.
+2. Não mexer em lógica de negócio, apenas refatorar para simplificar e remover duplicação.
+3. Não alterar nomes/pastas de dados. Se uma página depende de dados, ela continua apontando para os mesmos caminhos.
+
+Critério de sucesso:
+
+* O repositório fica mais curto, legível e com menos arquivos.
+* O app roda igual.
+* Dados permanecem intocados.
