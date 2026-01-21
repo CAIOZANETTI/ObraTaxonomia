@@ -21,14 +21,19 @@ except ImportError:
     sys.path.append('scripts')
     from header_utils import detect_header, CANDIDATOS
 
+# --- IMPORTS ---
+import sys
+import os
+import pandas as pd
+import streamlit as st
+
+# Add scripts to path if needed
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../scripts')))
+
 # --- UI LOGIC ---
 
-st.title("🕵️ Detecção de Cabeçalhos e Mapeamento de Colunas")
-
-# Dicionário (Legacy/Ref for now)
-if 'CANDIDATOS' not in locals():
-    # Only if not imported
-    CANDIDATOS = {}
+st.title("🕵️ Mapeamento Manual de Colunas")
+st.markdown("Selecione as abas, indique a linha do cabeçalho e mapeie as colunas manualmente.")
 
 if 'df_all' not in st.session_state:
     st.warning("Por favor, faça o upload do arquivo na Página 1.")
@@ -38,225 +43,197 @@ df_all = st.session_state['df_all']
 sheets = df_all['aba'].unique().tolist()
 grouped = df_all.groupby('aba')
 
-st.header(f"Processando {len(sheets)} abas...")
+# 1. Sheet Selection (Pills)
+st.subheader("1. Selecione as Abas para Processar")
 
-# Configuração Simplificada (Expander)
-with st.expander("⚙️ Configurações Avançadas (Opcional)"):
-    max_scan = st.slider("Máx. linhas para varrer", 10, 100, 50)
-    score_thresh = st.slider("Score minimo para aceitar", 0.0, 1.0, 0.55)
-    # Strategy is implicit now (Hybrid fallback)
-    # strategy = st.selectbox("Estratégia", ["Híbrida (Keywords + Conteúdo)", "Somente palavras-chave"])
+# Default select all? Or clean start? Let's select all by default so user can remove.
+selected_sheets = st.pills(
+    "Abas:",
+    options=sheets,
+    selection_mode="multi",
+    default=sheets,
+    key="manual_sheet_selection"
+)
 
-if st.button("🚀 Executar Detecção Automática", type="primary"):
-    results = {}
-    structured_dfs = []
-    
-    progress_bar = st.progress(0)
-    
-    for i, sheet in enumerate(sheets):
-        df_sheet = grouped.get_group(sheet)
+if not selected_sheets:
+    st.warning("Selecione pelo menos uma aba para configurar.")
+    st.stop()
+
+st.divider()
+
+# 2. Manual Configuration Loop
+st.subheader("2. Configuração de Mapeamento")
+
+manual_configs = {} # Store user config {sheet: {header_row, mapping}}
+structured_dfs = []
+
+# To persist configs across reruns, we might need st.session_state
+# But for now, let's rely on widget keys.
+
+for sheet in selected_sheets:
+    with st.expander(f"📝 Configurar Aba: {sheet}", expanded=False):
+        df_sheet = grouped.get_group(sheet).reset_index(drop=True)
+        # Drop internal 'aba' col for display
+        df_display = df_sheet.drop(columns=['aba'], errors='ignore')
         
-        # Reset index
-        df_sheet = df_sheet.reset_index(drop=True)
-        # Drop 'aba' col for detection
-        df_det = df_sheet.drop(columns=['aba'], errors='ignore')
+        # A. Preview Raw Data to help find Header Row
+        st.write("Visualização dos Dados Brutos (Topo):")
+        st.dataframe(df_display.head(10))
         
-        # Detect
-        det_result = detect_header(df_det, max_scan_lines=max_scan, score_threshold=score_thresh)
-        results[sheet] = det_result
+        # B. Header Row Selection
+        # Default 0
+        header_row_idx = st.number_input(
+            f"Linha do Cabeçalho ({sheet})", 
+            min_value=0, 
+            max_value=len(df_display)-1, 
+            value=0, 
+            key=f"hr_{sheet}"
+        )
         
-        # Process and Store
-        header_idx = det_result['header_row_idx']
-        mapping = det_result['mapping']
+        # C. Get Columns based on Header Row
+        # If Row 0, cols are df columns. 
+        # If Row > 0, we treat that row as header.
         
-        # Use header_idx + 1 for data start, unless it's -1 (inference mode)
-        if header_idx == -1:
-            data_start = 0
-            # Rename columns based on mapping directly
-            # mapping keys are current column names
-            df_struct = df_det.iloc[data_start:].copy()
-            # Normalize column names?
-            # We want to rename matched cols to std, others leave as is
-            rename_dict = {k: v for k, v in mapping.items()}
-            df_struct.rename(columns=rename_dict, inplace=True)
-            
+        current_cols = []
+        if header_row_idx == 0:
+            current_cols = list(df_display.columns)
         else:
-            data_start = header_idx + 1
-            df_struct = df_det.iloc[data_start:].copy()
-            
-            # Rename columns based on Header Row Values
-            header_vals = df_det.iloc[header_idx].astype(str).tolist()
-            current_cols = df_det.columns.tolist()
-            
-            # Create a rename dict: { CurrentColName: StandardName }
-            # Mapping is { HeaderValue: StandardName }
-            # Need to map CurrentCol -> HeaderValue -> StandardName
-            
-            final_rename = {}
-            for col_idx, col_name in enumerate(current_cols):
-                if col_idx < len(header_vals):
-                    h_val = header_vals[col_idx]
-                    if h_val in mapping:
-                        final_rename[col_name] = mapping[h_val]
-                    else:
-                        final_rename[col_name] = h_val # Use header value as name
-            
-            df_struct.rename(columns=final_rename, inplace=True)
-            
-        # Deduplicate columns to avoid InvalidIndexError in pd.concat
-        # (If header row had duplicate values, or if we ignored some columns)
-        cols = pd.Series(df_struct.columns)
-        for dup in cols[cols.duplicated()].unique(): 
-            cols[cols == dup] = [f"{dup}_{i}" for i in range(sum(cols == dup))]
-        df_struct.columns = cols
-        
-        # Re-inject 'aba' at start
-        df_struct.insert(0, 'aba', sheet)
-        structured_dfs.append(df_struct)
-        
-        progress_bar.progress((i + 1) / len(sheets))
-        
-    st.session_state['detection_results'] = results
-    
-    # Safe Concat
-    if structured_dfs:
-        try:
-            st.session_state['df_structured'] = pd.concat(structured_dfs, ignore_index=True)
-            st.success("Detecção concluída!")
-        except Exception as e:
-            st.error(f"Erro ao consolidar dados: {e}")
-            st.session_state['df_structured'] = None
-    else:
-        st.warning("Nenhum dado estruturado gerado.")
-
-# --- RESULTS DISPLAY ---
-if 'detection_results' in st.session_state:
-    results = st.session_state['detection_results']
-    
-    st.divider()
-    st.subheader("Validação e Seleção")
-    
-    # 1. Determine suggestions (Logic moved up)
-    suggested_sheets = []
-    all_sheets_options = []
-    
-    # Pre-calc suggestions to use in Pills
-    for sheet in sheets:
-        res = results.get(sheet)
-        if not res: continue
-        all_sheets_options.append(sheet)
-        
-        score = res['score']
-        method = res.get('method', 'keyword_scan')
-        if score >= score_thresh or method == 'content_inference':
-            suggested_sheets.append(sheet)
-
-    st.info("O sistema sugeriu automaticamente as abas com boa detecção. Confirme abaixo as que deseja processar.")
-
-    # Pills Widget (TOP)
-    selected_pills = st.pills(
-        "Abas para Processar:",
-        options=all_sheets_options,
-        selection_mode="multi",
-        default=suggested_sheets,
-        key="pills_selection"
-    )
-    
-    st.write(f"**Selecionadas:** {len(selected_pills)} de {len(all_sheets_options)}")
-    st.divider()
-    
-    # Slider
-    preview_rows = st.slider("Linhas de Preview por aba", min_value=3, max_value=50, value=5)
-    
-    summary_data = []
-    
-    # Use selected_pills to filter display? Or show all with status?
-    # Better to show all so user can manually check "Falha" ones and decide to add them back in Pills if they want.
-    
-    for sheet in sheets:
-        res = results.get(sheet)
-        if not res: continue
-        
-        score = res['score']
-        method = res.get('method', 'keyword_scan')
-        is_success = score >= score_thresh or method == 'content_inference'
-        icon = "✅" if is_success else "❌"
-        
-        # Highlight if selected in pills
-        # Add visual cue if selected
-        is_selected = sheet in selected_pills
-        sel_icon = "🔵" if is_selected else "⚪"
-        
-        with st.expander(f"{sel_icon} {icon} Aba: {sheet} (Linha Cab: {res['header_row_idx']}, Método: {method})"):
-            c1, c2 = st.columns([1, 2])
-            
-            c1.write(f"**Status:** {'Detectado' if is_success else 'Falha'}")
-            c1.write(f"**Selecionado p/ ETL:** {'Sim' if is_selected else 'Não'}")
-            c1.write(f"**Linha Cabeçalho:** {res['header_row_idx']}")
-            
-            c2.write("**Mapeamento Encontrado:**")
-            
-            mapping = res['mapping']
-            # Now mapping is {SourceVal: Field}, so invert for display
-            inv_map = {v: k for k, v in mapping.items()} # Field -> SourceVal
+            # Emulate reading header from that row
+            # We rename generic columns to values in that row
+            vals = df_display.iloc[header_row_idx].astype(str).tolist()
+            # Handle duplicates
+            seen = {}
+            for v in vals:
+                seen[v] = seen.get(v, 0) + 1
                 
-            display_fields = {
-                'descricao': 'Descrição',
-                'unidade': 'Unidade',
-                'quantidade': 'Quantidade',
-                'preco_unitario': 'Preço Unit.',
-                'preco_total': 'Preço Total'
-            }
-            
-            txt_md = ""
-            for field_key, field_label in display_fields.items():
-                found_col = inv_map.get(field_key, "---")
-                txt_md += f"- **{field_label}**: `{found_col}`\n"
-            
-            c2.markdown(txt_md)
-            
-            st.write(f"Preview ({preview_rows} primeiras linhas):")
-            if 'df_structured' in st.session_state and st.session_state['df_structured'] is not None:
-                df_s = st.session_state['df_structured']
-                try:
-                    df_preview = df_s[df_s['aba'] == sheet].head(preview_rows)
-                    st.dataframe(df_preview)
-                except:
-                    st.warning("Preview indisponível.")
-            else:
-                st.warning("Preview indisponível.")
-                
-        # Summary row
-        mapping = res['mapping']
-        summary_data.append({
-            "Aba": sheet,
-            "Header Row": res['header_row_idx'],
-            "Method": method,
-            # "Score": round(score, 2), # Removed
-            "Descricao": next((k for k,v in mapping.items() if v=='descricao'), None),
-            "Unidade": next((k for k,v in mapping.items() if v=='unidade'), None),
-            "Qtd": next((k for k,v in mapping.items() if v=='quantidade'), None),
-            "PrecoResult": next((k for k,v in mapping.items() if v=='preco_unitario'), None),
-        })
-
-    st.divider()
-    
-    # Action Buttons (Logic adjusted to use selected_pills)
-    if st.button("Confirmar e Avançar para ETL ➡️", type="primary"):
-        if not selected_pills:
-            st.warning("Selecione pelo menos uma aba para continuar.")
-        else:
-            if 'df_structured' in st.session_state and st.session_state['df_structured'] is not None:
-                final_df = st.session_state['df_structured']
-                final_df = final_df[final_df['aba'].isin(selected_pills)]
-                st.session_state['df_structured'] = final_df
-                
-                if final_df.empty:
-                    st.warning("Dataframe resultante vazio.")
+            final_cols = []
+            seen_counts = {}
+            for v in vals:
+                if seen[v] > 1:
+                    seen_counts[v] = seen_counts.get(v, 0) + 1
+                    final_cols.append(f"{v}_{seen_counts[v]}")
                 else:
-                    st.switch_page("pages/3_Normalizacao_ETL.py")
+                    final_cols.append(v)
+            current_cols = final_cols
+            
+        # Options for dropdowns match these columns
+        col_options = ["(Ignorar)"] + current_cols
+        
+        # D. Mapping Dropdowns
+        c1, c2, c3 = st.columns(3)
+        c4, c5 = st.columns(2)
+        
+        # Helper to find default index if column name matches simple keywords
+        def find_default(options, keyword):
+            for i, opt in enumerate(options):
+                if keyword in str(opt).lower():
+                    return i
+            return 0
+            
+        # Mappings
+        with c1:
+            desc_col = st.selectbox(f"Descrição ({sheet})", col_options, index=find_default(col_options, "desc"), key=f"map_desc_{sheet}")
+        with c2:
+            unit_col = st.selectbox(f"Unidade ({sheet})", col_options, index=find_default(col_options, "unid"), key=f"map_unit_{sheet}")
+        with c3:
+            qty_col = st.selectbox(f"Quantidade ({sheet})", col_options, index=find_default(col_options, "qtd"), key=f"map_qty_{sheet}")
+        with c4:
+            price_col = st.selectbox(f"Preço Unit. ({sheet})", col_options, index=find_default(col_options, "unit"), key=f"map_prc_{sheet}")
+        with c5:
+            total_col = st.selectbox(f"Preço Total ({sheet})", col_options, index=find_default(col_options, "total"), key=f"map_tot_{sheet}")
+            
+        # E. Process Sheet Button (Real-time Preview?)
+        # Let's show a preview of the *RESULT*
+        
+        # Logic to build structured DF for this sheet
+        # header_row_idx implies data starts at idx + 1
+        data_start = header_row_idx + 1
+        
+        # Slice data
+        df_sliced = df_sheet.iloc[data_start:].copy()
+        
+        # Use the "virtual" column names (current_cols) to reference data?
+        # NO. df_sliced still has original columns (0, 1, 2 or A, B, C...).
+        # We need to map: Chosen Name -> Original Column ID.
+        
+        # Let's rebuild the map: "Chosen Name" -> Index in current_cols -> Original Column Name in df_sheet
+        
+        # Map: Standard Field -> User Selected Option
+        user_map = {
+            'descricao': desc_col,
+            'unidade': unit_col,
+            'quantidade': qty_col,
+            'preco_unitario': price_col,
+            'preco_total': total_col
+        }
+        
+        # Filter out ignored
+        active_map = {k: v for k, v in user_map.items() if v != "(Ignorar)"}
+        
+        if not active_map:
+            st.warning("Nenhuma coluna mapeada.")
+        else:
+            # Rename logic
+            # We need to find which ACTUAL column in df_sheet corresponds to the selected name
+            # header_vals (current_cols) map 1:1 to df_sheet.columns (by index)
+            
+            rename_dict = {} # OldColName -> NewStandardName
+            
+            # Create lookup: DisplayName -> OriginalColName
+            # current_cols [i] corresponds to df_sheet.columns [i] (minus 'aba' if we dropped it, wait.
+            # df_display was used for current_cols. df_display matches df_sheet minus 'aba'.
+            
+            orig_cols = df_display.columns.tolist()
+            
+            for field, selected_name in active_map.items():
+                # Find index of selected_name in current_cols
+                try:
+                    idx = current_cols.index(selected_name)
+                    # Get original col name
+                    orig_name = orig_cols[idx]
+                    rename_dict[orig_name] = field
+                except ValueError:
+                    pass # Should not happen
+            
+            # Filter columns - keep only text cols + 'aba'
+            # But we must act on df_sheet (which has 'aba') or df_sliced (has 'aba'?)
+            # df_sliced comes from df_sheet, so it has 'aba'.
+            
+            # Select only mapped columns + aba
+            cols_to_keep = list(rename_dict.keys())
+            
+            # Rename
+            df_final = df_sliced.rename(columns=rename_dict)
+            
+            # Keep only standard fields + aba
+            final_cols_standard = list(rename_dict.values())
+            
+            # Ensure we keep 'aba'
+            if 'aba' in df_final.columns:
+                 df_final = df_final[['aba'] + final_cols_standard]
             else:
-                st.error("Erro no dataframe estruturado.")
-                
-    if st.button("⬅️ Voltar para Upload"):
-        st.switch_page("pages/1_Processar_Orcamento.py")
+                 # Re-inject?
+                 df_final = df_final[final_cols_standard]
+                 df_final['aba'] = sheet
+                 
+            st.write("Preview Resultado:")
+            st.dataframe(df_final.head(5))
+            
+            structured_dfs.append(df_final)
+
+st.divider()
+if st.button("Confirmar e Avançar para ETL ➡️", type="primary"):
+    if not structured_dfs:
+        st.error("Nenhum dado estruturado gerado. Configure pelo menos uma aba.")
+    else:
+        # Concatenate
+        try:
+            full_df = pd.concat(structured_dfs, ignore_index=True)
+            st.session_state['df_structured'] = full_df
+            st.success("Dados estruturados com sucesso!")
+            st.switch_page("pages/3_Normalizacao_ETL.py")
+        except Exception as e:
+            st.error(f"Erro ao consolidar: {e}")
+            
+if st.button("⬅️ Voltar para Upload"):
+    st.switch_page("pages/1_Processar_Orcamento.py")
