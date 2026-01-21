@@ -12,23 +12,16 @@ st.set_page_config(
 import sys
 import os
 
-# Add scripts to path if needed
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../scripts')))
+# Add generic path if needed (though Streamlit usually adds root)
+# But we should rely on 'obra_taxonomia' package structure
+# from obra_taxonomia import header_utils
 
 try:
-    from header_utils import detect_header, CANDIDATOS
+    from obra_taxonomia.header_utils import detect_header, CANDIDATOS
 except ImportError:
-    sys.path.append('scripts')
-    from header_utils import detect_header, CANDIDATOS
-
-# --- IMPORTS ---
-import sys
-import os
-import pandas as pd
-import streamlit as st
-
-# Add scripts to path if needed
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../scripts')))
+    # Fallback / Debug path add
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+    from obra_taxonomia.header_utils import detect_header, CANDIDATOS
 
 # --- UI LOGIC ---
 
@@ -222,7 +215,7 @@ for sheet in selected_sheets:
             structured_dfs.append(df_final)
 
 st.divider()
-if st.button("Confirmar e Avançar para ETL ➡️", type="primary"):
+if st.button("Confirmar Mapeamento"):
     if not structured_dfs:
         st.error("Nenhum dado estruturado gerado. Configure pelo menos uma aba.")
     else:
@@ -230,8 +223,8 @@ if st.button("Confirmar e Avançar para ETL ➡️", type="primary"):
         try:
             full_df = pd.concat(structured_dfs, ignore_index=True)
             st.session_state['df_structured'] = full_df
-            st.success("Dados estruturados com sucesso!")
-            st.switch_page("pages/3_Normalizacao_ETL.py")
+            st.success("Dados estruturados e Salvos em Session State!")
+            st.info("Você pode usar estes dados para etapas futuras.")
         except Exception as e:
             st.error(f"Erro ao consolidar: {e}")
             

@@ -1,287 +1,185 @@
+
 import streamlit as st
 import pandas as pd
-import io
+import os
+import sys
 
-# --- CONFIGURAÇÃO DA PÁGINA ---
+# Add project root to path generic logic if needed (or rely on installed package)
+base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+if base_path not in sys.path:
+    sys.path.append(base_path)
+
+from obra_taxonomia import data_ingestion as di
+
 st.set_page_config(
-    page_title="upload e conversão",
-    page_icon="📂",
+    page_title="Excel -> CSV",
+    page_icon="🏗️",
     layout="wide"
 )
 
-# --- REQUISITOS TÉCNICOS E FUNÇÕES ---
-
-REQUIRED_COLUMNS = ["codigo", "nome", "qtd", "unid"]
-
-def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    normaliza nomes de colunas: strip + lowercase.
-    """
-    df.columns = df.columns.astype(str).str.strip().str.lower()
-    return df
-
-def validate_sheet(df: pd.DataFrame) -> bool:
-    """
-    verifica se as colunas obrigatórias existem.
-    case insensitive (assumindo que o df já passou por normalize_columns).
-    """
-    if df is None or df.empty:
-        return False
+# --- SESSION STATE ---
+if 'processed_data' not in st.session_state:
+    st.session_state['processed_data'] = {} 
+    # Structure: { 
+    #   'excel_name': ..., 'excel_bytes': ..., 'sheets_info': ..., 
+    #   'df_all': ..., 'csv_all_bytes': ... 
+    #   'df_norm': ..., 'csv_norm_bytes': ..., 'etl_log': ...
+    # }
     
-    # normaliza antes de validar (embora a ordem de chamada deva garantir, reforçamos)
-    df = normalize_columns(df)
-    cols = df.columns.tolist()
-    
-    # verifica interseção
-    # não precisamos ser exatos (colunas extras permitidas, mas ignoradas depois)
-    # MAS todas as required devem estar presentes
-    for req in REQUIRED_COLUMNS:
-        if req not in cols:
-            return False
-    return True
+# We will use st.session_state locals to hold the CURRENT file's state for display context.
+if 'current_file_state' not in st.session_state:
+    st.session_state['current_file_state'] = None
 
-@st.cache_data
-def load_and_consolidate(file_content, filename_for_cache):
-    """
-    lê o arquivo excel, valida abas e consolida.
-    retorna:
-      - df_final: dataframe consolidado
-      - summary: dict com contagens
-      - validation_log: list de dicts com status por aba
-    """
-    try:
-        # lê todas as abas
-        xls = pd.ExcelFile(file_content)
-        all_sheets = xls.sheet_names
+
+# --- UI ---
+
+st.title("Excel → CSV (Ingestão Genérica)")
+st.markdown("Converta planilhas para o formato padrão do sistema (CSV) com opção de normalização.")
+
+# TABS
+tab_upload, tab_test = st.tabs(["📤 Upload", "🧪 Modo Teste (Batch)"])
+
+def set_current_state(filename, file_bytes, source):
+    """Process triggers generic ingestion logic."""
+    with st.spinner(f"Processando {filename}..."):
+        sheets_info, df_resumo, df_all, csv_bytes = di.process_workbook(file_bytes, filename)
         
-        valid_sheets_data = []
-        validation_log = []
-        
-        ignored_count = 0
-        valid_count = 0
-        
-        for sheet_name in all_sheets:
-            try:
-                # lê aba sem header para checar se está vazia? 
-                # o formato exige colunas nomeadas. vamos ler com header=0 padrão.
-                df = pd.read_excel(xls, sheet_name=sheet_name)
-                
-                # normaliza
-                df = normalize_columns(df)
-                
-                if validate_sheet(df):
-                    # mantém apenas colunas obrigatórias
-                    df_valid = df[REQUIRED_COLUMNS].copy()
-                    
-                    # limpa linhas vazias essenciais (se codigo ou nome for nulo, talvez?)
-                    # requisitos dizem: "se faltar qualquer uma das quatro colunas, ignora". 
-                    # sobre linhas vazias: "gerar csv bruto". vamos manter bruto, apenas dropna se tudo vazio.
-                    df_valid.dropna(how='all', inplace=True)
-                    
-                    df_valid['aba'] = sheet_name
-                    valid_sheets_data.append(df_valid)
-                    valid_count += 1
-                    validation_log.append({"aba": sheet_name, "status": "válida", "linhas": len(df_valid)})
-                else:
-                    ignored_count += 1
-                    validation_log.append({"aba": sheet_name, "status": "ignorada (formato inválido)", "linhas": 0})
-            except Exception as e:
-                ignored_count += 1
-                validation_log.append({"aba": sheet_name, "status": f"erro: {str(e)}", "linhas": 0})
-        
-        if valid_sheets_data:
-            df_final = pd.concat(valid_sheets_data, ignore_index=True)
-            # garante ordem das colunas + aba no final
-            df_final = df_final[REQUIRED_COLUMNS + ['aba']]
-        else:
-            df_final = pd.DataFrame(columns=REQUIRED_COLUMNS + ['aba'])
-            
-        summary = {
-            "validas": valid_count,
-            "ignoradas": ignored_count,
-            "total_linhas": len(df_final)
+        st.session_state['current_file_state'] = {
+            'filename': filename,
+            'source': source,
+            'sheets_info': sheets_info,
+            'df_resumo': df_resumo,
+            'df_all': df_all,
+            'csv_all_bytes': csv_bytes,
+            'df_norm': None,       # Reset norm on new process
+            'csv_norm_bytes': None
         }
         
-        return df_final, summary, validation_log
+        # Persist specific globals (optional, dependendo do requisito de session state global)
+        st.session_state['df_all'] = df_all
+        st.session_state['df_resumo_abas'] = df_resumo
+        st.session_state['sheets_info'] = sheets_info
 
-    except Exception as e:
-        return None, {"error": str(e)}, []
 
-# --- GERAÇÃO DE EXEMPLOS ---
+# --- TAB 1: UPLOAD ---
+with tab_upload:
+    uploaded_file = st.file_uploader("Selecione Excel (.xlsx, .xls)", type=['xlsx', 'xls'])
+    if uploaded_file:
+        # Check if we need to process (if file changed)
+        # Using name size check or just manual trigger? 
+        # Streamlit re-runs, let's process if not already processed same file
+        curr = st.session_state['current_file_state']
+        if curr is None or curr.get('filename') != uploaded_file.name:
+             set_current_state(uploaded_file.name, uploaded_file.getvalue(), "upload")
 
-def create_example_excel(type_key):
-    """
-    gera bytes de um excel de exemplo em memória.
-    """
-    output = io.BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+# --- TAB 2: TESTE ---
+with tab_test:
+    st.info("Arquivos em `data/excel/`")
+    test_files = di.list_test_files()
     
-    if type_key == 'simples':
-        df1 = pd.DataFrame({
-            'codigo': ['C001', 'C002'],
-            'nome': ['Cimento', 'Areia'],
-            'qtd': [10, 5],
-            'unid': ['sc', 'm3']
-        })
-        df2 = pd.DataFrame({
-            'codigo': ['E001'],
-            'nome': ['Tijolo'],
-            'qtd': [1000],
-            'unid': ['mil']
-        })
-        df1.to_excel(writer, sheet_name='Material_Base', index=False)
-        df2.to_excel(writer, sheet_name='Alvenaria', index=False)
-        
-    elif type_key == 'extras':
-        df1 = pd.DataFrame({
-            'codigo': ['P010'],
-            'nome': ['Tinta'],
-            'qtd': [4],
-            'unid': ['gl'],
-            'preco': [150.00], # extra
-            'obs': ['urgente'] # extra
-        })
-        df1.to_excel(writer, sheet_name='Pintura', index=False)
-        
-    elif type_key == 'invalidas':
-        # Aba válida
-        df1 = pd.DataFrame({
-            'codigo': ['X1'], 'nome': ['Item X'], 'qtd': [1], 'unid': ['un']
-        })
-        # Aba inválida (falta unid)
-        df2 = pd.DataFrame({
-            'codigo': ['Y1'], 'nome': ['Item Y'], 'qtd': [10]
-        })
-        # Aba inválida (colunas erradas)
-        df3 = pd.DataFrame({
-            'DESC': ['Item Z'], 'QTD': [50]
-        })
-        
-        df1.to_excel(writer, sheet_name='Valida', index=False)
-        df2.to_excel(writer, sheet_name='Sem_Unidade', index=False)
-        df3.to_excel(writer, sheet_name='Formato_Errado', index=False)
-        
-    writer.close()
-    output.seek(0)
-    return output
-
-# --- UI LAYER ---
-
-# 1. Cabeçalho
-st.title("upload e conversão")
-st.markdown("envie uma planilha excel no formato padrão para gerar um csv consolidado.")
-
-# 2. Especificação do Formato
-st.divider()
-st.markdown("**formato obrigatório da planilha**")
-c1, c2, c3, c4 = st.columns(4)
-with c1: st.markdown("`codigo`\n\nidentificador do item")
-with c2: st.markdown("`nome`\n\ndescrição do item")
-with c3: st.markdown("`qtd`\n\nquantidade")
-with c4: st.markdown("`unid`\n\nunidade de medida")
-st.caption("abas sem esse formato serão ignoradas.")
-st.divider()
-
-# 3. Uploader
-file = st.file_uploader(
-    "selecione um arquivo excel", 
-    type=["xlsx", "xls"], 
-    help="limite de 200mb. formatos .xlsx ou .xls."
-)
-
-if not file:
-    st.info("nenhum arquivo carregado.")
-else:
-    # 6. Resultado (Processamento)
-    with st.status("processando arquivo...", expanded=True) as status:
-        st.write("lendo planilha...")
-        
-        # BytesIO para cache funcionar bem precisa ser tratado, 
-        # mas st.cache_data lida bem se passarmos o .getvalue() ou id único se o objeto mudar
-        # vamos passar o bytes
-        bytes_data = file.getvalue()
-        
-        st.write("validando formato...")
-        df_final, summary, logs = load_and_consolidate(bytes_data, file.name)
-        
-        if df_final is None:
-            status.update(label="erro no processamento", state="error", expanded=True)
-            st.error(f"falha: {summary.get('error')}")
-        else:
-            status.update(label="csv gerado com sucesso.", state="complete", expanded=False)
-            
-            # Métricas e Feedback
-            m1, m2, m3 = st.columns(3)
-            m1.metric("abas válidas", summary['validas'])
-            m2.metric("abas ignoradas", summary['ignoradas'])
-            m3.metric("linhas consolidadas", summary['total_linhas'])
-            
-            # Detalhes das abas (expander para não poluir se for mt coisa)
-            if logs:
-                with st.expander("ver detalhes da validação por aba"):
-                    st.dataframe(pd.DataFrame(logs), use_container_width=True)
-            
-            # Preview (Top 20)
-            st.subheader("preview (primeiras 20 linhas)")
-            st.dataframe(df_final.head(20), use_container_width=True)
-            
-            # Download
-            csv = df_final.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="baixar csv",
-                data=csv,
-                file_name="consolidado_obra.csv",
-                mime="text/csv",
-                type="primary"
-            )
+    if test_files:
+        selected_test = st.selectbox("Escolha um arquivo para teste", test_files)
+        if st.button("Processar Arquivo de Teste"):
+            path = os.path.join("data/excel", selected_test)
+            try:
+                f_bytes, f_name = di.load_excel_bytes(path)
+                set_current_state(f_name, f_bytes, "test_file")
+            except Exception as e:
+                st.error(f"Erro ao ler arquivo: {e}")
+    else:
+        st.warning("Nenhum arquivo encontrado em `data/excel/`.")
 
 
-# 5. Exemplos
-st.divider()
-st.markdown("### exemplos de planilha")
-st.markdown("use estes modelos para testar a validação:")
+# --- DISPLAY RESULTS ---
 
-c_ex1, c_ex2, c_ex3 = st.columns(3)
+state = st.session_state['current_file_state']
 
-def load_example(key):
-    # gera o excel em mémoria e coloca no uploader? 
-    # Streamlit não permite injetar no file_uploader diretamente via código facil sem hack.
-    # O prompt diz: "permitir carregar o exemplo diretamente no fluxo (sem download)."
-    # Solução: setar session_state e renderizar a parte de processamento como se fosse um upload
-    # mas o uploader padrão é visual. 
-    # Vamos adaptar: se clicar no botão, processamos o bytes gerados e ignoramos o uploader vazio.
-    st.session_state['active_example'] = key
-
-if c_ex1.button("exemplo simples"):
-    load_example('simples')
+if state and state['df_all'] is not None:
+    st.divider()
+    st.subheader(f"Resultado: {state['filename']}")
     
-if c_ex2.button("exemplo com colunas extras"):
-    load_example('extras')
+    # 1. Summary Table
+    st.markdown("### Resumo das Abas")
+    st.dataframe(state['df_resumo'], hide_index=True)
     
-if c_ex3.button("exemplo com abas inválidas"):
-    load_example('invalidas')
-
-# Lógica para processar exemplo se selecionado E nenhum arquivo real carregado
-if 'active_example' in st.session_state and not file:
-    ex_key = st.session_state['active_example']
-    st.markdown(f"--- \n**visualizando exemplo: {ex_key}**")
+    # Stats footer
+    total_lines = len(state['df_all'])
+    total_cols = len(state['df_all'].columns)
+    counts = state['df_resumo']['linhas'].astype(bool).sum() # rough 'ok' check or use status logic? 
+    # Better to iterate sheets_info for accurate status count
+    s_info = state['sheets_info']
+    n_ok = sum(1 for k,v in s_info.items() if v['status'] == 'ok')
+    n_err = sum(1 for k,v in s_info.items() if v['status'] == 'error')
+    n_emp = sum(1 for k,v in s_info.items() if v['status'] == 'empty')
     
-    # Gera bytes
-    ex_bytes = create_example_excel(ex_key)
-    ex_content = ex_bytes.getvalue()
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Linhas (Bruto)", total_lines)
+    c2.metric("Colunas", total_cols)
+    c3.metric("Abas OK", n_ok)
+    c4.caption(f"Vazias: {n_emp} | Erros: {n_err}")
     
-    # Reutiliza lógica de display
-    # (Idealmente refatoraria a parte do 'if not file: else: ...' para uma função, 
-    # mas para manter simples e linear como script streamlit, repito a chamada da função de processamento)
+    # 2. Details (Expanders)
+    with st.expander("Ver Detalhes por Aba"):
+        for s_name, info in s_info.items():
+            status_icon = "✅" if info['status'] == 'ok' else "⚠️" if info['status'] == 'empty' else "❌"
+            st.markdown(f"**{status_icon} {s_name}** ({info['rows']}x{info['cols']})")
+            if info['status'] == 'ok' and info['df_head'] is not None:
+                st.dataframe(info['df_head'], use_container_width=True)
+            elif info['status'] == 'error':
+                st.error(info['error_msg'])
     
-    df_final, summary, logs = load_and_consolidate(ex_content, f"example_{ex_key}.xlsx")
+    # 3. CSV Bruto Download
+    if state['csv_all_bytes']:
+        st.download_button(
+            "⬇️ Baixar CSV Bruto",
+            state['csv_all_bytes'],
+            f"{state['filename']}__consolidado_bruto.csv",
+            "text/csv"
+        )
     
-    m1, m2, m3 = st.columns(3)
-    m1.metric("abas válidas", summary['validas'])
-    m2.metric("abas ignoradas", summary['ignoradas'])
-    m3.metric("linhas consolidadas", summary['total_linhas'])
+    st.divider()
     
-    with st.expander("analisar logs de validação"):
-        st.dataframe(pd.DataFrame(logs), use_container_width=True)
+    # --- NORMALIZATION BLOCK ---
+    st.header("Normalização de Texto (Opcional)")
+    
+    col_opts, col_action = st.columns([1, 2])
+    
+    with col_opts:
+        st.markdown("**Configurações:**")
+        do_accents = st.toggle("Remover Acentos", True)
+        do_punct = st.toggle("Remover Pontuação", True)
+        do_stopwords = st.toggle("Remover Stopwords (de, da, o...)", True)
+        do_spaces = st.toggle("Colapsar Espaços", True)
         
-    st.dataframe(df_final.head(20), use_container_width=True)
+        config = {
+            'remove_accents': do_accents,
+            'remove_punctuation': do_punct,
+            'remove_stopwords': do_stopwords,
+            'collapse_spaces': do_spaces
+        }
+
+    with col_action:
+        if st.button("Gerar CSV Normalizado"):
+            with st.spinner("Normalizando..."):
+                df_norm, logs = di.etl_normalize_df(state['df_all'], config)
+                
+                state['df_norm'] = df_norm
+                state['csv_norm_bytes'] = df_norm.to_csv(index=False).encode('utf-8')
+                state['etl_log'] = logs
+                st.success("Normalização concluída!")
+
+    if state['df_norm'] is not None:
+        st.markdown("#### Preview Normalizado")
+        st.dataframe(state['df_norm'].head(20), use_container_width=True)
+        
+        st.download_button(
+            "⬇️ Baixar CSV Normalizado",
+            state['csv_norm_bytes'],
+            f"{state['filename']}__consolidado_normalizado.csv",
+            "text/csv",
+            type="primary"
+        )
+        
+        with st.expander("Log de Normalização"):
+             st.write(state.get('etl_log'))
+
