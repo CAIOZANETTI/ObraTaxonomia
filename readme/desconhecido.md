@@ -1,101 +1,226 @@
-# Tratamento de Itens Desconhecidos (Feedback Loop com IA)
+# Tratamento de itens desconhecidos
 
-**Objetivo**: Estabelecer um ciclo virtuoso de melhoria contínua onde os itens não reconhecidos pela taxonomia atual não são descartados, mas sim utilizados como combustível para treinar e expandir a base de conhecimento (YAMLs) assistida pelo agente Antigravity.
+Ciclo de melhoria contínua: tudo que não foi reconhecido pela taxonomia vira insumo para evoluir os YAMLs com apoio do agente Antigravity.
 
-## 1. O Fluxo do "Refugo de Ouro"
+## Objetivo
 
-Quando o motor de classificação roda e marca itens como `tax_desconhecido = TRUE`, esses dados representam uma lacuna de conhecimento na taxonomia. Em vez de exigir esforço manual imediato para cada linha, adotamos um processo de "Remediação em Lote" assistido por IA.
+1. Não descartar falhas de reconhecimento (`tax_desconhecido = true`)
+2. Agrupar e priorizar desconhecidos (por frequência e unidade)
+3. Gerar um pacote de entrada para o Antigravity propor atualizações de YAML
+4. Aprovar mudanças (humano no loop)
+5. Rodar o build para atualizar `data/master/reconhecimento_master.json`
 
-### O Processo Cíclico
+---
 
-1.  **Filtragem e Extração**: Durante o processamento da planilha, o sistema identifica e isola automaticamente todas as linhas onde a classificação falhou.
-2.  **Persistência (Buffer)**: Esses itens "órfãos" são salvos em uma pasta dedicada (`data/unknowns`), aguardando análise.
-3.  **Ingestão pelo Agente (Antigravity)**: O agente de IA lê periodicamente esses arquivos de refugo.
-4.  **Verificação Cruzada**: A IA compara os itens desconhecidos contra a estrutura atual de arquivos YAML para entender se é um caso de:
-    *   **Sinônimo Faltante**: O conceito já existe, mas o termo usado é novo (ex: "Bêtao" vs "Concreto").
-    *   **Conceito Novo**: O item realmente não existe na base e precisa de uma nova regra/classe.
-5.  **Proposta de Evolução**: A IA gera um relatório ou diretamente uma sugestão de código (Snippet YAML) para completar a taxonomia.
+## Onde isso encaixa no fluxo do app
 
-## 2. Estratégia de Armazenamento
+Pipeline resumido:
 
-Para organizar a fila de processamento da IA, sugerimos a criação de uma estrutura de diretórios dedicada para logs de erro e aprendizado:
+1. upload excel → conversão para csv em `st.session_state` (`csv_raw`)
+2. escolha/validação de colunas (descricao, unidade, quantidade, preço) (`csv_struct`)
+3. normalização de texto (`descricao_norm`) (`csv_norm`)
+4. reconhecimento (apelido sugerido, score, semelhantes) (`csv_labeled`)
+5. validação do usuário (apelido_final + validado) (`csv_validated`)
+6. extração e consolidação de desconhecidos (`unknowns`)
 
-```text
-/
-├── data/
-│   └── unknowns/             # "Caixa de Entrada" da IA
-│       ├── 2024-01-15_obra_alpha_unknowns.csv
-│       ├── 2024-01-16_obra_beta_unknowns.csv
+Recomendação:
+
+* gerar uma prévia de `unknowns` ao final da etapa 4 (para transparência)
+* consolidar e salvar o lote ao final da etapa 5
+
+---
+
+## O que é considerado “desconhecido”
+
+Um item entra em `unknowns` se qualquer condição for verdadeira:
+
+1. `no_match`: nenhum candidato passou no filtro (unidade + must/must_not)
+2. `low_score`: houve candidato, mas o melhor score ficou abaixo do limiar (ex.: `< 0.65`)
+3. `ambiguous`: top1 e top2 muito próximos (risco alto)
+4. `bad_unit`: unidade inválida ou não mapeada (problema de normalização)
+
+Campos úteis para debug:
+
+* `motivo_desconhecido`: `no_match | low_score | ambiguous | bad_unit`
+* `top_candidates`: lista curta (apelido + score)
+
+---
+
+## Estrutura de armazenamento
+
+### Diretórios
+
+```
+repo/
+  data/
+    master/
+      reconhecimento_master.json
+      sanidade_master.json
+    unknowns/
+      inbox/
+      processed/
+      archive/
 ```
 
-### Formato do Arquivo de Refugo (.csv)
+Papel de cada pasta:
 
-O arquivo deve ser leve, contendo apenas o necessário para o contexto da IA:
+* `inbox/`: entrada do Antigravity (pronta para consumir)
+* `processed/`: lotes já analisados (com resultado/decisão)
+* `archive/`: histórico antigo (compactação/backup)
 
-| Coluna | Descrição |
-| :--- | :--- |
-| `descricao_original` | O texto exato que não foi reconhecido. |
-| `unidade_original` | A unidade que acompanhava o texto (vital para desambiguação). |
-| `frequencia` | Quantas vezes esse item apareceu na planilha (para priorizar correções de alto impacto). |
-| `arquivo_origem` | Nome do arquivo original para rastreabilidade. |
+### Naming dos lotes
 
-## 3. Ação do Agente Antigravity (Prompt de Identificação)
+Formato recomendado:
 
-O agente utiliza um prompt especializado para "limpar" essa base. A lógica de operação é:
+* `YYYY-MM-DD_HHMM_<origem>_unknowns.jsonl`
 
-> **Prompt para o Agente Antigravity**
->
-> **Role**: Você é o **Guardião da Taxonomia**. Sua missão é analisar itens desconhecidos e expandir a base de conhecimento YAML sem criar duplicatas ou regras frágeis.
->
-> **Task**: Processar o arquivo de entrada (CSV de itens desconhecidos) e gerar snippets YAML para atualização.
->
-> **Regras de Leitura (Estrutura YAML Existente)**:
-> Ao ler os arquivos na pasta `yaml/`, observe estritamente o seguinte schema:
-> ```yaml
-> regras:
->   - apelido: "nome_padronizado_unidade"
->     unit: "unidade"
->     contem:
->       - ["termo1", "termo2"] # Grupo de sinônimos (Lógica OR dentro da lista, AND entre listas)
->     ignorar:
->       - ["termo_proibido"]   # Exclusão explícita
-> ```
->
-> **Passo a Passo da Execução**:
->
-> 1.  **Ler o Input**: Carregue o CSV de itens desconhecidos (`descricao` | `unidade`).
-> 2.  **Buscar Similaridade (Fuzzy Search)**:
->     *   Para cada item, verifique se já existe um `apelido` semanticamente idêntico nos arquivos YAML existentes.
->     *   *Exemplo*: Se o item é "Concreto Bombeável" e já existe `concreto_bombeamento_m3`, **NÃO** crie uma nova regra. Apenas sugira adicionar "bombeável" na lista `contem`.
-> 3.  **Detectar Novos Conceitos**:
->     *   Se o item for um material/serviço totalmente novo (ex: "Manta Geotêxtil Bidim"), crie uma nova entrada completa.
->     *   Defina um `apelido` no padrão `substantivo_qualificador_unidade` (ex: `geotextil_bidim_m2`).
->     *   Preencha `contem` com as palavras-chave mais óbvias.
->     *   Preencha `ignorar` com termos que possam causar confusão (ex: ignorar "asfalto" se for manta de impermeabilização de laje).
-> 4.  **Validar Unidade**:
->     *   O `apelido` DEVE terminar com a unidade canônica (`_m3`, `_m2`, `_kg`, `_un`, `_vb`, `_h`).
->     *   Se o input tem unidade "saco" ou "lata", converta mentalmente para a unidade de engenharia (ex: Cimento é `_kg`, Tinta é `_l`) e anote a necessidade de conversão no comentário.
->
-> **Output Esperado**:
-> Gere um bloco de código Markdown com as alterações sugeridas no formato Diff ou Append:
->
-> ```yaml
-> # Arquivo: yaml/grupos/impermeabilizacao.yaml
-> # Adicionar à regra existente: manta_asfaltica_m2
-> contem:
->   - [ ... , "manta aluminizada" ] # Novo termo descoberto
->
-> # Nova Regra Sugerida:
-> - apelido: manta_liquida_pu_m2
->   unit: m2
->   contem:
->     - ["manta liquida", "poliuretano", "pu"]
->   ignorar:
->     - ["asfalto"]
-> ```
+Exemplo:
 
-## 4. Benefícios do Modelo
+* `2026-01-23_1740_orcamento_tesc_unknowns.jsonl`
 
-*   **Autocorreção**: O sistema aprende com os dados reais do dia a dia.
-*   **Zero atrito**: O usuário não precisa parar o trabalho para "cadastrar itens". Ele apenas joga o desconhecido no balde, e a IA processa depois.
-*   **Curadoria Inteligente**: A IA remove o trabalho braçal de ler milhares de linhas de erro, apresentando para o humano apenas as decisões estruturais ("Aprovar nova regra para Argamassa Polimérica?").
+Por que `jsonl`:
+
+* cada linha é um objeto json independente
+* permite `top_candidates`, motivos, amostras de origem sem virar string
+* fácil de anexar por lote e versionar
+
+---
+
+## Formato do lote unknowns (entrada do Antigravity)
+
+Formato recomendado: `jsonl`.
+
+Cada linha:
+
+```json
+{
+  "descricao_original": "concreto bombeavel fck 30",
+  "descricao_norm": "concreto bombeavel fck 30",
+  "unidade_original": "m3",
+  "unidade_canonica": "m3",
+  "frequencia": 12,
+  "arquivo_origem": "orcamento_tesc.xlsx",
+  "aba_origem": "planilha 1",
+  "linha_origem": 153,
+  "motivo_desconhecido": "low_score",
+  "top_candidates": [
+    {"apelido": "concreto_usinado_m3", "score": 0.61},
+    {"apelido": "concreto_bombeado_m3", "score": 0.58}
+  ]
+}
+```
+
+Mínimo obrigatório:
+
+* `descricao_original`
+* `unidade_original`
+* `frequencia`
+* `arquivo_origem`
+
+Recomendado:
+
+* `descricao_norm`
+* `unidade_canonica`
+* `motivo_desconhecido`
+* `top_candidates`
+
+---
+
+## Consolidação e deduplicação (antes de salvar)
+
+Antes de escrever em `data/unknowns/inbox/`:
+
+1. normalizar `descricao_original` → `descricao_norm`
+2. agrupar por (`descricao_norm`, `unidade_canonica`)
+3. somar `frequencia`
+4. manter amostras de origem (ex.: top 3 ocorrências com `aba_origem/linha_origem`)
+5. ordenar por `frequencia` desc (prioridade)
+
+Objetivo:
+
+* o Antigravity não deve receber 3.000 linhas repetidas com 5 variações de espaço
+
+---
+
+## Operação do agente Antigravity
+
+### Missão
+
+* expandir a base YAML sem criar duplicatas e sem criar regras frágeis
+
+### O que ele lê
+
+1. `data/unknowns/inbox/*.jsonl`
+2. árvore `yaml/` atual
+3. opcional: `data/master/reconhecimento_master.json` (para acelerar similaridade)
+
+### Saída esperada
+
+Gerar um pacote de propostas aplicável:
+
+1. `patches/` com diffs por arquivo yaml
+2. `relatorio.md` com justificativas e riscos
+
+Saída mínima (sempre):
+
+* lista de alterações sugeridas com:
+
+  * arquivo alvo
+  * regra alvo (se for extensão)
+  * nova regra (se for conceito novo)
+  * justificativa
+
+### Regras de decisão (anti-lixo)
+
+1. se o conceito já existe: preferir adicionar sinônimo em `contem`
+2. se for conceito novo: criar regra com `contem` e `ignorar` mínimos e sólidos
+3. respeitar unidade e padrão do apelido (`*_m3`, `*_m2`, `*_kg`, `*_un`, `_vb`, `_h`)
+4. não inventar conversão de unidade: se vier “lata/saco”, registrar observação (conversão é outra etapa)
+
+---
+
+## Humano no loop (aprovação)
+
+Antes de virar YAML oficial:
+
+1. revisar diffs
+2. checar duplicidade de `apelido`
+3. checar se `contem` ficou genérico demais (risco de falso positivo)
+4. checar se `ignorar` cobre confusões óbvias
+
+Depois:
+
+1. aplicar patches em `yaml/`
+2. rodar `yaml_to_master(...)`
+3. atualizar `data/master/reconhecimento_master.json`
+
+---
+
+## Atualização do master (gatilho prático)
+
+Atualizar sempre que:
+
+1. qualquer YAML for alterado (novo/removido/editado)
+2. um lote de unknowns for aprovado e aplicado nos YAMLs
+
+Mecanismo automático recomendado:
+
+* `sanidade_master.json` contém `yaml_fingerprint`
+* se o fingerprint atual divergir do salvo, rebuild
+
+---
+
+## Integração mínima no Streamlit (ux limpa)
+
+Componentes úteis:
+
+1. `st.dataframe` (top unknowns por frequência)
+2. `st.toggle` (mostrar top N)
+3. `st.pills` (filtro por `motivo_desconhecido` e `unidade_canonica`)
+4. `st.download_button` (baixar `unknowns.jsonl`)
+5. `st.caption` (1 linha: isso alimenta o Antigravity)
+
+Saídas do app:
+
+* principal: `apelidado_validado.csv` (resultado final validado)
+* secundária: `unknowns.jsonl` (alimenta IA)
