@@ -140,9 +140,13 @@ if uploaded_file:
                 m3.metric("Abas", len(sheet_names) if st.session_state['sheet_mode'] == 'Concatenar Abas' else 1)
                 
                 # Preview
-                st.subheader("Preview (Topo e Fim)")
-                st.dataframe(df_raw.head(5), use_container_width=True)
-                st.dataframe(df_raw.tail(5), use_container_width=True)
+                st.markdown("### 🔍 Visualização dos Dados")
+                
+                with st.expander("🟦 Início do Arquivo (Primeiras 10 linhas)", expanded=True):
+                    st.dataframe(df_raw.head(10), use_container_width=True)
+                
+                with st.expander("🟧 Fim do Arquivo (Últimas 10 linhas)", expanded=True):
+                    st.dataframe(df_raw.tail(10), use_container_width=True)
                 
                 # Ações
                 st.divider()
