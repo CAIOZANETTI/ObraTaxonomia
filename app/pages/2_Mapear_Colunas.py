@@ -14,29 +14,31 @@ if 'csv_raw' not in st.session_state:
         st.switch_page("pages/1_Upload_Excel.py")
     st.stop()
 
-# --- Carregar Dados ---
-try:
-    df_raw = pd.read_csv(io.StringIO(st.session_state['csv_raw']))
-    cols_originais = df_raw.columns.tolist()
-except Exception as e:
-    st.error(f"Erro ao ler CSV da sessão: {e}")
-    st.stop()
-
-# --- Definição dos Campos ---
-MANDATORY_FIELDS = {
-    'descricao': 'Descrição do Item *',
-    'unidade': 'Unidade de Medida *',
-    'quantidade': 'Quantidade *'
-}
-OPTIONAL_FIELDS = {
-    'codigo': 'Código / Item',
-    'preco_unit': 'Preço Unitário',
-    'preco_total': 'Preço Total'
-}
-
 # --- Sidebar: Controles de Mapeamento ---
 with st.sidebar:
     st.header("🔧 Configuração")
+    
+    # --- Ajuste de Cabeçalho ---
+    st.markdown("### 1. Ajuste de Tabela")
+    # Default 0, mas permite pular linhas de "lixo" no topo
+    header_row = st.number_input(
+        "Linha do Cabeçalho", 
+        min_value=0, 
+        value=0, 
+        help="Se a planilha tem títulos ou logos no topo, aumente este número até a linha azul (cabeçalho) ficar correta."
+    )
+    
+    # Recarregar com novo header (Otimização: cachear ou apenas ler de novo é rápido com StringIO)
+    try:
+        # header=header_row define qual linha é o header (0-indexed)
+        df_raw = pd.read_csv(io.StringIO(st.session_state['csv_raw']), header=header_row)
+        cols_originais = df_raw.columns.tolist()
+    except Exception as e:
+        st.error(f"Erro ao ler cabeçalho na linha {header_row}: {e}")
+        st.stop()
+        
+    st.markdown("---")
+    st.markdown("### 2. Mapeamento")
     st.markdown("Associe as colunas do Excel aos campos do sistema.")
     st.divider()
     
