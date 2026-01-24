@@ -1,0 +1,21 @@
+# Testes End-to-End da Taxonomia
+# Formato:
+# - input: {descricao: "texto", unidade: "un"}
+#   expected: {apelido: "classe_esperada", tipo: "dominio_esperado", status: "ok" | "unit_mismatch" | "unknown"}
+
+- input: {descricao: "Concreto usinado fck 25mpa", unidade: "m3"}
+  expected: {apelido: "concreto_usinado_m3", tipo: "concreto"}
+
+- input: {descricao: "Locação de container", unidade: "mês"}
+  expected: {apelido: "locacao_container_mes", tipo: "canteiro"} # Supondo que exista ou falhe
+
+- input: {descricao: "Aço CA-50 10mm", unidade: "kg"}
+  expected: {apelido: "aco_ca50_kg", tipo: "estrutura"}
+
+# Teste de unidade incorreta (deve falhar ou ser unknown se strict)
+- input: {descricao: "Aço CA-50 10mm", unidade: "m"}
+  expected: {apelido: null, status: "unknown"}
+
+# Teste de conversão simples (se e somente se "m³" -> m3)
+- input: {descricao: "Concreto bombeado", unidade: "m³"}
+  expected: {apelido: "concreto_usinado_m3", tipo: "concreto"} # Ajustar conforme regras reais

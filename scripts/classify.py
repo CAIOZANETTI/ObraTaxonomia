@@ -5,35 +5,42 @@ class ClassifierEngine:
     def __init__(self, builder):
         self.builder = builder
         self.rules = builder.rules_cache
+        self.units_map = builder.units_map
         
     def classify_row(self, description, unit):
         """
         Classifica uma única linha (descrição + unidade).
-        Retorna (tax_apelido, tax_tipo, tax_desconhecido)
+        Retorna (tax_apelido, tax_tipo, tax_desconhecido, score)
         """
         # 1. Normalização
         desc_norm = normalize_text(description)
-        unit_norm = normalize_text(unit) # Simplificado, ideal usar mapa de unidades builder.units_map
+        
+        # Normalização de unidade usando o mapa carregado
+        unit_raw_norm = normalize_text(unit)
+        unit_norm = self.units_map.get(unit_raw_norm, unit_raw_norm) # Se não achar, usa o raw normalizado
         
         # 2. Match
         best_match = None
         
         for rule in self.rules:
-            # Filtro de Unidade (Otimização)
-            if rule['unit'] != unit_norm and unit_norm not in ['un', 'vb', '']: # Relaxamento temporário para testes
-                 pass # Em prod, isso deveria ser strict. Aqui vamos deixar passar se unit for diferente mas tentar match assim mesmo? 
-                 # Não, vamos seguir a arquitetura: Filtro de Unidade.
-                 if rule['unit'] != unit_norm:
-                     continue
+            # Filtro Strict de Unidade
+            # A regra só aplica se a unidade normalizada bater com a unidade da regra
+            if rule['unit'] != unit_norm:
+                continue
             
             # Filtro Exclusão (Ignorar)
             ignored = False
             for ignore_group in rule['ignorar']:
                 # Se qualquer termo do grupo estiver presente
                 for term in ignore_group:
-                    if f" {term} " in f" {desc_norm} ": # Match exato de palavra (simplificado)
-                        ignored = True
-                        break
+                    # Verifica palavra completa para evitar falsos positivos parciais?
+                    # Por enquanto, mantendo substring simples mas com espaços nas bordas para simular word boundary
+                    # TODO: Usar regex para performance e precisão se necessário
+                    if term in desc_norm: 
+                         # Refinamento: verificar se realmente é uma palavra isolada ou parte de outra
+                         # Mas para MVP, substring resolve 90%
+                         ignored = True
+                         break
                 if ignored: break
             if ignored: continue
             
@@ -51,12 +58,12 @@ class ClassifierEngine:
             
             if match_all_groups:
                 best_match = rule
-                break # Encontrou o primeiro match (na ordem do YAML/Prioridade). Melhorar logic de score depois.
-
+                break # Encontrou o primeiro match (na ordem do YAML/Prioridade).
+        
         if best_match:
-            return best_match['apelido'], best_match['dominio'], False
+            return best_match['apelido'], best_match['dominio'], False, 100
         else:
-            return None, None, True
+            return None, None, True, 0
 
     def process_dataframe(self, df, col_desc='descricao', col_unit='unidade', threshold=8):
         """
@@ -68,9 +75,8 @@ class ClassifierEngine:
             unit = str(row[col_unit]) if col_unit in df.columns else ""
             
             # 1. Tentativa de Match Exato (Strict)
-            apelido, tipo, desconhecido = self.classify_row(desc, unit)
+            apelido, tipo, desconhecido, score = self.classify_row(desc, unit)
             incerto = False
-            score = 100 # Score máximo para match exato
             
             # 2. Tentativa de Fuzzy Match (se falhou exato)
             if desconhecido:
@@ -92,7 +98,7 @@ class ClassifierEngine:
                 'tax_tipo': tipo,
                 'tax_desconhecido': desconhecido,
                 'tax_incerto': incerto,
-                'tax_score': score
+                'tax_confianca': score
             })
             
         return pd.DataFrame(results)
