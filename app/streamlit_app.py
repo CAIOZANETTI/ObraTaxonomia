@@ -1,114 +1,40 @@
 import streamlit as st
-import pandas as pd
 import os
-import time
-from scripts.builder import TaxonomyBuilder
-from scripts.classify import ClassifierEngine
 
 st.set_page_config(
-    page_title="ObraTaxonomia - Processador",
+    page_title="ObraTaxonomia Home",
     page_icon="🏗️",
     layout="wide"
 )
 
-# --- Singleton Cache para Builder (evitar recarregar YAML a cada interação) ---
-@st.cache_resource
-def get_engine():
-    base_dir = os.path.join(os.path.dirname(__file__), '..', 'yaml')
-    builder = TaxonomyBuilder(base_dir).load_all()
-    classifier = ClassifierEngine(builder)
-    return classifier
+st.title("🏗️ ObraTaxonomia v4")
 
-classifier = get_engine()
+st.markdown("""
+### Bem-vindo ao Sistema de Taxonomia de Obras
 
-st.title("🏗️ ObraTaxonomia")
+Este sistema guia você através de 5 etapas para processar, normalizar e classificar itens de orçamento:
 
-st.markdown("### Processador de Orçamentos e Memoriais")
-st.info("O sistema aplica regras estritas de unidade. Itens com unidades incompatíveis serão marcados como desconhecidos.")
+1.  **Upload**: Carregue seu arquivo Excel e converta para CSV.
+2.  **Mapear**: Defina quais colunas correspondem ao padrão do sistema.
+3.  **Normalizar**: Limpe e padronize textos e números.
+4.  **Classificar**: Receba sugestões de apelidos e valide-as.
+5.  **Desconhecidos**: Exporte itens não identificados para curadoria.
 
-# --- Upload ---
-uploaded_file = st.file_uploader("Carregar planilha (.xlsx, .csv)", type=['xlsx', 'csv'])
+---
+**Status da Sessão:**
+""")
 
-if uploaded_file:
-    try:
-        if uploaded_file.name.endswith('.csv'):
-            df = pd.read_csv(uploaded_file)
-        else:
-            df = pd.read_excel(uploaded_file)
-        
-        st.write(f"Arquivo carregado: **{len(df)} linhas**")
-        
-        # --- Seleção de Colunas ---
-        cols = df.columns.tolist()
-        col1, col2 = st.columns(2)
-        
-        # Tenta adivinhar colunas padrão
-        default_desc = next((c for c in cols if 'desc' in c.lower()), cols[0])
-        default_unit = next((c for c in cols if 'unid' in c.lower()), cols[1] if len(cols)>1 else cols[0])
-        
-        with col1:
-            col_desc = st.selectbox("Coluna de Descrição", cols, index=cols.index(default_desc))
-        with col2:
-            col_unit = st.selectbox("Coluna de Unidade", cols, index=cols.index(default_unit))
-            
-        if st.button("🚀 Processar Classificação"):
-            with st.spinner("Classificando itens..."):
-                start_time = time.time()
-                
-                # Processamento
-                result_df = classifier.process_dataframe(df, col_desc=col_desc, col_unit=col_unit)
-                
-                # Merge com original
-                final_df = pd.concat([df, result_df], axis=1)
-                
-                elapsed = time.time() - start_time
-                st.success(f"Processamento concluído em {elapsed:.2f}s")
-                
-                # --- Resultados ---
-                st.divider()
-                
-                # Métricas
-                total = len(final_df)
-                unknowns = final_df['tax_desconhecido'].sum()
-                found = total - unknowns
-                accuracy = (found / total) * 100
-                
-                m1, m2, m3 = st.columns(3)
-                m1.metric("Itens Classificados", found)
-                m2.metric("Desconhecidos / Erro Unidade", unknowns)
-                m3.metric("Taxa de Sucesso", f"{accuracy:.1f}%")
-                
-                # Preview
-                st.subheader("Preview dos Resultados")
-                st.dataframe(final_df.head(50), use_container_width=True)
-                
-                # Filtro de Desconhecidos
-                if unknowns > 0:
-                    st.warning(f"Foram encontrados {unknowns} itens não classificados ou com unidade incompatível.")
-                    st.dataframe(final_df[final_df['tax_desconhecido'] == True].head(20))
-                
-                # --- Downloads ---
-                d1, d2 = st.columns(2)
-                
-                # CSV Completo
-                csv = final_df.to_csv(index=False).encode('utf-8')
-                d1.download_button(
-                    "📥 Baixar Resultado Completo (CSV)",
-                    csv,
-                    "orcamento_classificado.csv",
-                    "text/csv"
-                )
-                
-                # CSV Unknowns (para curadoria)
-                if unknowns > 0:
-                    unknowns_df = final_df[final_df['tax_desconhecido'] == True]
-                    csv_unknown = unknowns_df.to_csv(index=False).encode('utf-8')
-                    d2.download_button(
-                        "🧐 Baixar Apenas Desconhecidos (Curadoria)",
-                        csv_unknown,
-                        "unknowns_to_curate.csv",
-                        "text/csv"
-                    )
-                
-    except Exception as e:
-        st.error(f"Erro ao ler arquivo: {e}")
+# Mostrar estado atual da sessão para debug/acompanhamento
+if 'csv_raw' in st.session_state:
+    st.success("✅ CSV Bruto carregado")
+else:
+    st.warning("⚠️ Nenhum arquivo carregado")
+
+if 'colmap' in st.session_state:
+    st.success("✅ Colunas mapeadas")
+
+if 'csv_validated' in st.session_state:
+    st.success("✅ Classificação validada")
+
+st.divider()
+st.caption("Antigravity Engineer - v4.0.0")

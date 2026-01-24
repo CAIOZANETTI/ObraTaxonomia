@@ -77,28 +77,49 @@ class ClassifierEngine:
             # 1. Tentativa de Match Exato (Strict)
             apelido, tipo, desconhecido, score = self.classify_row(desc, unit)
             incerto = False
-            
+            alternativa = None
+            motivo = "Match exato" if not desconhecido else "Sem match"
+            status = "ok"
+            matches_similares = []
+
             # 2. Tentativa de Fuzzy Match (se falhou exato)
             if desconhecido:
-                matches = self.get_similar_matches(desc, unit, top_n=1)
+                matches = self.get_similar_matches(desc, unit, top_n=3)
                 if matches and matches[0]['score'] >= threshold:
                     # Encontrou um candidato bom (Incerto/Sugestão)
                     best = matches[0]
                     apelido = best['apelido']
                     tipo = best['tipo']
-                    desconhecido = False # Não é totalmente desconhecido, é incerto
+                    desconhecido = False # Não é totalmente desconhecido, é incerto/sugerido
                     incerto = True
                     score = best['score']
+                    status = "revisar"
+                    motivo = "Similaridade"
+                    
+                    if len(matches) > 1:
+                        alternativa = matches[1]['apelido']
+                    
+                    matches_similares = [m['apelido'] for m in matches]
                 else:
                     # Realmente desconhecido
                     score = matches[0]['score'] if matches else 0
+                    status = "desconhecido"
+                    motivo = "Score baixo ou unidade inv."
             
+            # Definição do apelido final sugerido
+            # Se for desconhecido, apelido é None ou vazio, para forçar usuário a preencher
+            apelido_sugerido = apelido if apelido else None
+
             results.append({
-                'tax_apelido': apelido,
+                'apelido_sugerido': apelido_sugerido,
+                'alternativa': alternativa,
+                'score': score,
+                'status': status,
+                'motivo': motivo,
+                'semelhantes': str(matches_similares), # Flatten para simples visualização
                 'tax_tipo': tipo,
-                'tax_desconhecido': desconhecido,
-                'tax_incerto': incerto,
-                'tax_confianca': score
+                'tax_desconhecido': desconhecido, # Manter legado por enquanto se necessário
+                'unidade_sugerida': unit # Por enquanto assume a unidade original se validou? Ou pega da regra?
             })
             
         return pd.DataFrame(results)
