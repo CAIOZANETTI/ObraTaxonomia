@@ -311,7 +311,14 @@ graph TD;
 
 **Mockup:**
 ```
+[Abas] [Upload Arquivo] | [Arquivo de Teste]
+
+Se Upload:
 [arquivo]   st.file_uploader
+
+Se Teste:
+[arquivo]   st.selectbox (lista de data/excel)
+
 [modo]      st.pills    (uma aba | concatenar abas)
 [aba]       st.pills / st.selectbox (pills se poucas abas)
 
@@ -687,6 +694,7 @@ Ações
 ### Upload (Página 1)
 - ✅ Arquivo vazio → bloquear
 - ✅ Aba "não tabela" → warning
+- ✅ Aba de Teste: Seleção rápida de arquivos em `data/excel`
 
 ### Mapear (Página 2)
 - ✅ Duplicidade no mapeamento → impedir
