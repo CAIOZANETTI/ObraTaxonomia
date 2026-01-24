@@ -1,0 +1,17 @@
+{
+  "version": "2026-01-24T08:24:14.452158",
+  "yaml_fingerprint": "3fb62698f80a3b3c1ec770d97ba4d16433715e32d01c0e46ec373ce9b50b66d0",
+  "files_count": 9,
+  "rules_count": 182,
+  "units_count": 143,
+  "unit_distribution": {
+    "un": 32,
+    "m3": 92,
+    "m2": 17,
+    "kg": 8,
+    "t": 7,
+    "h": 26
+  },
+  "warnings": [],
+  "duplicates": []
+}
