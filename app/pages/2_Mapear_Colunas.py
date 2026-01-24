@@ -7,6 +7,7 @@ st.set_page_config(page_title="2. Mapear Colunas", layout="wide")
 st.header("2. Mapeamento de Colunas")
 st.markdown("Identifique quais colunas do seu arquivo correspondem aos campos padrões do sistema.")
 
+# --- Validação Inicial ---
 if 'csv_raw' not in st.session_state:
     st.error("Nenhum arquivo carregado. Volte para a página 1.")
     if st.button("Voltar"):
@@ -22,150 +23,141 @@ except Exception as e:
     st.stop()
 
 # --- Definição dos Campos Padrão ---
-MANDATORY_FIELDS = ['descricao', 'unidade', 'quantidade']
-OPTIONAL_FIELDS = ['codigo', 'preco_unit', 'preco_total']
-ALL_FIELDS = MANDATORY_FIELDS + OPTIONAL_FIELDS
+MANDATORY_FIELDS = {
+    'descricao': 'Descrição do Item (Obrigatório)',
+    'unidade': 'Unidade de Medida (Obrigatório)',
+    'quantidade': 'Quantidade (Obrigatório)'
+}
+OPTIONAL_FIELDS = {
+    'codigo': 'Código / Item',
+    'preco_unit': 'Preço Unitário',
+    'preco_total': 'Preço Total'
+}
 
-# --- Interface de Mapeamento ---
-st.subheader("Configuração de De/Para")
+ALL_FIELDS_ORDER = list(MANDATORY_FIELDS.keys()) + list(OPTIONAL_FIELDS.keys())
 
-# Prepara DataFrame para o Data Editor
-# Estrutura: [Campo Padrão, Coluna no Arquivo]
-map_data = []
+# --- Lógica de Mapa ---
+# Inicializar mapa na sessão se não existir
+if 'colmap' not in st.session_state:
+    st.session_state['colmap'] = {}
 
-# Tentar automap (heurística simples)
-used_cols = set()
-for field in ALL_FIELDS:
-    match = None
-    # Procura por substring
-    for col in cols_originais:
-        if col in used_cols: continue
-        
-        # Heurísticas básicas
-        if field == 'descricao' and any(x in col.lower() for x in ['desc', 'disc', 'nome', 'servico']):
-            match = col
-        elif field == 'unidade' and any(x in col.lower() for x in ['unid', 'und']):
-            match = col
-        elif field == 'quantidade' and any(x in col.lower() for x in ['quant', 'qtd', 'qtde']):
-            match = col
-        elif field == 'codigo' and any(x in col.lower() for x in ['cod', 'item', 'ref']):
-            match = col
-        elif field == 'preco_unit' and any(x in col.lower() for x in ['unit', 'p.u']):
-            match = col
-        elif field == 'preco_total' and any(x in col.lower() for x in ['total', 'vl', 'valor']):
-            match = col
+# Copia para manipulação local
+current_map = st.session_state['colmap'].copy()
+
+# Heurística de Auto-Map (roda se o campo ainda não estiver mapeado)
+def try_automap(field, columns, used):
+    if field in current_map and current_map[field] in columns:
+        return current_map[field]
     
-    if match:
-        used_cols.add(match)
+    # Palavras-chave para heurística
+    keywords = {
+        'descricao': ['desc', 'disc', 'nome', 'servico', 'objeto'],
+        'unidade': ['unid', 'und', 'med'],
+        'quantidade': ['quant', 'qtd', 'qtde'],
+        'codigo': ['cod', 'item', 'ref'],
+        'preco_unit': ['unit', 'p.u', 'preco_unit'],
+        'preco_total': ['total', 'vl', 'valor', 'preco_tot']
+    }
     
-    # Se já tem mapeamento salvo na sessão, usa ele
-    saved_map = st.session_state.get('colmap', {})
-    current_val = saved_map.get(field, match)
-    
-    map_data.append({
-        "Campo Sistema": field,
-        "Obrigatório": "Sim" if field in MANDATORY_FIELDS else "Não",
-        "Coluna no Arquivo": current_val
-    })
+    for col in columns:
+        if col in used: continue
+        if any(k in col.lower() for k in keywords.get(field, [])):
+            return col
+    return None
 
-df_map = pd.DataFrame(map_data)
+# --- Interface Sequencial ---
+used_columns = []
+warnings = []
 
-# Editor de mapeamento
-edited_df = st.data_editor(
-    df_map,
-    column_config={
-        "Campo Sistema": st.column_config.TextColumn(disabled=True),
-        "Obrigatório": st.column_config.TextColumn(disabled=True),
-        "Coluna no Arquivo": st.column_config.SelectboxColumn(
-            "Selecione a coluna",
-            options=[""] + cols_originais,
-            required=True
-        )
-    },
-    use_container_width=True,
-    hide_index=True,
-    num_rows="fixed"
-)
-
-# --- Validação e Aplicação ---
 st.divider()
 
-colmap = {}
-errors = []
+col_layout, preview_layout = st.columns([1, 1])
 
-for idx, row in edited_df.iterrows():
-    field = row["Campo Sistema"]
-    col_file = row["Coluna no Arquivo"]
-    required = row["Obrigatório"] == "Sim"
+with col_layout:
+    st.subheader("Seleção de Colunas")
     
-    if required and (not col_file or col_file == ""):
-        errors.append(f"O campo obrigatório **{field}** não foi mapeado.")
-    
-    if col_file and col_file != "":
-        if col_file in colmap.values():
-            errors.append(f"A coluna **{col_file}** foi mapeada mais de uma vez.")
-        colmap[field] = col_file
+    for field in ALL_FIELDS_ORDER:
+        label = MANDATORY_FIELDS.get(field, OPTIONAL_FIELDS.get(field))
+        is_mandatory = field in MANDATORY_FIELDS
+        
+        # Filtrar colunas disponíveis (excluir as já usadas em iterações anteriores neste loop)
+        available_cols = [c for c in cols_originais if c not in used_columns or (field in current_map and current_map[field] == c)]
+        
+        # Determinar valor atual ou automap
+        default_val = try_automap(field, cols_originais, used_columns)
+        
+        # Se o valor atual (do session ou automap) não estiver nas disponíveis, resetar
+        if default_val and default_val not in available_cols:
+            default_val = None
 
-if errors:
-    for err in errors:
-        st.error(err)
-else:
-    st.info("Mapeamento parece válido.")
+        # UI: Pills
+        # Note: st.pills returns the selection interactively. 
+        # Selection mode "single" returns value or None.
+        selection = st.pills(
+            f"{label} {'*' if is_mandatory else ''}",
+            options=available_cols,
+            selection_mode="single",
+            default=default_val,
+            key=f"pills_{field}"
+        )
+        
+        if selection:
+            current_map[field] = selection
+            used_columns.append(selection)
+            
+            # Mostrar preview IMEDIATO (Snippet)
+            st.caption(f"👁️ Preview: **{selection}**")
+            # Pequeno dataframe preview logo abaixo do pill
+            st.dataframe(df_raw[selection].head(10), height=150, use_container_width=True)
+            st.markdown("---")
+            
+        else:
+            # Se obrigatório e vazio, avisa
+            if is_mandatory:
+                st.warning(f"⚠️ O campo **{field}** é obrigatório.")
+                warnings.append(field)
+            # Remove do mapa se foi desmarcado
+            if field in current_map:
+                del current_map[field]
 
+# --- Atualizar Session State ---
+st.session_state['colmap'] = current_map
+
+# --- Ações ---
+st.divider()
 c1, c2 = st.columns([1, 5])
+
 if c1.button("Voltar"):
     st.switch_page("pages/1_Upload_Excel.py")
 
-if c2.button("Aplicar Mapa e Continuar", type="primary", disabled=len(errors) > 0):
+can_proceed = len(warnings) == 0
+
+if c2.button("Aplicar Mapa e Continuar", type="primary", disabled=not can_proceed):
     try:
         # Construir csv_struct
         df_struct = df_raw.copy()
         
-        # Manter apenas colunas mapeadas e renomear
-        # Inverter o mapa para rename: {col_arquivo: campo_sistema}
-        rename_map = {v: k for k, v in colmap.items()}
+        # Inverter mapa
+        rename_map = {v: k for k, v in current_map.items()}
         
-        # Selecionar apenas as colunas que estão no mapa (e colunas técnicas se existirem)
         cols_to_keep = list(rename_map.keys())
-        
-        # Garantir que aba_origem e outras técnicas sejam preservadas se existirem
         if 'aba_origem' in df_struct.columns:
             cols_to_keep.append('aba_origem')
-        
+            
         df_struct = df_struct[cols_to_keep].rename(columns=rename_map)
-        
-        # Adicionar id_linha sequencial
         df_struct['id_linha'] = range(1, len(df_struct) + 1)
         
-        # Adicionar colunas faltantes opcionais como vazias
         for opt in OPTIONAL_FIELDS:
             if opt not in df_struct.columns:
                 df_struct[opt] = None
                 
-        # Validações de dados
-        # Quantidade deve ser numerica
+        # Validação Numérica Básica
         if 'quantidade' in df_struct.columns:
-            # Tentar limpar e converter
             df_struct['quantidade'] = pd.to_numeric(df_struct['quantidade'], errors='coerce')
-            qtd_invalidas = df_struct['quantidade'].isna().sum()
-            if qtd_invalidas > 0:
-                st.warning(f"{qtd_invalidas} linhas têm quantidade inválida (viraram NaN).")
-        
-        # Salvar na sessão
-        st.session_state['colmap'] = colmap
+            
         st.session_state['csv_struct'] = df_struct.to_csv(index=False)
-        
-        st.success("Estrutura criada com sucesso!")
+        st.success("Estrutura definida!")
         st.switch_page("pages/3_Normalizar.py")
         
     except Exception as e:
-        st.error(f"Erro ao aplicar estrutura: {e}")
-
-# Review
-if 'csv_struct' in st.session_state:
-    st.subheader("Preview Estruturado")
-    try:
-        df_show = pd.read_csv(io.StringIO(st.session_state['csv_struct']))
-        st.dataframe(df_show.head(), use_container_width=True)
-    except:
-        pass
+        st.error(f"Erro ao estruturar: {e}")
