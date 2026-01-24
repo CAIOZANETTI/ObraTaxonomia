@@ -71,6 +71,19 @@ warnings = []
 
 st.divider()
 
+# --- Global Preview (added per user request) ---
+with st.expander("🔍 Visualizar Dados Originais (Contexto Geral)", expanded=True):
+    col_slider, _ = st.columns([1, 3])
+    with col_slider:
+        n_rows = st.slider("Linhas para visualizar:", min_value=5, max_value=20, value=10)
+    
+    st.caption("Topo do Arquivo")
+    st.dataframe(df_raw.head(n_rows), use_container_width=True)
+    st.caption("Fim do Arquivo")
+    st.dataframe(df_raw.tail(n_rows), use_container_width=True)
+
+st.divider()
+
 col_layout, preview_layout = st.columns([1, 1])
 
 with col_layout:
