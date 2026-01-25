@@ -27,7 +27,12 @@ def get_engine():
 
 if st.button("🔄 Recarregar Regras (Limpar Cache)"):
     st.cache_resource.clear()
-    st.success("Cache limpo! As regras serão recarregadas.")
+    
+    # Forçar reclassificação dos dados
+    if 'df_working' in st.session_state:
+        del st.session_state['df_working']
+        
+    st.success("Cache e Dados limpos! O classificador rodará novamente.")
     st.rerun()
 
 classifier = get_engine()
