@@ -55,7 +55,7 @@ regras:
       - [fornecimento, fornecer, fornecido, material, compra, fornec]
     ignorar:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, corte, dobra]
-      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida, concreto protendido]
 
   - apelido: armadura_passiva_fornecimento_t
     unit: t
@@ -64,7 +64,7 @@ regras:
       - [fornecimento, fornecer, fornecido, material, compra, fornec]
     ignorar:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, corte, dobra]
-      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida, concreto protendido]
 
   # ---------------------------------------------------------------------------
   # 4) MÃO DE OBRA (EXECUÇÃO) — PASSIVA
@@ -77,7 +77,7 @@ regras:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, armador]
     ignorar:
       - [fornecimento, fornecer, fornecido, material, compra]
-      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida, concreto protendido]
 
   - apelido: armadura_passiva_mao_de_obra_t
     unit: t
@@ -86,7 +86,7 @@ regras:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, armador]
     ignorar:
       - [fornecimento, fornecer, fornecido, material, compra]
-      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida, concreto protendido]
 
   # ---------------------------------------------------------------------------
   # 5) FORNECIMENTO (MATERIAL) — ATIVA
