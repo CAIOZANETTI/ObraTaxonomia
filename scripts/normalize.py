@@ -136,7 +136,8 @@ def normalize_dataframe(
         'punctuation': 0,
         'spaces': 0,
         'zeroed': 0,
-        'removed_empty': 0
+        'removed_empty': 0,
+        'duplicates_removed': 0
     }
     }
     
@@ -255,6 +256,25 @@ def normalize_dataframe(
         
         df_norm.at[idx, 'descricao_norm'] = current
     
+    # 8. Deduplicação (Opção 1: Keep First)
+    if config.get('remove_duplicates', False):
+        before_dedup = len(df_norm)
+        # Considerar Unidade se existir, senão só descrição
+        subset_cols = ['descricao_norm']
+        if 'unidade' in df_norm.columns:
+            subset_cols.append('unidade')
+            
+        df_norm = df_norm.drop_duplicates(subset=subset_cols, keep='first').reset_index(drop=True)
+        dedup_count = before_dedup - len(df_norm)
+        
+        if dedup_count > 0:
+            stats['duplicates_removed'] = dedup_count
+            audit_log.append({
+                'tipo': 'duplicates_removed',
+                'quantidade': dedup_count,
+                'msg': f"{dedup_count} itens duplicados removidos (mantida a 1ª ocorrência)."
+            })
+    
     # Adicionar estatísticas ao log
     audit_log.insert(0, {
         'tipo': 'summary',
@@ -297,6 +317,8 @@ def get_normalization_report(audit_log: List[Dict]) -> str:
     report += f"  - Descrições zeradas (revertidas): {stats.get('zeroed', 0)}\n"
     if stats.get('removed_empty', 0) > 0:
         report += f"  - Linhas removidas (vazias): {stats.get('removed_empty', 0)}\n"
+    if stats.get('duplicates_removed', 0) > 0:
+        report += f"  - Duplicatas removidas: {stats.get('duplicates_removed', 0)}\n"
     
     # Avisos de decimais
     decimal_warnings = [log for log in audit_log if log.get('tipo') == 'decimal_comma']

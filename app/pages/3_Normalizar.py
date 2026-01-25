@@ -39,7 +39,8 @@ with col1:
         'remove_stopwords': st.checkbox("Remover stopwords (de, da, com...)", value=False),
         'collapse_spaces': st.checkbox("Remover espaços duplos", value=True),
         'normalize_numbers': st.checkbox("Normalizar números e decimais", value=True),
-        'remove_empty_rows': st.checkbox("Remover linhas sem descrição (Vazias/None)", value=True)
+        'remove_empty_rows': st.checkbox("Remover linhas sem descrição (Vazias/None)", value=True),
+        'remove_duplicates': st.checkbox("Remover duplicatas (Manter itens únicos)", value=False, help="Mantém apenas a primeira ocorrência de itens iguais (Mesma Descrição Normalizada + Unidade).")
     }
 
 # --- Preview Dinâmico (Amostra) ---
