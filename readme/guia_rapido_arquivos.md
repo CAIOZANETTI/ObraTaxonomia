@@ -1,151 +1,186 @@
 # Guia Rápido - Onde Salvar Arquivos
 
-## 📥 PASSO 1: Baixar da Aplicação → `data/uploads/`
+## 📥 Downloads da Aplicação
 
-Quando você baixar arquivos da página **"4. Apelidar e Validar"**, salve TODOS em `data/uploads/`:
+Quando você baixar arquivos da página **"4. Apelidar e Validar"**, salve-os nos seguintes diretórios:
 
-| Botão | Arquivo | Salvar em |
-|-------|---------|-----------|
-| 📥 Baixar Validado | `orcamento_validado.csv` | `data/uploads/validado/` |
-| 📥 Baixar Revisar | `itens_revisar.csv` | `data/uploads/revisar/` |
-| 📥 Baixar Desconhecidos | `desconhecidos.csv` | `data/uploads/desconhecidos/` |
+### ✅ Orçamento Validado (Completo)
+```
+Arquivo: orcamento_validado.csv
+Salvar em: data/output/validado/
+```
+**O que é:** Arquivo completo com todos os itens validados. Este é o resultado final do processamento.
 
 ---
 
-## 📂 PASSO 2: Mover para Destino Final
-
-### ✅ Validado (PRONTO!)
-```powershell
-# Mover para destino final
-Move-Item data/uploads/validado/orcamento_validado.csv data/output/validado/orcamento_PROJETO_2026-01-25.csv
+### ⚠️ Itens para Revisar
 ```
-
-### ⚠️ Revisar (PRECISA PROCESSAR)
-```powershell
-# Mover para inbox
-Move-Item data/uploads/revisar/itens_revisar.csv data/revisar/inbox/
-
-# Depois de processar, mover para processados
-Move-Item data/revisar/inbox/itens_revisar.csv data/revisar/processados/
+Arquivo: itens_revisar.csv
+Salvar em: data/revisar/inbox/
 ```
+**O que é:** Itens que o sistema marcou como "revisar" - precisam de atenção manual.
 
-### ❓ Desconhecidos (PRECISA PROCESSAR)
-```powershell
-# Mover para entrada
-Move-Item data/uploads/desconhecidos/desconhecidos.csv data/desconhecidos/entrada/
-
-# Depois de adicionar ao YAML, mover para processados
-Move-Item data/desconhecidos/entrada/desconhecidos.csv data/desconhecidos/processados/
-```
+**O que fazer:**
+1. Abra o arquivo
+2. Analise cada item
+3. Corrija na aplicação ou na planilha original
+4. Mova para: `data/revisar/processados/`
+5. Re-processe se necessário
 
 ---
 
-## 🔄 Fluxo Visual Completo
-
+### ❓ Desconhecidos
 ```
-┌─────────────────────────────────────────────────────────────┐
-│ 1. BAIXAR DA APLICAÇÃO                                      │
-└─────────────────────────────────────────────────────────────┘
-                        ↓
-            data/uploads/validado/
-            data/uploads/revisar/
-            data/uploads/desconhecidos/
-
-┌─────────────────────────────────────────────────────────────┐
-│ 2. MOVER PARA DESTINOS                                      │
-└─────────────────────────────────────────────────────────────┘
-                        ↓
-    ┌───────────────┬──────────────┬────────────────┐
-    │               │              │                │
-    ✅ Validado     ⚠️ Revisar     ❓ Desconhecidos
-    │               │              │
-    output/         revisar/       desconhecidos/
-    validado/       inbox/         entrada/
-    (FINAL)         (PROCESSAR)    (PROCESSAR)
-                    │              │
-                    ↓              ↓
-                    revisar/       desconhecidos/
-                    processados/   processados/
+Arquivo: desconhecidos.csv
+Salvar em: data/desconhecidos/entrada/
 ```
+**O que é:** Itens que o sistema não conseguiu classificar automaticamente.
+
+**O que fazer:**
+1. Abra o arquivo
+2. Identifique padrões comuns
+3. Adicione novos apelidos em `yaml/`
+4. Mova para: `data/desconhecidos/processados/`
+5. Re-processe o orçamento
 
 ---
 
-## 📁 Estrutura Completa
+## 📂 Estrutura Visual
 
 ```
 data/
 │
-├── uploads/                        # 📥 ZONA DE ENTRADA (temporário)
-│   ├── validado/                   # Baixe validados aqui
-│   ├── revisar/                    # Baixe revisar aqui
-│   └── desconhecidos/              # Baixe desconhecidos aqui
+├── excel/                          # 📥 ENTRADA
+│   └── seu_orcamento.xlsx          # Coloque aqui os Excel originais
 │
-├── output/                         # 📤 RESULTADO FINAL
-│   ├── validado/                   # ✅ Orçamentos finais
-│   └── arquivo/                    # 📦 Backups
+├── output/                         # 📤 SAÍDA
+│   ├── validado/                   # ✅ RESULTADO FINAL
+│   │   └── orcamento_validado.csv  # Salve aqui o arquivo completo
+│   │
+│   └── arquivo/                    # 📦 BACKUP
+│       └── orcamento_old.csv       # Versões antigas
 │
-├── revisar/                        # ⚠️ GESTÃO DE REVISÕES
-│   ├── inbox/                      # Para processar
-│   ├── processados/                # Já processados
-│   └── arquivo/                    # Histórico
+├── revisar/                        # ⚠️ PRECISA ATENÇÃO
+│   ├── inbox/                      # 📨 NOVOS
+│   │   └── itens_revisar.csv       # Salve aqui itens para revisar
+│   │
+│   ├── processados/                # ✔️ RESOLVIDOS
+│   │   └── itens_resolvidos.csv    # Mova para cá após processar
+│   │
+│   └── arquivo/                    # 📦 HISTÓRICO
+│       └── revisar_old.csv         # Revisões antigas
 │
-└── desconhecidos/                  # ❓ GESTÃO DE DESCONHECIDOS
-    ├── entrada/                    # Para processar
-    ├── processados/                # Já processados
-    └── arquivo/                    # Histórico
+└── desconhecidos/                  # ❓ DESCONHECIDOS
+    ├── entrada/                    # 📨 NOVOS
+    │   └── desconhecidos.csv       # Salve aqui os desconhecidos
+    │
+    ├── processados/                # ✔️ RESOLVIDOS
+    │   └── desconhecidos_ok.csv    # Mova para cá após processar
+    │
+    └── arquivo/                    # 📦 HISTÓRICO
+        └── desconhecidos_old.csv   # Desconhecidos antigos
 ```
 
 ---
 
-## 💡 Dicas Importantes
+## 🔄 Workflow Completo
 
-### 1. uploads/ é Temporário
+### Passo 1: Upload
 ```
-⚠️ Não deixe arquivos em uploads/
-   Baixe → Mova → Delete de uploads/
+1. Coloque Excel em: data/excel/
+2. Abra: streamlit run app/Home.py
+3. Faça upload do arquivo
 ```
 
-### 2. Nomenclatura ao Mover
+### Passo 2: Processar
 ```
-# Adicione contexto ao nome:
+4. Mapear Colunas
+5. Normalizar
+6. Apelidar e Validar
+```
+
+### Passo 3: Baixar e Salvar
+```
+7. Clique em "📥 Baixar Validado"
+   → Salve em: data/output/validado/orcamento_validado.csv
+
+8. Clique em "📥 Baixar Revisar" (se houver)
+   → Salve em: data/revisar/inbox/itens_revisar.csv
+
+9. Clique em "📥 Baixar Desconhecidos" (se houver)
+   → Salve em: data/desconhecidos/entrada/desconhecidos.csv
+```
+
+### Passo 4: Tratar Pendências
+
+#### Se tiver itens para revisar:
+```
+1. Abra: data/revisar/inbox/itens_revisar.csv
+2. Analise e corrija
+3. Re-processe na aplicação
+4. Mova para: data/revisar/processados/
+```
+
+#### Se tiver desconhecidos:
+```
+1. Abra: data/desconhecidos/entrada/desconhecidos.csv
+2. Identifique padrões
+3. Adicione apelidos em: yaml/
+4. Mova para: data/desconhecidos/processados/
+5. Re-processe o orçamento
+```
+
+---
+
+## 💡 Dicas
+
+### Nomenclatura Recomendada
+```
+# Inclua projeto e data
 orcamento_validado_OBRA_X_2026-01-25.csv
 itens_revisar_OBRA_X_2026-01-25.csv
 desconhecidos_OBRA_X_2026-01-25.csv
 ```
 
-### 3. Comandos Rápidos
+### Backup Antes de Sobrescrever
 ```powershell
-# Mover todos os validados
-Move-Item data/uploads/validado/*.csv data/output/validado/
+# Mover versão antiga para arquivo
+Move-Item data/output/validado/orcamento.csv data/output/arquivo/orcamento_2026-01-25.csv
+```
 
-# Mover todos os revisar
-Move-Item data/uploads/revisar/*.csv data/revisar/inbox/
+### Limpar Inbox Regularmente
+```
+⚠️ Não deixe arquivos acumulados em inbox/
+   Processe e mova para processados/
+```
 
-# Mover todos os desconhecidos
-Move-Item data/uploads/desconhecidos/*.csv data/desconhecidos/entrada/
-
-# Limpar uploads
-Remove-Item data/uploads/*/*.csv
+### Analisar Desconhecidos Periodicamente
+```
+📊 Revise data/desconhecidos/entrada/ semanalmente
+   Desconhecidos são oportunidades de melhorar a taxonomia!
 ```
 
 ---
 
 ## ❓ FAQ
 
-**P: Por que usar uploads/?**  
-R: Centraliza downloads em um lugar só. Depois você move conforme processa.
+**P: Onde salvo o Excel original?**  
+R: `data/excel/`
 
-**P: Posso baixar direto para o destino final?**  
-R: Pode, mas uploads/ ajuda a organizar e não misturar "recém baixado" com "já processado".
+**P: Onde fica o resultado final?**  
+R: `data/output/validado/orcamento_validado.csv`
 
-**P: Preciso sempre mover?**  
-R: Para validado, sim (é o resultado final). Para revisar e desconhecidos, só se tiver.
+**P: O que fazer com itens "revisar"?**  
+R: Salve em `data/revisar/inbox/`, analise, corrija, re-processe e mova para `processados/`
 
-**P: O que fazer com uploads/ depois?**  
-R: Delete os arquivos após mover. Mantenha a pasta limpa.
+**P: Como melhorar a classificação?**  
+R: Analise desconhecidos em `data/desconhecidos/entrada/` e adicione apelidos em `yaml/`
 
-**P: Posso deletar arquivos de processados/?**  
-R: Sim, mas mova para arquivo/ primeiro. Delete de arquivo/ após 90 dias.
+**P: Posso deletar arquivos antigos?**  
+R: Sim, mova para `arquivo/` antes. Após 90 dias pode deletar do arquivo.
+
+**P: Qual a diferença entre revisar e desconhecidos?**  
+R: **Revisar** = Sistema classificou mas tem baixa confiança. **Desconhecidos** = Sistema não conseguiu classificar.
 
 ---
 
@@ -154,4 +189,4 @@ R: Sim, mas mova para arquivo/ primeiro. Delete de arquivo/ após 90 dias.
 Consulte a documentação completa:
 - [README.md](../README.md) - Visão geral
 - [estrutura_diretorios.md](estrutura_diretorios.md) - Detalhes completos
-- [estrutura_resumo.md](estrutura_resumo.md) - Resumo visual
+- [arquitetura.md](arquitetura.md) - Como funciona o sistema

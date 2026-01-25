@@ -33,19 +33,15 @@ ObraTaxonomia/
 ├── app/                    # Aplicação Streamlit
 ├── data/                   # Dados e arquivos
 │   ├── excel/              # Arquivos Excel de entrada
-│   ├── uploads/            # 📥 DOWNLOADS (zona de entrada)
-│   │   ├── validado/       # Baixe validados aqui
-│   │   ├── revisar/        # Baixe revisar aqui
-│   │   └── desconhecidos/  # Baixe desconhecidos aqui
-│   ├── output/             # Arquivos finais
-│   │   ├── validado/       # Orçamentos finais
+│   ├── output/             # Arquivos processados
+│   │   ├── validado/       # Orçamentos validados
 │   │   └── arquivo/        # Backups
-│   ├── revisar/            # Gestão de revisões
-│   │   ├── inbox/          # Para processar
+│   ├── revisar/            # Itens para revisão
+│   │   ├── inbox/          # Novos
 │   │   ├── processados/    # Resolvidos
 │   │   └── arquivo/        # Histórico
-│   └── desconhecidos/      # Gestão de desconhecidos
-│       ├── entrada/        # Para processar
+│   └── desconhecidos/      # Desconhecidos
+│       ├── entrada/        # Novos
 │       ├── processados/    # Resolvidos
 │       └── arquivo/        # Histórico
 ├── scripts/                # Backend Python
@@ -55,13 +51,13 @@ ObraTaxonomia/
 
 **📖 Documentação completa:** [estrutura_diretorios.md](readme/estrutura_diretorios.md)
 
-## 📥 Onde Salvar Arquivos (Downloads da Aplicação)
+## 📥 Onde Salvar Arquivos
 
-| Arquivo | Salvar em | Depois mover para |
-|---------|-----------|-------------------|
-| `orcamento_validado.csv` | `data/uploads/validado/` | `data/output/validado/` |
-| `itens_revisar.csv` | `data/uploads/revisar/` | `data/revisar/inbox/` |
-| `desconhecidos.csv` | `data/uploads/desconhecidos/` | `data/desconhecidos/entrada/` |
+| Arquivo | Diretório | Descrição |
+|---------|-----------|-----------|
+| `orcamento_validado.csv` | `data/output/validado/` | Resultado final validado |
+| `itens_revisar.csv` | `data/revisar/inbox/` | Itens que precisam revisão |
+| `desconhecidos.csv` | `data/desconhecidos/entrada/` | Desconhecidos para análise |
 
 ## 📚 Documentação
 
@@ -102,25 +98,18 @@ ObraTaxonomia/
 
 ### 2. Exportar Resultados
 ```
-4. Na página "Apelidar e Validar", baixe para uploads/:
-   - "orcamento_validado.csv" → data/uploads/validado/
-   - "itens_revisar.csv" → data/uploads/revisar/ (se houver)
-   - "desconhecidos.csv" → data/uploads/desconhecidos/ (se houver)
+4. Na página "Apelidar e Validar":
+   - Baixe "orcamento_validado.csv" → data/output/validado/
+   - Baixe "itens_revisar.csv" → data/revisar/inbox/ (se houver)
+   - Baixe "desconhecidos.csv" → data/desconhecidos/entrada/ (se houver)
 ```
 
-### 3. Mover e Finalizar
+### 3. Melhorar Taxonomia
 ```
-5. Mova validado: uploads/validado/ → output/validado/
-6. Se tiver revisar: uploads/revisar/ → revisar/inbox/ → processar
-7. Se tiver desconhecidos: uploads/desconhecidos/ → desconhecidos/entrada/ → processar
-```
-
-### 4. Melhorar Taxonomia
-```
-8. Analise desconhecidos em: data/desconhecidos/entrada/
-9. Adicione novos apelidos em: yaml/
-10. Mova processados para: data/desconhecidos/processados/
-11. Re-processe orçamento
+5. Analise desconhecidos em: data/desconhecidos/entrada/
+6. Adicione novos apelidos em: yaml/
+7. Mova processados para: data/desconhecidos/processados/
+8. Re-processe orçamento
 ```
 
 ## 🔧 Manutenção

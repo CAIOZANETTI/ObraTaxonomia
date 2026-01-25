@@ -62,9 +62,8 @@ if 'df_working' not in st.session_state:
                 # Mas para garantir, vamos fazer concat e remover duplicatas se tiver
                 df_combined = pd.concat([df_norm, result_df], axis=1)
                 
-                # Inicializar colunas de validação
-                df_combined['validado'] = False
-                df_combined['apelido_final'] = df_combined['apelido_sugerido']
+                # Inicializar coluna de revisão
+                df_combined['revisar'] = False
                 
             st.session_state['df_working'] = df_combined
         else:
@@ -81,17 +80,17 @@ else:
 df = df_combined # Alias curto
 
 total = len(df)
-validados = df['validado'].sum()
+marcados_revisar = df['revisar'].sum()
 ok = len(df[df['query_status']=='ok']) if 'query_status' in df.columns else len(df[df['status'] == 'ok']) # fallback compatibility
-revisar = len(df[df['status'] == 'revisar'])
+status_revisar = len(df[df['status'] == 'revisar'])
 desconhecidos = len(df[df['status'] == 'desconhecido'])
 
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Total de Itens", total)
 m2.metric("Sugestão Certa (OK)", ok)
-m3.metric("Para Revisar", revisar)
+m3.metric("Status: Revisar", status_revisar)
 m4.metric("Desconhecidos", desconhecidos)
-st.progress(int(validados / total * 100) if total > 0 else 0, text=f"Progresso da Validação: {validados}/{total}")
+st.metric("Marcados para Revisão", f"{marcados_revisar} itens")
 
 # --- Filtros e Controles ---
 st.divider()
@@ -108,11 +107,11 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
         )
     
     with col2:
-        # Filtro por Validado
-        validado_filter = st.multiselect(
-            "Validado",
-            options=['Validado', 'Não Validado'],
-            default=['Validado', 'Não Validado']
+        # Filtro por Revisar
+        revisar_filter = st.multiselect(
+            "Revisar",
+            options=['Marcado', 'Não Marcado'],
+            default=['Marcado', 'Não Marcado']
         )
     
     with col3:
@@ -147,12 +146,12 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
 # Filtragem do DataFrame para Exibição
 mask = df['status'].isin(status_filter)
 
-# Aplicar filtro de validado
-if 'Validado' in validado_filter and 'Não Validado' not in validado_filter:
-    mask = mask & (df['validado'] == True)
-elif 'Não Validado' in validado_filter and 'Validado' not in validado_filter:
-    mask = mask & (df['validado'] == False)
-# Se ambos ou nenhum estiver selecionado, não filtra por validado
+# Aplicar filtro de revisar
+if 'Marcado' in revisar_filter and 'Não Marcado' not in revisar_filter:
+    mask = mask & (df['revisar'] == True)
+elif 'Não Marcado' in revisar_filter and 'Marcado' not in revisar_filter:
+    mask = mask & (df['revisar'] == False)
+# Se ambos ou nenhum estiver selecionado, não filtra por revisar
 
 # Aplicar filtro de tipo
 if tipo_filter != 'Todos':
@@ -170,12 +169,11 @@ df_view = df[mask].copy()
 
 # --- Configuração de Colunas Disponíveis (Mapeamento Interno -> Label) ---
 COL_LABELS = {
-    "validado": "Validado?",
+    "revisar": "Revisar?",
     "descricao_norm": "Descrição (Norm)",
     "unidade": "Und",
     "quantidade": "Qtd",
     "apelido_sugerido": "Sugestão",
-    "apelido_final": "Apelido Final",
     "status": "Status",
     "motivo": "Motivo",
     "codigo": "Código",
@@ -184,7 +182,7 @@ COL_LABELS = {
 }
 
 # Defaults visíveis
-DEFAULT_VISIBLE = ["validado", "descricao_norm", "apelido_final", "status", "apelido_sugerido"]
+DEFAULT_VISIBLE = ["revisar", "descricao_norm", "status", "apelido_sugerido", "motivo"]
 
 with st.expander("👁️ Configurar Colunas Visíveis", expanded=False):
     visible_cols = st.multiselect(
@@ -197,12 +195,11 @@ with st.expander("👁️ Configurar Colunas Visíveis", expanded=False):
 # --- Tabela Editável ---
 # Definir configuração base das colunas
 col_config = {
-    "validado": st.column_config.CheckboxColumn("Validado?", width="small"),
+    "revisar": st.column_config.CheckboxColumn("Revisar?", width="small", help="Marque os itens que precisam revisão"),
     "descricao_norm": st.column_config.TextColumn("Descrição (Norm)", disabled=True, width="large"),
     "unidade": st.column_config.TextColumn("Und", disabled=True, width="small"),
     "quantidade": st.column_config.NumberColumn("Qtd", disabled=True, format="%.2f"),
     "apelido_sugerido": st.column_config.TextColumn("Sugestão", disabled=True),
-    "apelido_final": st.column_config.TextColumn("Apelido Final (Editável)", required=True),
     "status": st.column_config.TextColumn("Status", disabled=True, width="small"),
     "motivo": st.column_config.TextColumn("Motivo", disabled=True),
     "codigo": st.column_config.TextColumn("Código", disabled=True, width="small"),
@@ -211,7 +208,8 @@ col_config = {
     # Esconder colunas técnicas sempre
     "id_linha": None, "linha_origem": None, "aba_origem": None, 
     "alternativa": None, "score": None, "tax_tipo": None, "tax_desconhecido": None,
-    "unidade_sugerida": None, "tax_incerto": None, "tax_confianca": None, "tax_apelido": None
+    "unidade_sugerida": None, "tax_incerto": None, "tax_confianca": None, "tax_apelido": None,
+    "apelido_final": None  # Esconder apelido_final
 }
 
 # Aplicar filtro de visibilidade
@@ -226,7 +224,7 @@ if show_similares:
 else:
     col_config["semelhantes"] = None
 
-st.caption("Edite o 'Apelido Final' se necessário e marque 'Validado'. Suas alterações são salvas automaticamente na memória.")
+st.caption("Marque os itens que precisam revisão. Baixe o CSV de itens marcados para aprendizado.")
 
 edited_df_view = st.data_editor(
     df_view,
@@ -246,14 +244,6 @@ if st.button("💾 Salvar Alterações na Sessão"):
     # Pandas update é eficiente com índices alinhados
     st.session_state['df_working'].update(edited_df_view)
     
-    # Atualizar status de desconhecido baseado na edição
-    # Se usuário preencheu apelido_final em um desconhecido, ele deixa de ser desconhecido para fins de unknown export?
-    # Regra: Se validado=True e apelido_final != "", não é mais unknown
-    
-    # Re-calcular tax_desconhecido para consistência
-    mask_resolved = (st.session_state['df_working']['validado'] == True) & (st.session_state['df_working']['apelido_final'].notna()) & (st.session_state['df_working']['apelido_final'] != "")
-    st.session_state['df_working'].loc[mask_resolved, 'tax_desconhecido'] = False
-    
     st.success("Alterações salvas!")
     st.rerun() # Refresh nas métricas
 
@@ -270,37 +260,37 @@ if c1.button("Voltar"):
 # Botão Download Validado (Completo)
 csv_validado = st.session_state['df_working'].to_csv(index=False).encode('utf-8')
 c2.download_button(
-    label="📥 Baixar Validado",
+    label="📥 Baixar Completo",
     data=csv_validado,
     file_name="orcamento_validado.csv",
     mime="text/csv",
-    help="Baixa todos os dados validados (completo)."
+    help="Baixa todos os dados processados (completo)."
 )
 
-# Botão Download Revisar
-revisar_df = st.session_state['df_working'][
-    st.session_state['df_working']['status'] == 'revisar'
+# Botão Download Marcados para Revisar (Aprendizado)
+marcados_revisar_df = st.session_state['df_working'][
+    st.session_state['df_working']['revisar'] == True
 ]
-csv_revisar = revisar_df.to_csv(index=False).encode('utf-8')
+csv_marcados = marcados_revisar_df.to_csv(index=False).encode('utf-8')
 c3.download_button(
-    label="📥 Baixar Revisar",
-    data=csv_revisar,
-    file_name="itens_revisar.csv",
+    label="📥 Marcados Revisar",
+    data=csv_marcados,
+    file_name="aprendizado_revisar.csv",
     mime="text/csv",
-    help="Baixa apenas os itens que precisam de revisão."
+    help=f"Baixa {len(marcados_revisar_df)} itens marcados para revisão → data/aprendizado/revisar/"
 )
 
-# Botão Download Unknowns (Rápido)
+# Botão Download Desconhecidos (Aprendizado)
 unknowns_df = st.session_state['df_working'][
     st.session_state['df_working']['tax_desconhecido'] == True
 ]
 csv_unknowns = unknowns_df.to_csv(index=False).encode('utf-8')
 c4.download_button(
-    label="📥 Baixar Desconhecidos",
+    label="📥 Desconhecidos",
     data=csv_unknowns,
-    file_name="unknowns_antigravity.csv",
+    file_name="aprendizado_desconhecidos.csv",
     mime="text/csv",
-    help="Baixa apenas os itens não identificados para envio rápido."
+    help=f"Baixa {len(unknowns_df)} itens desconhecidos → data/aprendizado/desconhecidos/"
 )
 
 # Segunda linha - Botão de continuar
