@@ -2,7 +2,7 @@
 
 Este documento descreve a organização de diretórios do projeto ObraTaxonomia e onde salvar cada tipo de arquivo.
 
-## 📁 Estrutura Completa
+## 📁 Estrutura Completa (em Português)
 
 ```
 ObraTaxonomia/
@@ -13,15 +13,27 @@ ObraTaxonomia/
 │
 ├── data/                   # Dados e arquivos de trabalho
 │   ├── excel/              # 📥 Arquivos Excel originais (entrada)
+│   │
 │   ├── master/             # 🗂️ Taxonomia mestre e referências
-│   ├── output/             # 📤 Arquivos processados (saída)
-│   │   ├── validados/      # ✅ Orçamentos validados finais
-│   │   ├── revisar/        # ⚠️ Itens que precisam revisão
-│   │   └── archive/        # 📦 Versões anteriores (backup)
-│   └── unknowns/           # ❓ Gestão de desconhecidos
-│       ├── inbox/          # 📨 Novos desconhecidos
-│       ├── processed/      # ✔️ Desconhecidos resolvidos
-│       └── archive/        # 📦 Histórico antigo
+│   │
+│   ├── uploads/            # 📥 ZONA DE ENTRADA - Baixe aqui da aplicação
+│   │   ├── validado/       # Orçamentos validados baixados
+│   │   ├── revisar/        # Itens para revisar baixados
+│   │   └── desconhecidos/  # Desconhecidos baixados
+│   │
+│   ├── output/             # 📤 Arquivos processados (saída final)
+│   │   ├── validado/       # ✅ Orçamentos validados finais
+│   │   └── arquivo/        # 📦 Versões anteriores (backup)
+│   │
+│   ├── revisar/            # ⚠️ Gestão de itens para revisão
+│   │   ├── inbox/          # 📨 Itens movidos de uploads/ para processar
+│   │   ├── processados/    # ✔️ Itens revisados e corrigidos
+│   │   └── arquivo/        # 📦 Histórico de revisões
+│   │
+│   └── desconhecidos/      # ❓ Gestão de itens não identificados
+│       ├── entrada/        # 📨 Itens movidos de uploads/ para processar
+│       ├── processados/    # ✔️ Desconhecidos resolvidos
+│       └── arquivo/        # 📦 Histórico antigo
 │
 ├── scripts/                # Scripts Python do backend
 ├── yaml/                   # Definições da taxonomia
@@ -29,30 +41,28 @@ ObraTaxonomia/
 └── requirements.txt        # Dependências
 ```
 
-## 📥 Onde Salvar Cada Arquivo
+## 🎯 Conceito: Zona de Entrada Centralizada
 
-### Arquivos de Entrada
+A pasta `data/uploads/` é a **zona de entrada** onde você salva TODOS os arquivos baixados da aplicação. Depois você move eles para os lugares apropriados conforme processa.
 
-| Tipo | Diretório | Descrição |
-|------|-----------|-----------|
-| **Excel original** | `data/excel/` | Planilhas de orçamento originais |
+### Por que essa estrutura?
 
-### Arquivos de Saída (Downloads da Aplicação)
+1. **Simplicidade**: Um único lugar para salvar downloads
+2. **Organização**: Separa "recém baixado" de "em processamento" de "finalizado"
+3. **Rastreabilidade**: Fácil ver o que ainda precisa ser processado
+4. **Backup**: Sempre tem os originais em uploads/
 
-| Arquivo | Diretório Recomendado | Descrição |
-|---------|----------------------|-----------|
-| **orcamento_validado.csv** | `data/output/validados/` | Orçamento completo validado (resultado final) |
-| **itens_revisar.csv** | `data/output/revisar/` | Itens que precisam de revisão manual |
-| **unknowns_antigravity.csv** | `data/unknowns/inbox/` | Novos itens desconhecidos para análise |
+## 📥 Onde Salvar Cada Arquivo (Downloads)
 
-### Arquivos de Backup
+### Arquivos Baixados da Aplicação → `data/uploads/`
 
-| Tipo | Diretório | Quando Usar |
-|------|-----------|-------------|
-| **Versões antigas** | `data/output/archive/` | Antes de sobrescrever um validado |
-| **Unknowns antigos** | `data/unknowns/archive/` | Desconhecidos já processados |
+| Arquivo | Salvar em | Descrição |
+|---------|-----------|-----------|
+| **orcamento_validado.csv** | `data/uploads/validado/` | Orçamento completo validado |
+| **itens_revisar.csv** | `data/uploads/revisar/` | Itens que precisam de revisão |
+| **desconhecidos.csv** | `data/uploads/desconhecidos/` | Itens não identificados |
 
-## 🔄 Fluxo de Trabalho Recomendado
+## 🔄 Fluxo de Trabalho Completo
 
 ### 1. Upload e Processamento
 ```
@@ -61,109 +71,155 @@ ObraTaxonomia/
 3. Siga o fluxo: Upload → Mapear → Normalizar → Validar
 ```
 
-### 2. Validação e Exportação
+### 2. Download (da Aplicação)
 ```
-4. Na página "Apelidar e Validar":
-   - Revise e valide os itens
-   - Baixe "orcamento_validado.csv" → Salve em data/output/validados/
-   - Baixe "itens_revisar.csv" → Salve em data/output/revisar/
-   - Baixe "unknowns_antigravity.csv" → Salve em data/unknowns/inbox/
-```
-
-### 3. Tratamento de Itens Especiais
-
-#### Para Revisar
-```
-1. Abra: data/output/revisar/itens_revisar.csv
-2. Analise os itens manualmente
-3. Corrija na aplicação ou na planilha original
-4. Re-processe se necessário
+4. Na página "Apelidar e Validar", baixe os arquivos:
+   
+   📥 Baixar Validado → Salve em: data/uploads/validado/
+   📥 Baixar Revisar → Salve em: data/uploads/revisar/
+   📥 Baixar Desconhecidos → Salve em: data/uploads/desconhecidos/
 ```
 
-#### Para Desconhecidos
+### 3. Processar Validado
 ```
-1. Abra: data/unknowns/inbox/unknowns_antigravity.csv
-2. Analise padrões e frequências
-3. Adicione novos apelidos em: yaml/
-4. Mova para: data/unknowns/processed/
-5. Re-processe o orçamento
+5. Arquivo final está pronto!
+   
+   Mova de: data/uploads/validado/orcamento_validado.csv
+   Para: data/output/validado/orcamento_PROJETO_2026-01-25.csv
+   
+   (Opcional: Backup antigo para data/output/arquivo/)
+```
+
+### 4. Processar Revisar (se houver)
+```
+6. Mova de: data/uploads/revisar/itens_revisar.csv
+   Para: data/revisar/inbox/itens_revisar_PROJETO.csv
+   
+7. Abra e analise o arquivo
+8. Corrija na aplicação ou na planilha original
+9. Mova para: data/revisar/processados/
+10. Re-processe se necessário
+```
+
+### 5. Processar Desconhecidos (se houver)
+```
+11. Mova de: data/uploads/desconhecidos/desconhecidos.csv
+    Para: data/desconhecidos/entrada/desconhecidos_PROJETO.csv
+    
+12. Analise padrões e frequências
+13. Adicione novos apelidos em: yaml/
+14. Mova para: data/desconhecidos/processados/
+15. Re-processe o orçamento
+```
+
+## 📊 Exemplo de Uso Completo
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. ENTRADA                                                  │
+└─────────────────────────────────────────────────────────────┘
+data/excel/orcamento_obra_x.xlsx
+
+┌─────────────────────────────────────────────────────────────┐
+│ 2. PROCESSAR NA APLICAÇÃO                                   │
+└─────────────────────────────────────────────────────────────┘
+Upload → Mapear → Normalizar → Validar
+
+┌─────────────────────────────────────────────────────────────┐
+│ 3. DOWNLOAD (Zona de Entrada)                               │
+└─────────────────────────────────────────────────────────────┘
+data/uploads/validado/orcamento_validado.csv
+data/uploads/revisar/itens_revisar.csv (se houver)
+data/uploads/desconhecidos/desconhecidos.csv (se houver)
+
+┌─────────────────────────────────────────────────────────────┐
+│ 4. MOVER E PROCESSAR                                        │
+└─────────────────────────────────────────────────────────────┘
+✅ Validado:
+   uploads/validado/ → output/validado/ (FINAL)
+
+⚠️ Revisar:
+   uploads/revisar/ → revisar/inbox/ → [processar] → revisar/processados/
+
+❓ Desconhecidos:
+   uploads/desconhecidos/ → desconhecidos/entrada/ → [adicionar YAML] → desconhecidos/processados/
+
+┌─────────────────────────────────────────────────────────────┐
+│ 5. RESULTADO FINAL                                          │
+└─────────────────────────────────────────────────────────────┘
+data/output/validado/orcamento_obra_x_2026-01-25.csv
 ```
 
 ## 🎯 Boas Práticas
 
 ### Nomenclatura de Arquivos
 ```
-# Validados
+# Ao mover de uploads/ para destino final, adicione contexto:
 orcamento_validado_PROJETO_2026-01-25.csv
-
-# Revisar
 itens_revisar_PROJETO_2026-01-25.csv
-
-# Unknowns
-unknowns_PROJETO_2026-01-25.csv
+desconhecidos_PROJETO_2026-01-25.csv
 ```
 
-### Organização por Projeto
+### Manter uploads/ Limpo
 ```
-data/output/validados/
-├── projeto_a/
-│   ├── orcamento_validado_2026-01-25.csv
-│   └── orcamento_validado_2026-01-20.csv
-└── projeto_b/
-    └── orcamento_validado_2026-01-25.csv
+⚠️ uploads/ é temporário!
+   Após mover os arquivos, delete de uploads/
+   Não deixe arquivos acumulados
 ```
 
-### Backup Antes de Sobrescrever
+### Comandos PowerShell Úteis
+
 ```powershell
-# Mover versão antiga para archive
-Move-Item data/output/validados/orcamento.csv data/output/archive/orcamento_2026-01-25.csv
-```
+# Mover validado de uploads para output
+Move-Item data/uploads/validado/*.csv data/output/validado/
 
-## 📊 Exemplo de Uso Completo
+# Mover revisar de uploads para inbox
+Move-Item data/uploads/revisar/*.csv data/revisar/inbox/
 
-```
-1. Upload: data/excel/orcamento_obra_x.xlsx
-2. Processar na aplicação
-3. Baixar e salvar:
-   ✅ data/output/validados/orcamento_obra_x_validado.csv
-   ⚠️ data/output/revisar/obra_x_revisar.csv (se houver)
-   ❓ data/unknowns/inbox/obra_x_unknowns.csv (se houver)
-4. Tratar revisar e unknowns
-5. Re-processar se necessário
-6. Arquivo final: data/output/validados/orcamento_obra_x_validado.csv
+# Mover desconhecidos de uploads para entrada
+Move-Item data/uploads/desconhecidos/*.csv data/desconhecidos/entrada/
+
+# Limpar uploads após mover tudo
+Remove-Item data/uploads/*/*.csv
 ```
 
 ## 🔍 Monitoramento
 
 ### Verificar Pendências
 ```powershell
-# Quantos arquivos para revisar?
-Get-ChildItem data/output/revisar/*.csv | Measure-Object
+# O que tem em uploads esperando ser movido?
+Get-ChildItem data/uploads/*/*.csv
 
-# Quantos unknowns novos?
-Get-ChildItem data/unknowns/inbox/*.csv | Measure-Object
+# Quantos arquivos para revisar?
+Get-ChildItem data/revisar/inbox/*.csv | Measure-Object
+
+# Quantos desconhecidos novos?
+Get-ChildItem data/desconhecidos/entrada/*.csv | Measure-Object
 ```
 
 ### Limpar Arquivos Antigos
 ```powershell
-# Mover arquivos com mais de 30 dias para archive
-Get-ChildItem data/output/validados/*.csv | 
+# Mover arquivos com mais de 30 dias para arquivo
+Get-ChildItem data/output/validado/*.csv | 
   Where-Object {$_.LastWriteTime -lt (Get-Date).AddDays(-30)} |
-  Move-Item -Destination data/output/archive/
+  Move-Item -Destination data/output/arquivo/
 ```
 
 ## 📝 Notas Importantes
 
 > [!IMPORTANT]
+> - **uploads/ é temporário** - Mova os arquivos para os destinos apropriados
 > - **Sempre faça backup** antes de sobrescrever arquivos validados
-> - **Não delete unknowns** sem antes analisá-los - eles são fonte de melhoria da taxonomia
-> - **Organize por projeto** para facilitar rastreamento
+> - **Não delete desconhecidos** sem antes analisá-los
+> - **Organize por projeto** usando nomes descritivos
 
 > [!TIP]
 > - Use datas no nome dos arquivos (YYYY-MM-DD)
-> - Mantenha `data/output/revisar/` limpo - processe e delete
-> - Revise `data/unknowns/inbox/` regularmente para melhorar a taxonomia
+> - Mantenha `uploads/` limpo - mova e delete
+> - Revise `desconhecidos/entrada/` regularmente
+> - Use subpastas por projeto para melhor organização
 
 > [!WARNING]
-> - Arquivos em `data/output/archive/` podem ser deletados após 90 dias
-> - Não versione arquivos grandes no Git (use .gitignore)
+> - Não versione `uploads/` no Git (é temporário)
+> - Arquivos em `*/arquivo/` podem ser deletados após 90 dias
+> - Sempre mova arquivos processados, não delete diretamente
