@@ -14,6 +14,18 @@ if 'csv_raw' not in st.session_state:
         st.switch_page("pages/1_Upload_Excel.py")
     st.stop()
 
+# --- Definição dos Campos ---
+MANDATORY_FIELDS = {
+    'descricao': 'Descrição do Item *',
+    'unidade': 'Unidade de Medida *',
+    'quantidade': 'Quantidade *'
+}
+OPTIONAL_FIELDS = {
+    'codigo': 'Código / Item',
+    'preco_unit': 'Preço Unitário',
+    'preco_total': 'Preço Total'
+}
+
 # --- Sidebar: Controles de Mapeamento ---
 with st.sidebar:
     st.header("🔧 Configuração")
