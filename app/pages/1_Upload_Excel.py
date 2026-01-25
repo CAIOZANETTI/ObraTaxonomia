@@ -44,7 +44,13 @@ with tab_test:
     if os.path.exists(test_dir):
         files = [f for f in os.listdir(test_dir) if f.endswith(('.xlsx', '.xls', '.csv'))]
         if files:
-            selected_test_file = st.selectbox("Escolha um arquivo:", [""] + files)
+            # Change from selectbox to pills per user request
+            selected_test_file = st.pills(
+                "Escolha um arquivo:", 
+                files, 
+                selection_mode="single"
+            )
+            
             if selected_test_file:
                 file_path = os.path.join(test_dir, selected_test_file)
                 # Ler arquivo como bytes para simular upload
