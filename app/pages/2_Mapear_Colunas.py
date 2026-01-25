@@ -132,27 +132,27 @@ with st.sidebar:
     st.divider()
     
     # Expander Opcionais
-    with st.expander("⚙️ Opcionais", expanded=False):
-        for field, label in OPTIONAL_FIELDS.items():
-            used_others = get_used_in_others(field)
-            available = [""] + [c for c in cols_originais if c not in used_others]
+    
+    for field, label in OPTIONAL_FIELDS.items():
+        used_others = get_used_in_others(field)
+        available = [""] + [c for c in cols_originais if c not in used_others]
             
-            val = try_automap(field, cols_originais, used_others)
-            # Opcionais não precisam de automap agressivo, mas ajuda
+        val = try_automap(field, cols_originais, used_others)
+        # Opcionais não precisam de automap agressivo, mas ajuda
             
-            index_val = available.index(val) if val in available else 0
+        index_val = available.index(val) if val in available else 0
             
-            selection = st.selectbox(
-                label,
-                options=available,
-                index=index_val,
-                key=f"sel_{field}"
-            )
+        selection = st.selectbox(
+            label,
+            options=available,
+            index=index_val,
+            key=f"sel_{field}"
+        )
             
-            if selection:
-                current_map[field] = selection
-            elif field in current_map:
-                del current_map[field]
+        if selection:
+             current_map[field] = selection
+        elif field in current_map:
+            del current_map[field]
                 
     # Salvar mapa
     st.session_state['colmap'] = current_map
