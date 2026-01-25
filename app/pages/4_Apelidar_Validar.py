@@ -95,24 +95,65 @@ st.progress(int(validados / total * 100) if total > 0 else 0, text=f"Progresso d
 
 # --- Filtros e Controles ---
 st.divider()
-c_filter, c_toggle = st.columns([3, 1])
 
-with c_filter:
-    # Usando selectbox ou multiselect para filtros, pills ideal mas fallback
-    status_filter = st.multiselect(
-        "Filtrar por Status",
-        options=['ok', 'revisar', 'desconhecido'],
-        default=['ok', 'revisar', 'desconhecido']
-    )
+with st.expander("🔍 Filtros Avançados", expanded=True):
+    col1, col2, col3 = st.columns(3)
     
-    # Checkbox para mostrar apenas não validados
-    show_pending_only = st.checkbox("Mostrar apenas pendentes de validação", value=False)
-
-with c_toggle:
-    show_similares = st.toggle("Mostrar Semelhantes", value=False)
+    with col1:
+        # Filtro por Status
+        status_filter = st.multiselect(
+            "Status",
+            options=['ok', 'revisar', 'desconhecido'],
+            default=['ok', 'revisar', 'desconhecido']
+        )
+    
+    with col2:
+        # Filtro por Tipo (Domínio)
+        tipos_disponiveis = ['Todos'] + sorted(df['tax_tipo'].dropna().unique().tolist())
+        tipo_filter = st.selectbox(
+            "Tipo (Domínio)",
+            options=tipos_disponiveis,
+            index=0
+        )
+    
+    with col3:
+        # Filtro por Apelido
+        apelidos_disponiveis = ['Todos'] + sorted(df['apelido_sugerido'].dropna().unique().tolist())
+        apelido_filter = st.selectbox(
+            "Apelido Sugerido",
+            options=apelidos_disponiveis,
+            index=0
+        )
+    
+    # Segunda linha de filtros
+    col4, col5, col6 = st.columns(3)
+    
+    with col4:
+        # Checkbox para mostrar apenas não validados
+        show_pending_only = st.checkbox("Apenas pendentes de validação", value=False)
+    
+    with col5:
+        # Toggle para mostrar semelhantes
+        show_similares = st.toggle("Mostrar Semelhantes", value=False)
+    
+    with col6:
+        # Filtro de busca por texto na descrição
+        search_text = st.text_input("Buscar na descrição", placeholder="Digite para filtrar...")
 
 # Filtragem do DataFrame para Exibição
 mask = df['status'].isin(status_filter)
+
+# Aplicar filtro de tipo
+if tipo_filter != 'Todos':
+    mask = mask & (df['tax_tipo'] == tipo_filter)
+
+# Aplicar filtro de apelido
+if apelido_filter != 'Todos':
+    mask = mask & (df['apelido_sugerido'] == apelido_filter)
+
+# Aplicar filtro de busca por texto
+if search_text:
+    mask = mask & df['descricao_norm'].str.contains(search_text.lower(), case=False, na=False)
 if show_pending_only:
     mask = mask & (df['validado'] == False)
 
