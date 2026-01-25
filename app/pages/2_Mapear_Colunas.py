@@ -48,11 +48,7 @@ with st.sidebar:
     except Exception as e:
         st.error(f"Erro ao ler cabeçalho na linha {header_row}: {e}")
         st.stop()
-        
-    st.markdown("### 2. Mapeamento")
 
-    st.divider()
-    
     # Inicializar mapa na sessão se não existir
     if 'colmap' not in st.session_state:
         st.session_state['colmap'] = {}
