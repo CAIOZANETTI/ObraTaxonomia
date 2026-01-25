@@ -135,12 +135,41 @@ def normalize_dataframe(
         'accents': 0,
         'punctuation': 0,
         'spaces': 0,
-        'zeroed': 0
+        'zeroed': 0,
+        'removed_empty': 0
+    }
     }
     
     # Lista de linhas zeradas (para reverter)
     zeroed_rows = []
     
+    # 0. Remover linhas vazias (se configurado)
+    # Remove NaN, None, string "None", string vazia ou só espaços
+    if config.get('remove_empty_rows', False):
+        initial_count = len(df_norm)
+        
+        # Critério de vazio: NaN, None, "None" (case insensitive), "" ou whitespace
+        # Converter para string temporariamente para checar 'none' e whitespace
+        temp_desc = df_norm[col_desc].astype(str).str.strip().str.lower()
+        
+        mask_valid = ~(
+            (temp_desc == 'nan') | 
+            (temp_desc == 'none') | 
+            (temp_desc == '') | 
+            (df_norm[col_desc].isna())
+        )
+        
+        df_norm = df_norm[mask_valid].reset_index(drop=True)
+        removed_count = initial_count - len(df_norm)
+        
+        if removed_count > 0:
+            stats['removed_empty'] = removed_count
+            audit_log.append({
+                'tipo': 'rows_removed',
+                'quantidade': removed_count,
+                 'msg': f"{removed_count} linhas removidas por estarem vazias ou inválidas."
+            })
+
     for idx, row in df_norm.iterrows():
         original = str(row[col_desc])
         current = original
@@ -263,6 +292,8 @@ def get_normalization_report(audit_log: List[Dict]) -> str:
     report += f"  - Stopwords removidas: {stats.get('stopwords', 0)}\n"
     report += f"  - Espaços colapsados: {stats.get('spaces', 0)}\n"
     report += f"  - Descrições zeradas (revertidas): {stats.get('zeroed', 0)}\n"
+    if stats.get('removed_empty', 0) > 0:
+        report += f"  - Linhas removidas (vazias): {stats.get('removed_empty', 0)}\n"
     
     # Avisos de decimais
     decimal_warnings = [log for log in audit_log if log.get('tipo') == 'decimal_comma']

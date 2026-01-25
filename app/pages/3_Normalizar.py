@@ -38,7 +38,8 @@ with col1:
         'remove_punctuation': st.checkbox("Remover pontuação (exceto traços numéricos)", value=True),
         'remove_stopwords': st.checkbox("Remover stopwords (de, da, com...)", value=False),
         'collapse_spaces': st.checkbox("Remover espaços duplos", value=True),
-        'normalize_numbers': st.checkbox("Normalizar números e decimais", value=True)
+        'normalize_numbers': st.checkbox("Normalizar números e decimais", value=True),
+        'remove_empty_rows': st.checkbox("Remover linhas sem descrição (Vazias/None)", value=True)
     }
 
 # --- Preview Dinâmico (Amostra) ---
