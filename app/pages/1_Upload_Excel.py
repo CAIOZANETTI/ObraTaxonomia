@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import os
 import io
+import sys
+
+# Adicionar diretório raiz ao path para importar scripts
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 from scripts.utils import convert_xlsx_to_csv_all_methods
 
 st.set_page_config(page_title="1. Upload Excel", layout="wide")

@@ -1,6 +1,12 @@
 import streamlit as st
 import pandas as pd
 import io
+import sys
+import os
+
+# Adicionar root ao path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 from scripts.normalize import normalize_dataframe, get_normalization_report
 
 st.set_page_config(page_title="3. Normalizar", layout="wide")

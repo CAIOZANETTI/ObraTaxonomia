@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import io
 import os
+import sys
+
+# Adicionar root ao path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 from scripts.unknowns import aggregate_unknowns, save_unknowns_jsonl
 
 st.set_page_config(page_title="5. Desconhecidos", layout="wide")

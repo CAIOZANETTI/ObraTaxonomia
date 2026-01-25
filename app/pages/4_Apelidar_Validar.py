@@ -3,6 +3,10 @@ import pandas as pd
 import io
 import os
 import time
+import sys
+
+# Adicionar root ao path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from scripts.builder import TaxonomyBuilder
 from scripts.classify import ClassifierEngine
