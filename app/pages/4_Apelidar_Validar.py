@@ -115,7 +115,10 @@ COL_LABELS = {
     "apelido_sugerido": "Sugestão",
     "apelido_final": "Apelido Final",
     "status": "Status",
-    "motivo": "Motivo"
+    "motivo": "Motivo",
+    "codigo": "Código",
+    "preco_unit": "Preço Unit.",
+    "preco_total": "Preço Total"
 }
 
 # Defaults visíveis
@@ -140,6 +143,9 @@ col_config = {
     "apelido_final": st.column_config.TextColumn("Apelido Final (Editável)", required=True),
     "status": st.column_config.TextColumn("Status", disabled=True, width="small"),
     "motivo": st.column_config.TextColumn("Motivo", disabled=True),
+    "codigo": st.column_config.TextColumn("Código", disabled=True, width="small"),
+    "preco_unit": st.column_config.NumberColumn("Preço Unit.", disabled=True, format="%.2f"),
+    "preco_total": st.column_config.NumberColumn("Preço Total", disabled=True, format="%.2f"),
     # Esconder colunas técnicas sempre
     "id_linha": None, "linha_origem": None, "aba_origem": None, 
     "alternativa": None, "score": None, "tax_tipo": None, "tax_desconhecido": None,
