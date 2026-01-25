@@ -13,7 +13,7 @@ regras:
     contem:
       - [armacao, armação, vergalhao, vergalhão, aco, aço, ca-50, ca50, ca-60, ca60, estribo, barra nervurada]
     ignorar:
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
       - [madeira, telhado, cobertura, carpintaria, estrutura de madeira]
 
   - apelido: armadura_passiva_t
@@ -21,7 +21,7 @@ regras:
     contem:
       - [armacao, armação, vergalhao, vergalhão, aco, aço, ca-50, ca50, ca-60, ca60, estribo, barra nervurada]
     ignorar:
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
       - [madeira, telhado, cobertura, carpintaria, estrutura de madeira]
 
   # ---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ regras:
   - apelido: armadura_ativa_kg
     unit: kg
     contem:
-      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem, cunha, armadura ativa]
+      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem, cunha, armadura ativa, protendido, protendida]
     ignorar:
       - [ca-50, ca50, ca-60, ca60, vergalhao, vergalhão, passiva]
       - [madeira, telhado, cobertura, carpintaria]
@@ -39,7 +39,7 @@ regras:
   - apelido: armadura_ativa_t
     unit: t
     contem:
-      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem, cunha, armadura ativa]
+      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem, cunha, armadura ativa, protendido, protendida]
     ignorar:
       - [ca-50, ca50, ca-60, ca60, vergalhao, vergalhão, passiva]
       - [madeira, telhado, cobertura, carpintaria]
@@ -55,7 +55,7 @@ regras:
       - [fornecimento, fornecer, fornecido, material, compra, fornec]
     ignorar:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, corte, dobra]
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
 
   - apelido: armadura_passiva_fornecimento_t
     unit: t
@@ -64,7 +64,7 @@ regras:
       - [fornecimento, fornecer, fornecido, material, compra, fornec]
     ignorar:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, corte, dobra]
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
 
   # ---------------------------------------------------------------------------
   # 4) MÃO DE OBRA (EXECUÇÃO) — PASSIVA
@@ -77,7 +77,7 @@ regras:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, armador]
     ignorar:
       - [fornecimento, fornecer, fornecido, material, compra]
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
 
   - apelido: armadura_passiva_mao_de_obra_t
     unit: t
@@ -86,7 +86,7 @@ regras:
       - [mao de obra, mão de obra, montagem, amarracao, amarração, posicionamento, instalacao, instalação, armador]
     ignorar:
       - [fornecimento, fornecer, fornecido, material, compra]
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
 
   # ---------------------------------------------------------------------------
   # 5) FORNECIMENTO (MATERIAL) — ATIVA
@@ -95,7 +95,7 @@ regras:
   - apelido: armadura_ativa_fornecimento_kg
     unit: kg
     contem:
-      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem]
+      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem, protendido, protendida]
       - [fornecimento, fornecer, fornecido, material, compra, fornec]
     ignorar:
       - [mao de obra, mão de obra, montagem, instalacao, instalação, tensionamento, protender]
@@ -104,7 +104,7 @@ regras:
   - apelido: armadura_ativa_fornecimento_t
     unit: t
     contem:
-      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem]
+      - [protensao, protensão, cordoalha, cabo, bainha, ancoragem, protendido, protendida]
       - [fornecimento, fornecer, fornecido, material, compra, fornec]
     ignorar:
       - [mao de obra, mão de obra, montagem, instalacao, instalação, tensionamento, protender]
@@ -117,7 +117,7 @@ regras:
   - apelido: armadura_ativa_mao_de_obra_kg
     unit: kg
     contem:
-      - [protensao, protensão, cordoalha, cabo]
+      - [protensao, protensão, cordoalha, cabo, protendido, protendida]
       - [mao de obra, mão de obra, montagem, instalacao, instalação, tensionamento, protender, macaco, alongamento]
     ignorar:
       - [fornecimento, fornecer, fornecido, material, compra]
@@ -126,7 +126,7 @@ regras:
   - apelido: armadura_ativa_mao_de_obra_t
     unit: t
     contem:
-      - [protensao, protensão, cordoalha, cabo]
+      - [protensao, protensão, cordoalha, cabo, protendido, protendida]
       - [mao de obra, mão de obra, montagem, instalacao, instalação, tensionamento, protender, macaco, alongamento]
     ignorar:
       - [fornecimento, fornecer, fornecido, material, compra]
@@ -142,7 +142,7 @@ regras:
       - [armacao, armação, vergalhao, vergalhão, ca-50, ca50, ca-60, ca60]
       - [corte, dobra, corte e dobra, dobragem, estribo]
     ignorar:
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
       - [fornecimento, compra]
 
   - apelido: armadura_corte_dobra_t
@@ -151,7 +151,7 @@ regras:
       - [armacao, armação, vergalhao, vergalhão, ca-50, ca50, ca-60, ca60]
       - [corte, dobra, corte e dobra, dobragem, estribo]
     ignorar:
-      - [protensao, protensão, cordoalha, ativa]
+      - [protensao, protensão, cordoalha, ativa, protendido, protendida]
       - [fornecimento, compra]
 
   # ---------------------------------------------------------------------------

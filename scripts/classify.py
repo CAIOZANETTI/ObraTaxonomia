@@ -21,6 +21,7 @@ class ClassifierEngine:
         
         # 2. Match
         best_match = None
+        best_score = -1
         
         for rule in self.rules:
             # Filtro Strict de Unidade
@@ -46,19 +47,27 @@ class ClassifierEngine:
             
             # Filtro Inclusão (Contem) - AND entre grupos, OR dentro do grupo
             match_all_groups = True
+            current_rule_score = 0
+            
             for must_have_group in rule['contem']:
-                group_satisfied = False
-                for term in must_have_group:
-                    if term in desc_norm: # Substring match
-                        group_satisfied = True
-                        break
-                if not group_satisfied:
+                # Encontrar todos os matches neste grupo
+                matches_in_group = [term for term in must_have_group if term in desc_norm]
+                
+                if not matches_in_group:
                     match_all_groups = False
                     break
+                
+                # Para pontuação, usamos o termo mais longo encontrado no grupo (maior especificidade)
+                # Ex: se tem ["aco", "aco carbono"], e texto tem "aco carbono", soma len("aco carbono")
+                longest_match = max(matches_in_group, key=len)
+                current_rule_score += len(longest_match)
             
             if match_all_groups:
-                best_match = rule
-                break # Encontrou o primeiro match (na ordem do YAML/Prioridade).
+                # Se passou em todos os grupos, é um candidato
+                if current_rule_score > best_score:
+                    best_score = current_rule_score
+                    best_match = rule
+                # Não damos break aqui, continuamos procurando scores melhores
         
         if best_match:
             return best_match['apelido'], best_match['dominio'], False, 100
