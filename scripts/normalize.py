@@ -143,23 +143,26 @@ def normalize_dataframe(
     # Lista de linhas zeradas (para reverter)
     zeroed_rows = []
     
-    # 0. Remover linhas vazias (se configurado)
-    # Remove NaN, None, string "None", string vazia ou só espaços
-    if config.get('remove_empty_rows', False):
+    # 0. Remover linhas vazias (Strict Cleaning)
+    # Remove NaN, None, string "None", string vazia ou só espaços NA COLUNA DE DESCRIÇÃO
+    if config.get('remove_empty_rows', True): # Default True
         initial_count = len(df_norm)
         
-        # Critério de vazio: NaN, None, "None" (case insensitive), "" ou whitespace
-        # Converter para string temporariamente para checar 'none' e whitespace
+        # Converter para string e normalizar para check
+        # 'coerce' transforma dtypes não str em str, mas NaN vira 'nan'
         temp_desc = df_norm[col_desc].astype(str).str.strip().str.lower()
         
-        mask_valid = ~(
-            (temp_desc == 'nan') | 
-            (temp_desc == 'none') | 
-            (temp_desc == '') | 
-            (df_norm[col_desc].isna())
+        # Critérios de INVALIDADE (Se der True, a linha cai fora)
+        mask_invalid = (
+            (df_norm[col_desc].isna()) |          # NaN real
+            (temp_desc == 'nan') |                # String 'nan'
+            (temp_desc == 'none') |               # String 'none'
+            (temp_desc == '') |                   # Vazio
+            (temp_desc == '0') |                  # As vezes 0 é lixo
+            (temp_desc == 'item')                 # Títulos perdidos
         )
         
-        df_norm = df_norm[mask_valid].reset_index(drop=True)
+        df_norm = df_norm[~mask_invalid].reset_index(drop=True)
         removed_count = initial_count - len(df_norm)
         
         if removed_count > 0:
@@ -167,7 +170,7 @@ def normalize_dataframe(
             audit_log.append({
                 'tipo': 'rows_removed',
                 'quantidade': removed_count,
-                 'msg': f"{removed_count} linhas removidas por estarem vazias ou inválidas."
+                 'msg': f"{removed_count} linhas removidas (Descrição vazia ou 'None')."
             })
 
     for idx, row in df_norm.iterrows():
