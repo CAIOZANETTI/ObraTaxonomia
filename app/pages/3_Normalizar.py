@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import io
+import time
 import sys
 import os
 
@@ -72,15 +73,16 @@ if c2.button("Aplicar Normalização em Tudo", type="primary"):
             st.session_state['csv_norm'] = df_norm.to_csv(index=False)
             st.session_state['audit_log'] = audit_log
             
-            # Mostrar Relatório
+            # Mostrar Relatório (Rápido)
             report = get_normalization_report(audit_log)
-            st.success("Normalização concluída!")
+            st.success("Normalização concluída! Redirecionando...")
             
-            with st.expander("Ver Relatório de Auditoria", expanded=True):
+            with st.expander("Ver Relatório Detalhado (Salvou no Log)", expanded=False):
                 st.text(report)
-                
-            # Botão para proximo
-            st.button("Continuar para Classificação >", on_click=lambda: st.switch_page("pages/4_Apelidar_Validar.py"))
+            
+            # Auto-Nav
+            time.sleep(1.5)
+            st.switch_page("pages/4_Apelidar_Validar.py")
             
         except Exception as e:
             st.error(f"Erro na normalização: {e}")
