@@ -117,12 +117,17 @@ col_config = {
     "apelido_final": st.column_config.TextColumn("Apelido Final (Editável)", required=True),
     "status": st.column_config.TextColumn("Status", disabled=True, width="small"),
     "motivo": st.column_config.TextColumn("Motivo", disabled=True),
-    "semelhantes": st.column_config.TextColumn("Semelhantes", disabled=True, hidden=not show_similares),
     # Esconder colunas técnicas
     "id_linha": None, "linha_origem": None, "aba_origem": None, 
     "alternativa": None, "score": None, "tax_tipo": None, "tax_desconhecido": None,
     "unidade_sugerida": None, "tax_incerto": None, "tax_confianca": None, "tax_apelido": None
 }
+
+# Lógica Dinâmica para Ocultar Colunas
+if show_similares:
+    col_config["semelhantes"] = st.column_config.TextColumn("Semelhantes", disabled=True)
+else:
+    col_config["semelhantes"] = None
 
 st.caption("Edite o 'Apelido Final' se necessário e marque 'Validado'. Suas alterações são salvas automaticamente na memória.")
 
