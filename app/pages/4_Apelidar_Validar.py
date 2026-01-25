@@ -106,8 +106,31 @@ if show_pending_only:
 
 df_view = df[mask].copy()
 
+# --- Configuração de Colunas Disponíveis (Mapeamento Interno -> Label) ---
+COL_LABELS = {
+    "validado": "Validado?",
+    "descricao_norm": "Descrição (Norm)",
+    "unidade": "Und",
+    "quantidade": "Qtd",
+    "apelido_sugerido": "Sugestão",
+    "apelido_final": "Apelido Final",
+    "status": "Status",
+    "motivo": "Motivo"
+}
+
+# Defaults visíveis
+DEFAULT_VISIBLE = ["validado", "descricao_norm", "apelido_final", "status", "apelido_sugerido"]
+
+with st.expander("👁️ Configurar Colunas Visíveis", expanded=False):
+    visible_cols = st.multiselect(
+        "Selecione as colunas para exibir:",
+        options=list(COL_LABELS.keys()),
+        default=DEFAULT_VISIBLE,
+        format_func=lambda x: COL_LABELS[x]
+    )
+
 # --- Tabela Editável ---
-# Definir configuração das colunas
+# Definir configuração base das colunas
 col_config = {
     "validado": st.column_config.CheckboxColumn("Validado?", width="small"),
     "descricao_norm": st.column_config.TextColumn("Descrição (Norm)", disabled=True, width="large"),
@@ -117,13 +140,19 @@ col_config = {
     "apelido_final": st.column_config.TextColumn("Apelido Final (Editável)", required=True),
     "status": st.column_config.TextColumn("Status", disabled=True, width="small"),
     "motivo": st.column_config.TextColumn("Motivo", disabled=True),
-    # Esconder colunas técnicas
+    # Esconder colunas técnicas sempre
     "id_linha": None, "linha_origem": None, "aba_origem": None, 
     "alternativa": None, "score": None, "tax_tipo": None, "tax_desconhecido": None,
     "unidade_sugerida": None, "tax_incerto": None, "tax_confianca": None, "tax_apelido": None
 }
 
-# Lógica Dinâmica para Ocultar Colunas
+# Aplicar filtro de visibilidade
+# Para cada coluna que NÃO está em visible_cols, setar como None (esconder)
+for col_key in COL_LABELS.keys():
+    if col_key not in visible_cols:
+        col_config[col_key] = None
+
+# Lógica Dinâmica para Semelhantes (Toggle soberano)
 if show_similares:
     col_config["semelhantes"] = st.column_config.TextColumn("Semelhantes", disabled=True)
 else:
