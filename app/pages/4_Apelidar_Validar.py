@@ -108,6 +108,14 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
         )
     
     with col2:
+        # Filtro por Validado
+        validado_filter = st.multiselect(
+            "Validado",
+            options=['Validado', 'Não Validado'],
+            default=['Validado', 'Não Validado']
+        )
+    
+    with col3:
         # Filtro por Tipo (Domínio)
         tipos_disponiveis = ['Todos'] + sorted(df['tax_tipo'].dropna().unique().tolist())
         tipo_filter = st.selectbox(
@@ -116,7 +124,10 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
             index=0
         )
     
-    with col3:
+    # Segunda linha de filtros
+    col4, col5, col6 = st.columns(3)
+    
+    with col4:
         # Filtro por Apelido
         apelidos_disponiveis = ['Todos'] + sorted(df['apelido_sugerido'].dropna().unique().tolist())
         apelido_filter = st.selectbox(
@@ -124,13 +135,6 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
             options=apelidos_disponiveis,
             index=0
         )
-    
-    # Segunda linha de filtros
-    col4, col5, col6 = st.columns(3)
-    
-    with col4:
-        # Checkbox para mostrar apenas não validados
-        show_pending_only = st.checkbox("Apenas pendentes de validação", value=False)
     
     with col5:
         # Toggle para mostrar semelhantes
@@ -143,6 +147,13 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
 # Filtragem do DataFrame para Exibição
 mask = df['status'].isin(status_filter)
 
+# Aplicar filtro de validado
+if 'Validado' in validado_filter and 'Não Validado' not in validado_filter:
+    mask = mask & (df['validado'] == True)
+elif 'Não Validado' in validado_filter and 'Validado' not in validado_filter:
+    mask = mask & (df['validado'] == False)
+# Se ambos ou nenhum estiver selecionado, não filtra por validado
+
 # Aplicar filtro de tipo
 if tipo_filter != 'Todos':
     mask = mask & (df['tax_tipo'] == tipo_filter)
@@ -154,8 +165,6 @@ if apelido_filter != 'Todos':
 # Aplicar filtro de busca por texto
 if search_text:
     mask = mask & df['descricao_norm'].str.contains(search_text.lower(), case=False, na=False)
-if show_pending_only:
-    mask = mask & (df['validado'] == False)
 
 df_view = df[mask].copy()
 
