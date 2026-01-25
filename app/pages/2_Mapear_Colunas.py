@@ -49,9 +49,8 @@ with st.sidebar:
         st.error(f"Erro ao ler cabeçalho na linha {header_row}: {e}")
         st.stop()
         
-    st.markdown("---")
     st.markdown("### 2. Mapeamento")
-    st.markdown("Associe as colunas do Excel aos campos do sistema.")
+
     st.divider()
     
     # Inicializar mapa na sessão se não existir
