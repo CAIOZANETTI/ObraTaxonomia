@@ -112,6 +112,7 @@ col_config = {
     "validado": st.column_config.CheckboxColumn("Validado?", width="small"),
     "descricao_norm": st.column_config.TextColumn("Descrição (Norm)", disabled=True, width="large"),
     "unidade": st.column_config.TextColumn("Und", disabled=True, width="small"),
+    "quantidade": st.column_config.NumberColumn("Qtd", disabled=True, format="%.2f"),
     "apelido_sugerido": st.column_config.TextColumn("Sugestão", disabled=True),
     "apelido_final": st.column_config.TextColumn("Apelido Final (Editável)", required=True),
     "status": st.column_config.TextColumn("Status", disabled=True, width="small"),
@@ -158,7 +159,7 @@ if st.button("💾 Salvar Alterações na Sessão"):
 st.divider()
 st.subheader("Finalizar e Exportar")
 
-c1, c2, c3 = st.columns(3)
+c1, c2, c3, c4 = st.columns(4)
 
 if c1.button("Voltar"):
     st.switch_page("pages/3_Normalizar.py")
@@ -166,15 +167,29 @@ if c1.button("Voltar"):
 # Botão Download Validado
 csv_validado = st.session_state['df_working'].to_csv(index=False).encode('utf-8')
 c2.download_button(
-    label="📥 Baixar Resultado Validado (.csv)",
+    label="📥 Baixar Validado",
     data=csv_validado,
     file_name="orcamento_validado.csv",
     mime="text/csv"
 )
 
-# Botão Continuar para Unknowns
+# Botão Download Unknowns (Rápido)
+# Filtra apenas o que é desconhecido ou não validado
+unknowns_df = st.session_state['df_working'][
+    st.session_state['df_working']['tax_desconhecido'] == True
+]
+csv_unknowns = unknowns_df.to_csv(index=False).encode('utf-8')
+c3.download_button(
+    label="📥 Baixar Desconhecidos",
+    data=csv_unknowns,
+    file_name="unknowns_antigravity.csv",
+    mime="text/csv",
+    help="Baixa apenas os itens não identificados para envio rápido."
+)
+
+# Botão Continuar para Unknowns (Gestão)
 # Salva unknowns na sessão antes de ir
-if c3.button("Ver Desconhecidos >"):
+if c4.button("Gerir Desconhecidos >", type="primary"):
     # Salvar estado final
     st.session_state['csv_validated'] = st.session_state['df_working'].to_csv(index=False)
     
