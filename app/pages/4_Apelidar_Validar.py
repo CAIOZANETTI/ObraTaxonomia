@@ -23,6 +23,13 @@ def get_engine():
     classifier = ClassifierEngine(builder)
     return classifier
 
+    return classifier
+
+if st.button("🔄 Recarregar Regras (Limpar Cache)"):
+    st.cache_resource.clear()
+    st.success("Cache limpo! As regras serão recarregadas.")
+    st.rerun()
+
 classifier = get_engine()
 
 st.header("4. Classificação e Validação")
