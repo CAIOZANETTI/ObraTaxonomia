@@ -261,27 +261,41 @@ if st.button("💾 Salvar Alterações na Sessão"):
 st.divider()
 st.subheader("Finalizar e Exportar")
 
+# Primeira linha de botões
 c1, c2, c3, c4 = st.columns(4)
 
 if c1.button("Voltar"):
     st.switch_page("pages/3_Normalizar.py")
 
-# Botão Download Validado
+# Botão Download Validado (Completo)
 csv_validado = st.session_state['df_working'].to_csv(index=False).encode('utf-8')
 c2.download_button(
     label="📥 Baixar Validado",
     data=csv_validado,
     file_name="orcamento_validado.csv",
-    mime="text/csv"
+    mime="text/csv",
+    help="Baixa todos os dados validados (completo)."
+)
+
+# Botão Download Revisar
+revisar_df = st.session_state['df_working'][
+    st.session_state['df_working']['status'] == 'revisar'
+]
+csv_revisar = revisar_df.to_csv(index=False).encode('utf-8')
+c3.download_button(
+    label="📥 Baixar Revisar",
+    data=csv_revisar,
+    file_name="itens_revisar.csv",
+    mime="text/csv",
+    help="Baixa apenas os itens que precisam de revisão."
 )
 
 # Botão Download Unknowns (Rápido)
-# Filtra apenas o que é desconhecido ou não validado
 unknowns_df = st.session_state['df_working'][
     st.session_state['df_working']['tax_desconhecido'] == True
 ]
 csv_unknowns = unknowns_df.to_csv(index=False).encode('utf-8')
-c3.download_button(
+c4.download_button(
     label="📥 Baixar Desconhecidos",
     data=csv_unknowns,
     file_name="unknowns_antigravity.csv",
@@ -289,9 +303,12 @@ c3.download_button(
     help="Baixa apenas os itens não identificados para envio rápido."
 )
 
+# Segunda linha - Botão de continuar
+st.markdown("")  # Espaçamento
+
 # Botão Continuar para Unknowns (Gestão)
 # Salva unknowns na sessão antes de ir
-if c4.button("Gerir Desconhecidos >", type="primary"):
+if st.button("Gerir Desconhecidos >", type="primary"):
     # Salvar estado final
     st.session_state['csv_validated'] = st.session_state['df_working'].to_csv(index=False)
     
