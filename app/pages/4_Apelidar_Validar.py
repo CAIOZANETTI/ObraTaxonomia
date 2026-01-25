@@ -76,6 +76,19 @@ else:
     # Recarregar do session state (pode ter edições anteriores)
     df_combined = st.session_state['df_working']
 
+# --- Migração de Dados Antigos ---
+# Se existe coluna 'validado' mas não existe 'revisar', migrar
+if 'validado' in df_combined.columns and 'revisar' not in df_combined.columns:
+    # Migrar: inverter lógica (validado=True vira revisar=False)
+    df_combined['revisar'] = False
+    st.session_state['df_working'] = df_combined
+    st.info("⚠️ Dados migrados para novo formato. A coluna 'Validado' foi substituída por 'Revisar'.")
+
+# Se não existe coluna 'revisar', criar
+if 'revisar' not in df_combined.columns:
+    df_combined['revisar'] = False
+    st.session_state['df_working'] = df_combined
+
 # --- Métricas ---
 df = df_combined # Alias curto
 
