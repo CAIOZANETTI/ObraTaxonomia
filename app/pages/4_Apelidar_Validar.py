@@ -257,7 +257,18 @@ if st.button("💾 Salvar Alterações na Sessão"):
     # Pandas update é eficiente com índices alinhados
     st.session_state['df_working'].update(edited_df_view)
     
-    st.success("Alterações salvas!")
+    # Atualizar status baseado na marcação de revisar
+    # Se marcou revisar=True, mudar status para 'revisar'
+    # Se desmarcou revisar=False e status era 'revisar', voltar para status original ou 'ok'
+    mask_marcado = st.session_state['df_working']['revisar'] == True
+    st.session_state['df_working'].loc[mask_marcado, 'status'] = 'revisar'
+    
+    # Se desmarcou e status é 'revisar', voltar para 'ok' (assumindo que estava ok antes)
+    mask_desmarcado = st.session_state['df_working']['revisar'] == False
+    mask_status_revisar = st.session_state['df_working']['status'] == 'revisar'
+    st.session_state['df_working'].loc[mask_desmarcado & mask_status_revisar, 'status'] = 'ok'
+    
+    st.success("Alterações salvas! Status atualizado automaticamente.")
     st.rerun() # Refresh nas métricas
 
 # --- Exportação ---
