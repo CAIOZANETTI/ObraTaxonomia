@@ -198,7 +198,7 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
         show_similares = st.toggle("Mostrar Semelhantes", value=False)
     
     with col7:
-        # Filtro de busca por texto na descrição
+        # Filtro de busca por texto na descrição (busca em AMBAS as colunas)
         search_text = st.text_input("Buscar na descrição", placeholder="Digite para filtrar...")
 
 # Filtragem do DataFrame para Exibição
@@ -223,16 +223,22 @@ if 'tax_grupo' in df.columns and grupo_filter != 'Todos':
 if apelido_filter != 'Todos':
     mask = mask & (df['apelido_sugerido'] == apelido_filter)
 
-# Aplicar filtro de busca por texto
+# Aplicar filtro de busca por texto (busca em AMBAS: original e normalizada)
 if search_text:
-    mask = mask & df['descricao_norm'].str.contains(search_text.lower(), case=False, na=False)
+    search_lower = search_text.lower()
+    mask_search = (
+        df['descricao_norm'].str.contains(search_lower, case=False, na=False) |
+        df['descricao'].str.contains(search_text, case=False, na=False)  # Busca também no original
+    )
+    mask = mask & mask_search
 
 df_view = df[mask].copy()
 
 # --- Configuração de Colunas Disponíveis (Mapeamento Interno -> Label) ---
 COL_LABELS = {
     "revisar": "Revisar?",
-    "descricao_norm": "Descrição (Norm)",
+    "descricao": "Descrição Original",
+    "descricao_norm": "Descrição (Normalizada)",
     "unidade": "Und",
     "quantidade": "Qtd",
     "tax_tipo": "Tipo",
@@ -246,8 +252,8 @@ COL_LABELS = {
     "preco_total": "Preço Total"
 }
 
-# Defaults visíveis
-DEFAULT_VISIBLE = ["revisar", "descricao_norm", "tax_tipo", "tax_grupo", "apelido_sugerido", "apelido_desejado", "status"]
+# Defaults visíveis - mostrar original E normalizada
+DEFAULT_VISIBLE = ["revisar", "descricao", "tax_tipo", "tax_grupo", "apelido_sugerido", "apelido_desejado", "status"]
 
 with st.expander("👁️ Configurar Colunas Visíveis", expanded=False):
     visible_cols = st.multiselect(
@@ -261,7 +267,18 @@ with st.expander("👁️ Configurar Colunas Visíveis", expanded=False):
 # Definir configuração base das colunas
 col_config = {
     "revisar": st.column_config.CheckboxColumn("Revisar?", width="small", help="Marque os itens que precisam revisão"),
-    "descricao_norm": st.column_config.TextColumn("Descrição (Norm)", disabled=True, width="large"),
+    "descricao": st.column_config.TextColumn(
+        "Descrição Original", 
+        disabled=True, 
+        width="large",
+        help="Texto original com acentos, maiúsculas e caracteres especiais preservados"
+    ),
+    "descricao_norm": st.column_config.TextColumn(
+        "Descrição (Normalizada)", 
+        disabled=True, 
+        width="large",
+        help="Texto normalizado usado para classificação (sem acentos, lowercase)"
+    ),
     "unidade": st.column_config.TextColumn("Und", disabled=True, width="small"),
     "quantidade": st.column_config.NumberColumn("Qtd", disabled=True, format="%.2f"),
     "tax_tipo": st.column_config.TextColumn("Tipo", disabled=True, width="small", help="Diretório YAML (ex: estrutura, fundacao)"),
