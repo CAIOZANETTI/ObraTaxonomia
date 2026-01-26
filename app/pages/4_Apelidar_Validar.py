@@ -267,6 +267,12 @@ col_config = {
     "tax_tipo": st.column_config.TextColumn("Tipo", disabled=True, width="small", help="Diretório YAML (ex: estrutura, fundacao)"),
     "tax_grupo": st.column_config.TextColumn("Grupo", disabled=True, width="small", help="Arquivo YAML (ex: concreto, aco)"),
     "apelido_sugerido": st.column_config.TextColumn("Sugestão", disabled=True),
+    "apelido_desejado": st.column_config.TextColumn(
+        "Apelido Desejado", 
+        width="medium",
+        help="Digite o apelido correto que você gostaria (ex: demolicao_concreto_m3, escavacao_rocha_m3)",
+        disabled=False  # EDITÁVEL
+    ),
     "status": st.column_config.TextColumn("Status", disabled=True, width="small"),
     "motivo": st.column_config.TextColumn("Motivo", disabled=True),
     "codigo": st.column_config.TextColumn("Código", disabled=True, width="small"),
@@ -291,7 +297,7 @@ if show_similares:
 else:
     col_config["semelhantes"] = None
 
-st.caption("Marque os itens que precisam revisão. Baixe o CSV de itens marcados para aprendizado.")
+st.caption("✏️ **Edite 'Apelido Desejado'** para sugerir novos apelidos. Marque itens para revisão. Baixe CSV para aprendizado.")
 
 edited_df_view = st.data_editor(
     df_view,

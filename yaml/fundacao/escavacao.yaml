@@ -1,0 +1,46 @@
+# Escavação
+- apelido: escavacao_solo_m3
+  unit: m³
+  contem:
+    - escavacao
+    - escavacao solo
+    - escavacao terra
+    - escavacao manual
+    - escavacao mecanica
+  ignorar:
+    - rocha
+    - alterada
+    - sapata
+    - vala
+
+- apelido: escavacao_rocha_m3
+  unit: m³
+  contem:
+    - escavacao rocha
+    - demolicao rocha
+    - desmonte rocha
+    - perfuracao rocha
+  ignorar:
+    - explosivo
+    - rompedor
+
+- apelido: escavacao_solo_alterado_m3
+  unit: m³
+  contem:
+    - escavacao alterada
+    - escavacao solo alterado
+    - solo alterado
+    - material alterado
+  ignorar:
+    - []
+
+- apelido: reaterro_compactado_m3
+  unit: m³
+  contem:
+    - reaterro
+    - aterro compactado
+    - compactacao
+    - reaterro compactado
+  ignorar:
+    - mecanica
+    - manual

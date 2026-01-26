@@ -1,0 +1,63 @@
+# Instalações Elétricas - Tomadas e Pontos
+- apelido: tomada_eletrica_2p_t_10a
+  unit: un
+  contem:
+    - tomada
+    - tomada 2p t
+    - tomada 10a
+    - ponto tomada
+  ignorar:
+    - embutir
+    - sobrepor
+    - caixa
+
+- apelido: tomada_eletrica_2p_t_20a
+  unit: un
+  contem:
+    - tomada 20a
+    - tomada 2p t 20a
+  ignorar:
+    - embutir
+    - sobrepor
+
+- apelido: interruptor_simples
+  unit: un
+  contem:
+    - interruptor simples
+    - interruptor 1 tecla
+    - interruptor uma tecla
+  ignorar:
+    - embutir
+    - sobrepor
+    - caixa
+
+- apelido: interruptor_duplo
+  unit: un
+  contem:
+    - interruptor duplo
+    - interruptor 2 teclas
+    - interruptor duas teclas
+  ignorar:
+    - embutir
+    - sobrepor
+
+- apelido: interruptor_triplo
+  unit: un
+  contem:
+    - interruptor triplo
+    - interruptor 3 teclas
+    - interruptor tres teclas
+  ignorar:
+    - embutir
+    - sobrepor
+
+- apelido: ponto_luz_teto
+  unit: un
+  contem:
+    - ponto luz
+    - ponto iluminacao
+    - luminaria
+    - ponto teto
+  ignorar:
+    - led
+    - fluorescente

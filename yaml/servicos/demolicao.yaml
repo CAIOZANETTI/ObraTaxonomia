@@ -1,0 +1,38 @@
+# Demolição
+- apelido: demolicao_concreto_armado_m3
+  unit: m³
+  contem:
+    - demolicao
+    - demolicao concreto
+    - concreto armado
+    - remocao concreto
+    - quebra concreto
+  ignorar:
+    - manual
+    - mecanica
+    - rompedor
+
+- apelido: demolicao_alvenaria_m3
+  unit: m³
+  contem:
+    - demolicao alvenaria
+    - demolicao parede
+    - remocao alvenaria
+    - quebra alvenaria
+    - demolicao tijolo
+    - demolicao bloco
+  ignorar:
+    - manual
+    - mecanica
+
+- apelido: demolicao_piso_m2
+  unit: m²
+  contem:
+    - demolicao piso
+    - remocao piso
+    - retirada piso
+    - quebra piso
+  ignorar:
+    - ceramica
+    - porcelanato
+    - granito
