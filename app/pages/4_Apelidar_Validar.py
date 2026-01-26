@@ -51,6 +51,11 @@ if 'csv_norm' not in st.session_state:
 if 'df_working' not in st.session_state:
     try:
         df_norm = pd.read_csv(io.StringIO(st.session_state['csv_norm']))
+        
+        # Adicionar ID original para preservar ordem da planilha
+        if 'id_original' not in df_norm.columns:
+            df_norm.insert(0, 'id_original', range(1, len(df_norm) + 1))
+        
         # Inicializar colunas de trabalho se não existirem
         if 'apelido_sugerido' not in df_norm.columns:
             # Ainda não rodou classificador
@@ -137,22 +142,49 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
         )
     
     # Segunda linha de filtros
-    col4, col5, col6 = st.columns(3)
+    col4, col5, col6, col7 = st.columns(4)
     
     with col4:
+        # Filtro por Grupo (Arquivo YAML)
+        # Filtrar grupos baseado no tipo selecionado
+        if tipo_filter != 'Todos':
+            grupos_disponiveis = ['Todos'] + sorted(
+                df[df['tax_tipo'] == tipo_filter]['tax_grupo'].dropna().unique().tolist()
+            )
+        else:
+            grupos_disponiveis = ['Todos'] + sorted(df['tax_grupo'].dropna().unique().tolist())
+        
+        grupo_filter = st.selectbox(
+            "Grupo (Arquivo YAML)",
+            options=grupos_disponiveis,
+            index=0
+        )
+    
+    with col5:
         # Filtro por Apelido
-        apelidos_disponiveis = ['Todos'] + sorted(df['apelido_sugerido'].dropna().unique().tolist())
+        # Filtrar apelidos baseado no grupo selecionado
+        if grupo_filter != 'Todos':
+            apelidos_disponiveis = ['Todos'] + sorted(
+                df[df['tax_grupo'] == grupo_filter]['apelido_sugerido'].dropna().unique().tolist()
+            )
+        elif tipo_filter != 'Todos':
+            apelidos_disponiveis = ['Todos'] + sorted(
+                df[df['tax_tipo'] == tipo_filter]['apelido_sugerido'].dropna().unique().tolist()
+            )
+        else:
+            apelidos_disponiveis = ['Todos'] + sorted(df['apelido_sugerido'].dropna().unique().tolist())
+        
         apelido_filter = st.selectbox(
             "Apelido Sugerido",
             options=apelidos_disponiveis,
             index=0
         )
     
-    with col5:
+    with col6:
         # Toggle para mostrar semelhantes
         show_similares = st.toggle("Mostrar Semelhantes", value=False)
     
-    with col6:
+    with col7:
         # Filtro de busca por texto na descrição
         search_text = st.text_input("Buscar na descrição", placeholder="Digite para filtrar...")
 
@@ -170,6 +202,10 @@ elif 'Não Marcado' in revisar_filter and 'Marcado' not in revisar_filter:
 if tipo_filter != 'Todos':
     mask = mask & (df['tax_tipo'] == tipo_filter)
 
+# Aplicar filtro de grupo
+if grupo_filter != 'Todos':
+    mask = mask & (df['tax_grupo'] == grupo_filter)
+
 # Aplicar filtro de apelido
 if apelido_filter != 'Todos':
     mask = mask & (df['apelido_sugerido'] == apelido_filter)
@@ -186,6 +222,8 @@ COL_LABELS = {
     "descricao_norm": "Descrição (Norm)",
     "unidade": "Und",
     "quantidade": "Qtd",
+    "tax_tipo": "Tipo",
+    "tax_grupo": "Grupo",
     "apelido_sugerido": "Sugestão",
     "status": "Status",
     "motivo": "Motivo",
@@ -195,7 +233,7 @@ COL_LABELS = {
 }
 
 # Defaults visíveis
-DEFAULT_VISIBLE = ["revisar", "descricao_norm", "status", "apelido_sugerido", "motivo"]
+DEFAULT_VISIBLE = ["revisar", "descricao_norm", "tax_tipo", "tax_grupo", "apelido_sugerido", "status", "motivo"]
 
 with st.expander("👁️ Configurar Colunas Visíveis", expanded=False):
     visible_cols = st.multiselect(
@@ -212,6 +250,8 @@ col_config = {
     "descricao_norm": st.column_config.TextColumn("Descrição (Norm)", disabled=True, width="large"),
     "unidade": st.column_config.TextColumn("Und", disabled=True, width="small"),
     "quantidade": st.column_config.NumberColumn("Qtd", disabled=True, format="%.2f"),
+    "tax_tipo": st.column_config.TextColumn("Tipo", disabled=True, width="small", help="Diretório YAML (ex: estrutura, fundacao)"),
+    "tax_grupo": st.column_config.TextColumn("Grupo", disabled=True, width="small", help="Arquivo YAML (ex: concreto, aco)"),
     "apelido_sugerido": st.column_config.TextColumn("Sugestão", disabled=True),
     "status": st.column_config.TextColumn("Status", disabled=True, width="small"),
     "motivo": st.column_config.TextColumn("Motivo", disabled=True),
@@ -220,7 +260,7 @@ col_config = {
     "preco_total": st.column_config.NumberColumn("Preço Total", disabled=True, format="%.2f"),
     # Esconder colunas técnicas sempre
     "id_linha": None, "linha_origem": None, "aba_origem": None, 
-    "alternativa": None, "score": None, "tax_tipo": None, "tax_desconhecido": None,
+    "alternativa": None, "score": None, "tax_desconhecido": None,
     "unidade_sugerida": None, "tax_incerto": None, "tax_confianca": None, "tax_apelido": None,
     "apelido_final": None  # Esconder apelido_final
 }
@@ -281,20 +321,27 @@ c1, c2, c3, c4 = st.columns(4)
 if c1.button("Voltar"):
     st.switch_page("pages/3_Normalizar.py")
 
-# Botão Download Validado (Completo)
-csv_validado = st.session_state['df_working'].to_csv(index=False).encode('utf-8')
+# Botão Download Validado (Completo) - Ordenado pela ordem original
+df_export = st.session_state['df_working'].copy()
+if 'id_original' in df_export.columns:
+    df_export = df_export.sort_values('id_original')
+
+csv_validado = df_export.to_csv(index=False).encode('utf-8')
 c2.download_button(
     label="📥 Baixar Completo",
     data=csv_validado,
     file_name="orcamento_validado.csv",
     mime="text/csv",
-    help="Baixa todos os dados processados (completo)."
+    help="Baixa todos os dados processados na ordem original da planilha."
 )
 
 # Botão Download Marcados para Revisar (Aprendizado)
 marcados_revisar_df = st.session_state['df_working'][
     st.session_state['df_working']['revisar'] == True
-]
+].copy()
+if 'id_original' in marcados_revisar_df.columns:
+    marcados_revisar_df = marcados_revisar_df.sort_values('id_original')
+
 csv_marcados = marcados_revisar_df.to_csv(index=False).encode('utf-8')
 c3.download_button(
     label="📥 Marcados Revisar",
@@ -307,7 +354,10 @@ c3.download_button(
 # Botão Download Desconhecidos (Aprendizado)
 unknowns_df = st.session_state['df_working'][
     st.session_state['df_working']['tax_desconhecido'] == True
-]
+].copy()
+if 'id_original' in unknowns_df.columns:
+    unknowns_df = unknowns_df.sort_values('id_original')
+
 csv_unknowns = unknowns_df.to_csv(index=False).encode('utf-8')
 c4.download_button(
     label="📥 Desconhecidos",
@@ -323,8 +373,12 @@ st.markdown("")  # Espaçamento
 # Botão Continuar para Unknowns (Gestão)
 # Salva unknowns na sessão antes de ir
 if st.button("Gerir Desconhecidos >", type="primary"):
-    # Salvar estado final
-    st.session_state['csv_validated'] = st.session_state['df_working'].to_csv(index=False)
+    # Salvar estado final - ordenado pela ordem original
+    df_final = st.session_state['df_working'].copy()
+    if 'id_original' in df_final.columns:
+        df_final = df_final.sort_values('id_original')
+    
+    st.session_state['csv_validated'] = df_final.to_csv(index=False)
     
     # Gerar Unknowns
     # Consideramos unknown aquilo que ainda está marked as unknown OU não foi validado/preenchido
