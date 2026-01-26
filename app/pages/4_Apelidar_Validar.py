@@ -70,6 +70,10 @@ if 'df_working' not in st.session_state:
                 # Inicializar coluna de revisão
                 df_combined['revisar'] = False
                 
+                # Inicializar coluna de apelido desejado (feedback do usuário)
+                if 'apelido_desejado' not in df_combined.columns:
+                    df_combined['apelido_desejado'] = ''
+                
             st.session_state['df_working'] = df_combined
         else:
             st.session_state['df_working'] = df_norm
@@ -92,6 +96,11 @@ if 'validado' in df_combined.columns and 'revisar' not in df_combined.columns:
 # Se não existe coluna 'revisar', criar
 if 'revisar' not in df_combined.columns:
     df_combined['revisar'] = False
+    st.session_state['df_working'] = df_combined
+
+# Se não existe coluna 'apelido_desejado', criar
+if 'apelido_desejado' not in df_combined.columns:
+    df_combined['apelido_desejado'] = ''
     st.session_state['df_working'] = df_combined
 
 # --- Métricas ---
@@ -225,6 +234,7 @@ COL_LABELS = {
     "tax_tipo": "Tipo",
     "tax_grupo": "Grupo",
     "apelido_sugerido": "Sugestão",
+    "apelido_desejado": "Apelido Desejado",
     "status": "Status",
     "motivo": "Motivo",
     "codigo": "Código",
@@ -233,7 +243,7 @@ COL_LABELS = {
 }
 
 # Defaults visíveis
-DEFAULT_VISIBLE = ["revisar", "descricao_norm", "tax_tipo", "tax_grupo", "apelido_sugerido", "status", "motivo"]
+DEFAULT_VISIBLE = ["revisar", "descricao_norm", "tax_tipo", "tax_grupo", "apelido_sugerido", "apelido_desejado", "status"]
 
 with st.expander("👁️ Configurar Colunas Visíveis", expanded=False):
     visible_cols = st.multiselect(
