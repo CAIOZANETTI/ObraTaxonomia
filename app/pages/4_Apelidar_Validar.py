@@ -154,25 +154,29 @@ with st.expander("🔍 Filtros Avançados", expanded=True):
     col4, col5, col6, col7 = st.columns(4)
     
     with col4:
-        # Filtro por Grupo (Arquivo YAML)
-        # Filtrar grupos baseado no tipo selecionado
-        if tipo_filter != 'Todos':
-            grupos_disponiveis = ['Todos'] + sorted(
-                df[df['tax_tipo'] == tipo_filter]['tax_grupo'].dropna().unique().tolist()
+        # Filtro por Grupo (Arquivo YAML) - apenas se coluna existir
+        if 'tax_grupo' in df.columns:
+            # Filtrar grupos baseado no tipo selecionado
+            if tipo_filter != 'Todos':
+                grupos_disponiveis = ['Todos'] + sorted(
+                    df[df['tax_tipo'] == tipo_filter]['tax_grupo'].dropna().unique().tolist()
+                )
+            else:
+                grupos_disponiveis = ['Todos'] + sorted(df['tax_grupo'].dropna().unique().tolist())
+            
+            grupo_filter = st.selectbox(
+                "Grupo (Arquivo YAML)",
+                options=grupos_disponiveis,
+                index=0
             )
         else:
-            grupos_disponiveis = ['Todos'] + sorted(df['tax_grupo'].dropna().unique().tolist())
-        
-        grupo_filter = st.selectbox(
-            "Grupo (Arquivo YAML)",
-            options=grupos_disponiveis,
-            index=0
-        )
+            grupo_filter = 'Todos'
+            st.info("ℹ️ Coluna 'tax_grupo' não disponível. Atualize o classificador.")
     
     with col5:
         # Filtro por Apelido
         # Filtrar apelidos baseado no grupo selecionado
-        if grupo_filter != 'Todos':
+        if 'tax_grupo' in df.columns and grupo_filter != 'Todos':
             apelidos_disponiveis = ['Todos'] + sorted(
                 df[df['tax_grupo'] == grupo_filter]['apelido_sugerido'].dropna().unique().tolist()
             )
@@ -211,8 +215,8 @@ elif 'Não Marcado' in revisar_filter and 'Marcado' not in revisar_filter:
 if tipo_filter != 'Todos':
     mask = mask & (df['tax_tipo'] == tipo_filter)
 
-# Aplicar filtro de grupo
-if grupo_filter != 'Todos':
+# Aplicar filtro de grupo (apenas se coluna existir)
+if 'tax_grupo' in df.columns and grupo_filter != 'Todos':
     mask = mask & (df['tax_grupo'] == grupo_filter)
 
 # Aplicar filtro de apelido
