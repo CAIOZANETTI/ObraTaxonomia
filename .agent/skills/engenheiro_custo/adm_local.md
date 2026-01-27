@@ -1,0 +1,1 @@
+skill de engenheiros, encarregados, eng segurança, enfermeiro, qualidade.. mecanico, borracheiro.. todo equipe de apoio indireto que compoe a dm local de obra de acordo com a legislação dom numero de funcionarios considerando que a obra grau de risco entre 3 e 4
