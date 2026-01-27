@@ -1,0 +1,1 @@
+adicione a skill de concreto produzido em usina, brita produzida, central de forma, central de armação, pre-moldado (portico, pista...) todas essas centrais industricais que são utilizadas em obras industriais
