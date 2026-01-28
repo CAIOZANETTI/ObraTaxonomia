@@ -1,0 +1,5114 @@
+{
+  "rules": [
+    {
+      "apelido": "elemento_estrutural_un",
+      "unit": "un",
+      "contem": [
+        [
+          "pilar",
+          "viga",
+          "laje",
+          "bloco",
+          "estaca",
+          "parede estrutural",
+          "muro",
+          "sapata",
+          "radier"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "tubulacao",
+          "tubulacao",
+          "adutora",
+          "dn",
+          "pead",
+          "pvc",
+          "ppr"
+        ],
+        [
+          "porta",
+          "janela",
+          "rodape",
+          "rodape",
+          "forro",
+          "pintura",
+          "piso",
+          "revestimento"
+        ],
+        [
+          "bomba",
+          "motor",
+          "painel",
+          "valvula",
+          "valvula"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "pilar_un",
+      "unit": "un",
+      "contem": [
+        [
+          "pilar",
+          "coluna"
+        ]
+      ],
+      "ignorar": [
+        [
+          "poste",
+          "mourao",
+          "mourao"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "pilar_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "pilar",
+          "coluna"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "pilar_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "pilar",
+          "coluna"
+        ],
+        [
+          "forma",
+          "forma",
+          "cofragem"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "viga_un",
+      "unit": "un",
+      "contem": [
+        [
+          "viga",
+          "longarina",
+          "travessa"
+        ]
+      ],
+      "ignorar": [
+        [
+          "viga w",
+          "i",
+          "perfil i",
+          "perfil w"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "viga_baldrame_un",
+      "unit": "un",
+      "contem": [
+        [
+          "viga baldrame",
+          "baldrame"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "viga_anelar_un",
+      "unit": "un",
+      "contem": [
+        [
+          "viga anel",
+          "viga anelar",
+          "viga de anel"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "viga_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "viga",
+          "longarina",
+          "baldrame",
+          "anelar"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "viga_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "viga",
+          "longarina",
+          "baldrame",
+          "anelar"
+        ],
+        [
+          "forma",
+          "forma",
+          "cofragem"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "laje_un",
+      "unit": "un",
+      "contem": [
+        [
+          "laje",
+          "placa",
+          "slab"
+        ]
+      ],
+      "ignorar": [
+        [
+          "contrapiso",
+          "regularizacao",
+          "regularizacao"
+        ],
+        [
+          "steel deck",
+          "deck"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "laje_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "laje",
+          "placa",
+          "capeamento",
+          "capa"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "contrapiso"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "laje_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "laje"
+        ],
+        [
+          "forma",
+          "forma",
+          "cofragem"
+        ]
+      ],
+      "ignorar": [
+        [
+          "steel deck",
+          "forma permanente"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "radier_un",
+      "unit": "un",
+      "contem": [
+        [
+          "radier"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "radier_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "radier"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "bloco_coroamento_un",
+      "unit": "un",
+      "contem": [
+        [
+          "bloco de coroamento",
+          "bloco coroamento"
+        ]
+      ],
+      "ignorar": [
+        [
+          "bloco de concreto",
+          "bloco ceramico",
+          "bloco ceramico"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "bloco_fundacao_un",
+      "unit": "un",
+      "contem": [
+        [
+          "bloco de fundacao",
+          "bloco de fundacao",
+          "bloco"
+        ],
+        [
+          "fundacao",
+          "fundacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "bloco de concreto",
+          "bloco ceramico",
+          "bloco ceramico"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "bloco_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "bloco"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "bloco de concreto",
+          "bloco ceramico",
+          "bloco ceramico"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "estaca_un",
+      "unit": "un",
+      "contem": [
+        [
+          "estaca",
+          "tubulao",
+          "tubulao",
+          "barrete"
+        ]
+      ],
+      "ignorar": [
+        [
+          "estaca prancha",
+          "sheet pile"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "estaca_escavada_un",
+      "unit": "un",
+      "contem": [
+        [
+          "estaca"
+        ],
+        [
+          "escavada",
+          "broca",
+          "trado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "estaca prancha"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "estaca_helice_un",
+      "unit": "un",
+      "contem": [
+        [
+          "estaca"
+        ],
+        [
+          "helice",
+          "helice",
+          "cfa",
+          "helice continua",
+          "helice continua"
+        ]
+      ],
+      "ignorar": [
+        [
+          "estaca prancha"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "tubulao_un",
+      "unit": "un",
+      "contem": [
+        [
+          "tubulao",
+          "tubulao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "barrete_un",
+      "unit": "un",
+      "contem": [
+        [
+          "barrete"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "parede_estrutural_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "parede"
+        ],
+        [
+          "estrutural",
+          "concreto",
+          "parede de concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "alvenaria",
+          "bloco",
+          "drywall"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "muro_concreto_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "muro"
+        ],
+        [
+          "concreto",
+          "estrutural"
+        ]
+      ],
+      "ignorar": [
+        [
+          "alambrado",
+          "cerca",
+          "gradil"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "muro_arrimo_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "muro de arrimo",
+          "arrimo"
+        ]
+      ],
+      "ignorar": [
+        [
+          "alambrado",
+          "cerca",
+          "gradil"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "tanque_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "tanque"
+        ],
+        [
+          "concreto",
+          "estrutural",
+          "armado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "aco",
+          "metalico",
+          "fibra",
+          "frp"
+        ],
+        [
+          "bomba",
+          "motor",
+          "agitador"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "caixa_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "caixa"
+        ],
+        [
+          "concreto",
+          "estrutural",
+          "armado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fibra",
+          "plastica",
+          "plastico",
+          "polietileno"
+        ],
+        [
+          "bomba",
+          "motor"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "caixa_enterrada_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "caixa"
+        ],
+        [
+          "enterrada",
+          "subterranea",
+          "subterranea"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fibra",
+          "plastica",
+          "plastico"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "decantador_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "decantador",
+          "decantacao",
+          "decantacao"
+        ],
+        [
+          "concreto",
+          "estrutural"
+        ]
+      ],
+      "ignorar": [
+        [
+          "lamela",
+          "placa",
+          "equipamento",
+          "raspador"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "floculador_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "floculador",
+          "floculacao",
+          "floculacao"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "agitador",
+          "motor",
+          "eixo"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "flotador_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "flotador",
+          "flotacao",
+          "flotacao",
+          "daf"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "saturador",
+          "bomba",
+          "compressor"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "reator_anaerobio_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "reator"
+        ],
+        [
+          "anaerobio",
+          "anaerobio",
+          "uase",
+          "uast"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "midia",
+          "midia",
+          "enchimento",
+          "difusor"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "reator_aerobio_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "reator"
+        ],
+        [
+          "aerobio",
+          "aerobio"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "soprador",
+          "difusor",
+          "bolha"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "filtro_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "filtro"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "areia",
+          "antracito",
+          "midia",
+          "midia"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "leito_drenagem_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "leito"
+        ],
+        [
+          "drenagem"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dreno",
+          "brita"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "canal_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "canal",
+          "canaleta"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "tubulacao",
+          "tubulacao"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "calha_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "calha"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "metalica",
+          "metalica",
+          "pvc"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "galeria_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "galeria"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "aduela"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "base_equipamento_saneamento_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "base"
+        ],
+        [
+          "equipamento",
+          "unidade"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "bomba",
+          "motor",
+          "painel"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "plataforma_operacional_concreto_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "plataforma",
+          "passarela"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "metalica",
+          "metalica",
+          "grating"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "parede_concreto_saneamento_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "parede",
+          "divisoria",
+          "divisoria"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "alvenaria",
+          "bloco"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "tampa_concreto_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "tampa",
+          "laje"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "metalica",
+          "metalica",
+          "grelha"
+        ]
+      ],
+      "dominio": "saneamento_estruturas"
+    },
+    {
+      "apelido": "escavacao_solo_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "solo",
+          "terra"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rocha"
+        ],
+        [
+          "alterada"
+        ],
+        [
+          "sapata"
+        ],
+        [
+          "vala"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "escavacao_rocha_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "rocha"
+        ]
+      ],
+      "ignorar": [
+        [
+          "explosivo"
+        ],
+        [
+          "rompedor"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "escavacao_solo_alterado_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "alterada",
+          "solo alterado",
+          "material alterado"
+        ]
+      ],
+      "ignorar": [],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "reaterro_compactado_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "reaterro",
+          "aterro compactado",
+          "compactacao",
+          "compactacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mecanica",
+          "mecanica"
+        ],
+        [
+          "manual"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "escavacao_mec_solo_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "mecanica",
+          "mecanica",
+          "carga"
+        ],
+        [
+          "1a categoria",
+          "2a categoria",
+          "material"
+        ]
+      ],
+      "ignorar": [
+        [
+          "ripper"
+        ],
+        [
+          "alterada"
+        ],
+        [
+          "vala"
+        ],
+        [
+          "lamina",
+          "lamina",
+          "agua",
+          "agua"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "escavacao_mec_alterada_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "2a categoria",
+          "material"
+        ],
+        [
+          "ripper"
+        ]
+      ],
+      "ignorar": [
+        [
+          "1a categoria"
+        ],
+        [
+          "lamina",
+          "lamina"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "escavacao_mec_vala_solo_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "drenos",
+          "bueiros",
+          "vala"
+        ]
+      ],
+      "ignorar": [
+        [
+          "explosivo"
+        ],
+        [
+          "manual"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "escavacao_mec_solo-mole_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "solo mole",
+          "lamina",
+          "lamina",
+          "agua",
+          "agua",
+          "sob agua",
+          "sob agua"
+        ]
+      ],
+      "ignorar": [
+        [
+          "manual"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "escavacao_manual_solo_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "manual",
+          "obras"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mecanica",
+          "mecanica"
+        ],
+        [
+          "explosivo"
+        ]
+      ],
+      "dominio": "fundacao_escavacao"
+    },
+    {
+      "apelido": "armadura_passiva_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "aco",
+          "aco",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "estribo",
+          "barra nervurada"
+        ]
+      ],
+      "ignorar": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "madeira",
+          "telhado",
+          "cobertura",
+          "carpintaria",
+          "estrutura de madeira"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_passiva_t",
+      "unit": "t",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "aco",
+          "aco",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "estribo",
+          "barra nervurada"
+        ]
+      ],
+      "ignorar": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "madeira",
+          "telhado",
+          "cobertura",
+          "carpintaria",
+          "estrutura de madeira"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_ativa_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "cabo",
+          "bainha",
+          "ancoragem",
+          "cunha",
+          "armadura ativa",
+          "protendido",
+          "protendida"
+        ]
+      ],
+      "ignorar": [
+        [
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "vergalhao",
+          "vergalhao",
+          "passiva"
+        ],
+        [
+          "madeira",
+          "telhado",
+          "cobertura",
+          "carpintaria"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_ativa_t",
+      "unit": "t",
+      "contem": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "cabo",
+          "bainha",
+          "ancoragem",
+          "cunha",
+          "armadura ativa",
+          "protendido",
+          "protendida"
+        ]
+      ],
+      "ignorar": [
+        [
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "vergalhao",
+          "vergalhao",
+          "passiva"
+        ],
+        [
+          "madeira",
+          "telhado",
+          "cobertura",
+          "carpintaria"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_passiva_fornecimento_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "aco",
+          "aco",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60"
+        ],
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra",
+          "fornec"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "amarracao",
+          "amarracao",
+          "posicionamento",
+          "instalacao",
+          "instalacao",
+          "corte",
+          "dobra"
+        ],
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida",
+          "concreto protendido"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_passiva_fornecimento_t",
+      "unit": "t",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "aco",
+          "aco",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60"
+        ],
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra",
+          "fornec"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "amarracao",
+          "amarracao",
+          "posicionamento",
+          "instalacao",
+          "instalacao",
+          "corte",
+          "dobra"
+        ],
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida",
+          "concreto protendido"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_passiva_mao_de_obra_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "estribo"
+        ],
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "amarracao",
+          "amarracao",
+          "posicionamento",
+          "instalacao",
+          "instalacao",
+          "armador"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra"
+        ],
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida",
+          "concreto protendido"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_passiva_mao_de_obra_t",
+      "unit": "t",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "estribo"
+        ],
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "amarracao",
+          "amarracao",
+          "posicionamento",
+          "instalacao",
+          "instalacao",
+          "armador"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra"
+        ],
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida",
+          "concreto protendido"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_ativa_fornecimento_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "cabo",
+          "bainha",
+          "ancoragem",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra",
+          "fornec"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "instalacao",
+          "instalacao",
+          "tensionamento",
+          "protender"
+        ],
+        [
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "vergalhao",
+          "vergalhao"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_ativa_fornecimento_t",
+      "unit": "t",
+      "contem": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "cabo",
+          "bainha",
+          "ancoragem",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra",
+          "fornec"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "instalacao",
+          "instalacao",
+          "tensionamento",
+          "protender"
+        ],
+        [
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "vergalhao",
+          "vergalhao"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_ativa_mao_de_obra_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "cabo",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "instalacao",
+          "instalacao",
+          "tensionamento",
+          "protender",
+          "macaco",
+          "alongamento"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra"
+        ],
+        [
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "vergalhao",
+          "vergalhao"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_ativa_mao_de_obra_t",
+      "unit": "t",
+      "contem": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "cabo",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "instalacao",
+          "instalacao",
+          "tensionamento",
+          "protender",
+          "macaco",
+          "alongamento"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra"
+        ],
+        [
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60",
+          "vergalhao",
+          "vergalhao"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_corte_dobra_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60"
+        ],
+        [
+          "corte",
+          "dobra",
+          "corte e dobra",
+          "dobragem",
+          "estribo"
+        ]
+      ],
+      "ignorar": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "fornecimento",
+          "compra"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "armadura_corte_dobra_t",
+      "unit": "t",
+      "contem": [
+        [
+          "armacao",
+          "armacao",
+          "vergalhao",
+          "vergalhao",
+          "ca 50",
+          "ca50",
+          "ca 60",
+          "ca60"
+        ],
+        [
+          "corte",
+          "dobra",
+          "corte e dobra",
+          "dobragem",
+          "estribo"
+        ]
+      ],
+      "ignorar": [
+        [
+          "protensao",
+          "protensao",
+          "cordoalha",
+          "ativa",
+          "protendido",
+          "protendida"
+        ],
+        [
+          "fornecimento",
+          "compra"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "tela_soldada_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "tela soldada",
+          "malha pop",
+          "malha",
+          "painel de tela",
+          "q 92",
+          "q92",
+          "q 138",
+          "q138",
+          "q 196",
+          "q196"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tela de protecao",
+          "tela de protecao",
+          "tela mosquiteiro",
+          "tela sombreamento",
+          "alambrado",
+          "cerca"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "tela_soldada_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "tela soldada",
+          "malha pop",
+          "malha",
+          "painel de tela",
+          "q 92",
+          "q92",
+          "q 138",
+          "q138",
+          "q 196",
+          "q196"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tela de protecao",
+          "tela de protecao",
+          "tela mosquiteiro",
+          "tela sombreamento",
+          "alambrado",
+          "cerca"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "tela_soldada_fornecimento_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "tela soldada",
+          "malha pop",
+          "malha",
+          "painel de tela",
+          "q 92",
+          "q92",
+          "q 138",
+          "q138",
+          "q 196",
+          "q196"
+        ],
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra",
+          "fornec"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "amarracao",
+          "amarracao",
+          "instalacao",
+          "instalacao"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "tela_soldada_mao_de_obra_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "tela soldada",
+          "malha pop",
+          "malha",
+          "painel de tela",
+          "q 92",
+          "q92",
+          "q 138",
+          "q138",
+          "q 196",
+          "q196"
+        ],
+        [
+          "mao de obra",
+          "mao de obra",
+          "montagem",
+          "amarracao",
+          "amarracao",
+          "instalacao",
+          "instalacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "material",
+          "compra"
+        ]
+      ],
+      "dominio": "armadura"
+    },
+    {
+      "apelido": "concreto_geral_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "concretagem",
+          "lancamento",
+          "lancamento"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "tubulacao",
+          "tubulacao",
+          "adutora",
+          "emissario",
+          "emissario",
+          "dn",
+          "pead",
+          "pvc",
+          "ppr",
+          "flange",
+          "conexao",
+          "conexao",
+          "junta"
+        ],
+        [
+          "artefato",
+          "manilha",
+          "aduela",
+          "anel",
+          "poste",
+          "mourao",
+          "bloco de concreto",
+          "bloco intertravado"
+        ],
+        [
+          "cbuq",
+          "asfalto",
+          "bgs",
+          "brita graduada",
+          "sinalizacao",
+          "sinalizacao"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_in_loco_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "in loco",
+          "moldado in loco",
+          "moldado no local",
+          "executado in loco"
+        ]
+      ],
+      "ignorar": [
+        [
+          "pre moldado",
+          "pre moldado",
+          "precast",
+          "pre fabricado",
+          "prefabricado"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fornecimento_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "entrega",
+          "usina",
+          "usinado",
+          "central"
+        ]
+      ],
+      "ignorar": [
+        [
+          "lancamento",
+          "lancamento",
+          "concretagem",
+          "aplicar",
+          "aplicacao",
+          "adensamento",
+          "vibracao",
+          "vibracao",
+          "acabamento",
+          "sarrafeamento"
+        ],
+        [
+          "bombeamento",
+          "bombeado",
+          "bomba",
+          "tremie",
+          "submerso"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_lancamento_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "concretagem",
+          "lancamento",
+          "lancamento"
+        ],
+        [
+          "mao de obra",
+          "mao de obra",
+          "aplicacao",
+          "aplicacao",
+          "espalhamento",
+          "adensamento",
+          "vibracao",
+          "vibracao",
+          "acabamento",
+          "sarrafeamento",
+          "nivelamento"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fornecimento",
+          "fornecer",
+          "fornecido",
+          "entrega",
+          "usina",
+          "usinado",
+          "central"
+        ],
+        [
+          "pre moldado",
+          "pre moldado",
+          "precast",
+          "pre fabricado"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_bombeamento_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "bombeamento",
+          "bombeado",
+          "bomba de concreto",
+          "bomba",
+          "lancamento bombeado",
+          "lancamento bombeado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "pre moldado",
+          "pre moldado",
+          "precast"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "bombeamento_concreto_h",
+      "unit": "h",
+      "contem": [
+        [
+          "bomba de concreto",
+          "bombeamento",
+          "bomba"
+        ],
+        [
+          "hora",
+          "h",
+          "hr"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_transporte_frete_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "frete",
+          "transporte",
+          "deslocamento",
+          "taxa de entrega",
+          "km"
+        ]
+      ],
+      "ignorar": [
+        [
+          "lancamento",
+          "lancamento",
+          "concretagem"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_estrutural_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "concretagem",
+          "lancamento",
+          "lancamento"
+        ],
+        [
+          "viga",
+          "pilar",
+          "laje",
+          "bloco",
+          "radier",
+          "parede estrutural",
+          "muro estrutural"
+        ]
+      ],
+      "ignorar": [
+        [
+          "piso",
+          "contrapiso",
+          "calcada",
+          "pavimento",
+          "paver"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_viga_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "viga",
+          "longarina",
+          "travessa",
+          "viga anel",
+          "viga anelar",
+          "baldrame",
+          "viga baldrame"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "piso",
+          "contrapiso"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_pilar_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "pilar",
+          "coluna"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_laje_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "laje",
+          "capeamento",
+          "capa estrutural"
+        ]
+      ],
+      "ignorar": [
+        [
+          "contrapiso",
+          "regularizacao",
+          "regularizacao"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_parede_estrutura_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "parede estrutural",
+          "muro estrutural",
+          "parede de concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "alvenaria",
+          "bloco ceramico",
+          "bloco ceramico"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fundacao_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "sapata",
+          "bloco de coroamento",
+          "radier",
+          "baldrame",
+          "viga baldrame"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "piso",
+          "contrapiso"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_bloco_coroamento_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "bloco de coroamento",
+          "bloco coroamento",
+          "bloco"
+        ]
+      ],
+      "ignorar": [
+        [
+          "bloco de concreto",
+          "artefato"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_estaca_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "estaca",
+          "tubulao",
+          "tubulao",
+          "barrete",
+          "broca"
+        ]
+      ],
+      "ignorar": [
+        [
+          "pre moldada",
+          "pre moldada",
+          "pre moldada",
+          "cravada"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_estaca_helice_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "estaca"
+        ],
+        [
+          "helice",
+          "helice",
+          "helice continua",
+          "helice continua",
+          "cfa"
+        ]
+      ],
+      "ignorar": [
+        [
+          "pre moldada",
+          "pre moldada"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_estaca_strauss_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "estaca"
+        ],
+        [
+          "strauss"
+        ]
+      ],
+      "ignorar": [
+        [
+          "pre moldada",
+          "pre moldada"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_estaca_franki_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "estaca"
+        ],
+        [
+          "franki"
+        ]
+      ],
+      "ignorar": [
+        [
+          "pre moldada",
+          "pre moldada"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_barrete_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "barrete"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_tubulao_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "tubulao",
+          "tubulao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_pre_moldado_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "pre moldado",
+          "pre moldado",
+          "pre moldado",
+          "precast",
+          "pre fabricado",
+          "prefabricado"
+        ],
+        [
+          "viga",
+          "laje",
+          "pilar",
+          "painel",
+          "placa"
+        ]
+      ],
+      "ignorar": [
+        [
+          "in loco",
+          "moldado in loco",
+          "concretagem"
+        ],
+        [
+          "tubo",
+          "manilha",
+          "aduela",
+          "anel",
+          "dn"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_pre_moldado_montagem_un",
+      "unit": "un",
+      "contem": [
+        [
+          "montagem",
+          "icamento",
+          "icar",
+          "guindaste",
+          "grua"
+        ],
+        [
+          "pre moldado",
+          "pre moldado",
+          "precast"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_cad_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "cad",
+          "alto desempenho",
+          "hpc",
+          "high performance"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "piso",
+          "contrapiso"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_auto_adensavel_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "autoadensavel",
+          "auto adensavel",
+          "auto adensavel",
+          "caa",
+          "scc",
+          "self compacting"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fluido_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "fluido",
+          "alta fluidez",
+          "slump flow",
+          "slumpflow"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_com_fibras_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "fibra",
+          "fibras",
+          "steel fiber",
+          "fibra de aco",
+          "polipropileno",
+          "macrofibra",
+          "microfibra"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_com_silica_ativa_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "silica ativa",
+          "silica ativa",
+          "silica",
+          "silica",
+          "microssilica",
+          "microssilica",
+          "silica fume"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_com_metacaulim_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "metacaulim",
+          "metakaolin"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_com_escoria_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "escoria",
+          "escoria",
+          "alto forno",
+          "alto forno",
+          "slag"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_com_cinza_volante_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "cinza volante",
+          "fly ash"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_impermeavel_baixa_permeabilidade_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "baixa permeabilidade",
+          "impermeavel",
+          "impermeavel",
+          "estanqueidade",
+          "estanque",
+          "baixa absorcao",
+          "baixa absorcao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "manta",
+          "membrana",
+          "primer",
+          "asfalto"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_com_cristalizante_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "cristalizante",
+          "cristalizacao",
+          "cristalizacao",
+          "xypex"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_resistente_sulfatos_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "sulfato",
+          "sulfatos",
+          "rs",
+          "resistente a sulfatos",
+          "resistente aos sulfatos"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_alta_resistencia_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "alta resistencia",
+          "alta resistencia",
+          "hsc",
+          "high strength"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_submerso_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "submerso",
+          "tremie",
+          "tremi",
+          "underwater"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "piso",
+          "contrapiso"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_marinho_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "marinho",
+          "agua do mar",
+          "agua do mar",
+          "ambiente marinho",
+          "cloreto",
+          "cloretos"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_massa_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto massa",
+          "concreto de massa",
+          "mass concrete"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "piso",
+          "contrapiso"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_compactado_rolo_ccr_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "ccr",
+          "concreto compactado a rolo",
+          "concreto rolado",
+          "roller compacted concrete",
+          "rcc"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "cbuq",
+          "asfalto"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_projetado_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "projetado",
+          "shotcrete",
+          "gunite",
+          "gunitagem"
+        ]
+      ],
+      "ignorar": [
+        [
+          "argamassa projetada"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_projetado_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "concreto projetado",
+          "shotcrete",
+          "gunite",
+          "gunitagem"
+        ]
+      ],
+      "ignorar": [
+        [
+          "argamassa projetada"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_projetado_via_umida_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "concreto projetado",
+          "shotcrete"
+        ],
+        [
+          "via umida",
+          "via umida",
+          "wet mix",
+          "wetmix"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_projetado_via_seca_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "concreto projetado",
+          "shotcrete"
+        ],
+        [
+          "via seca",
+          "dry mix",
+          "drymix"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_revestimento_tunel_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "tunel",
+          "tunel"
+        ],
+        [
+          "revestimento",
+          "lining"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_magro_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "magro",
+          "lastro",
+          "limpeza",
+          "regularizacao",
+          "regularizacao",
+          "blinding"
+        ]
+      ],
+      "ignorar": [
+        [
+          "concreto estrutural",
+          "concreto armado"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "lastro_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "lastro"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_ciclópico_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "ciclopico",
+          "ciclopico",
+          "pedra de mao",
+          "pedra de mao",
+          "matacao",
+          "matacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_piso_industrial_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "piso industrial",
+          "piso",
+          "laje de piso",
+          "piso de concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "paver",
+          "asfalto",
+          "cbuq"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_piso_industrial_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "piso industrial",
+          "piso de concreto",
+          "piso"
+        ],
+        [
+          "acabamento",
+          "polimento",
+          "desempeno",
+          "desempeno helicoidal",
+          "helicoptero",
+          "helicoptero"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "asfalto",
+          "cbuq"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "contrapiso_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "contrapiso"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "capeamento_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "capeamento"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "pavimento_rigido_concreto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "pavimento rigido",
+          "pavimento rigido",
+          "placa de concreto",
+          "concreto para pavimento"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "cbuq",
+          "asfalto"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "pavimento_rigido_concreto_m2",
+      "unit": "m2",
+      "contem": [
+        [
+          "pavimento rigido",
+          "pavimento rigido",
+          "placa de concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "cbuq",
+          "asfalto"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_drenante_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto drenante",
+          "pervious concrete",
+          "permeavel",
+          "permeavel"
+        ]
+      ],
+      "ignorar": [
+        [
+          "asfalto",
+          "cbuq"
+        ],
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_resistente_abrasao_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "abrasao",
+          "abrasao",
+          "desgaste",
+          "alta abrasao",
+          "alta abrasao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_refratario_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "refratario",
+          "refratario",
+          "forno",
+          "alta temperatura"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_leve_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "leve",
+          "expanded clay",
+          "argila expandida",
+          "eps",
+          "isopor"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_pesado_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto"
+        ],
+        [
+          "pesado",
+          "barita",
+          "barita",
+          "magnetita"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_celular_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto celular",
+          "aerado",
+          "aac",
+          "concreto aerado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "pavimento",
+          "piso",
+          "contrapiso"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_20_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck",
+          "mpa"
+        ],
+        [
+          "20",
+          "20mpa",
+          "fck20"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_25_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck",
+          "mpa"
+        ],
+        [
+          "25",
+          "25mpa",
+          "fck25"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_30_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck",
+          "mpa"
+        ],
+        [
+          "30",
+          "30mpa",
+          "fck30"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_35_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck",
+          "mpa"
+        ],
+        [
+          "35",
+          "35mpa",
+          "fck35"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_40_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck",
+          "mpa"
+        ],
+        [
+          "40",
+          "40mpa",
+          "fck40"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_45_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck",
+          "mpa"
+        ],
+        [
+          "45",
+          "45mpa",
+          "fck45"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "concreto_fck_50_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "concreto",
+          "fck",
+          "mpa"
+        ],
+        [
+          "50",
+          "50mpa",
+          "fck50"
+        ]
+      ],
+      "ignorar": [
+        [
+          "tubo",
+          "dn",
+          "pead",
+          "pvc"
+        ],
+        [
+          "argamassa",
+          "graute",
+          "grout"
+        ]
+      ],
+      "dominio": "concreto"
+    },
+    {
+      "apelido": "servente_h",
+      "unit": "h",
+      "contem": [
+        [
+          "servente",
+          "ajudante geral",
+          "auxiliar de obra"
+        ]
+      ],
+      "ignorar": [
+        [
+          "vigia",
+          "porteiro",
+          "administrativo"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "ajudante_especializado_h",
+      "unit": "h",
+      "contem": [
+        [
+          "ajudante especializado",
+          "ajudante tecnico",
+          "auxiliar tecnico"
+        ]
+      ],
+      "ignorar": [
+        [
+          "servente"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "carpinteiro_h",
+      "unit": "h",
+      "contem": [
+        [
+          "carpinteiro",
+          "carpintaria"
+        ]
+      ],
+      "ignorar": [
+        [
+          "marceneiro"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "armador_h",
+      "unit": "h",
+      "contem": [
+        [
+          "armador",
+          "armacao",
+          "armacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "soldador"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "pedreiro_h",
+      "unit": "h",
+      "contem": [
+        [
+          "pedreiro"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mestre"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "operador_concreto_h",
+      "unit": "h",
+      "contem": [
+        [
+          "concretagem",
+          "lancamento de concreto",
+          "lancamento de concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "fornecimento"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "operador_escavadeira_h",
+      "unit": "h",
+      "contem": [
+        [
+          "operador de escavadeira",
+          "operador escavadeira"
+        ]
+      ],
+      "ignorar": [
+        [
+          "operador de guindaste"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "operador_maquinas_h",
+      "unit": "h",
+      "contem": [
+        [
+          "operador de maquinas",
+          "operador de maquinas"
+        ]
+      ],
+      "ignorar": [
+        [
+          "operador de guindaste"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "operador_rolo_h",
+      "unit": "h",
+      "contem": [
+        [
+          "operador de rolo",
+          "operador rolo"
+        ]
+      ],
+      "ignorar": [
+        [
+          "operador de escavadeira"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "soldador_h",
+      "unit": "h",
+      "contem": [
+        [
+          "soldador",
+          "soldagem"
+        ]
+      ],
+      "ignorar": [
+        [
+          "caldeireiro"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "caldeireiro_h",
+      "unit": "h",
+      "contem": [
+        [
+          "caldeireiro"
+        ]
+      ],
+      "ignorar": [
+        [
+          "soldador"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "montador_estrutura_metalica_h",
+      "unit": "h",
+      "contem": [
+        [
+          "montador",
+          "montagem"
+        ],
+        [
+          "estrutura metalica",
+          "estrutura metalica"
+        ]
+      ],
+      "ignorar": [
+        [
+          "montagem de tubulacao",
+          "montagem de tubulacao"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "encanador_h",
+      "unit": "h",
+      "contem": [
+        [
+          "encanador",
+          "bombeiro hidraulico",
+          "bombeiro hidraulico"
+        ]
+      ],
+      "ignorar": [
+        [
+          "eletricista"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "montador_tubulacao_h",
+      "unit": "h",
+      "contem": [
+        [
+          "montador"
+        ],
+        [
+          "tubulacao",
+          "tubulacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "estrutura metalica"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "operador_rede_saneamento_h",
+      "unit": "h",
+      "contem": [
+        [
+          "rede de agua",
+          "rede de agua",
+          "rede de esgoto",
+          "saneamento"
+        ]
+      ],
+      "ignorar": [
+        [
+          "drenagem"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "eletricista_h",
+      "unit": "h",
+      "contem": [
+        [
+          "eletricista"
+        ]
+      ],
+      "ignorar": [
+        [
+          "instrumentista"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "instrumentista_h",
+      "unit": "h",
+      "contem": [
+        [
+          "instrumentista",
+          "instrumentacao",
+          "instrumentacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "eletricista"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "mecanico_h",
+      "unit": "h",
+      "contem": [
+        [
+          "mecanico",
+          "mecanico"
+        ]
+      ],
+      "ignorar": [
+        [
+          "eletricista"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "montador_mecanico_h",
+      "unit": "h",
+      "contem": [
+        [
+          "montador mecanico",
+          "montador mecanico"
+        ]
+      ],
+      "ignorar": [
+        [
+          "montador estrutural"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "pintor_h",
+      "unit": "h",
+      "contem": [
+        [
+          "pintor",
+          "pintura"
+        ]
+      ],
+      "ignorar": [
+        [
+          "revestimento"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "azulejista_h",
+      "unit": "h",
+      "contem": [
+        [
+          "azulejista",
+          "revestimento ceramico",
+          "revestimento ceramico"
+        ]
+      ],
+      "ignorar": [
+        [
+          "pintura"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "operador_guindaste_h",
+      "unit": "h",
+      "contem": [
+        [
+          "operador de guindaste",
+          "guindaste"
+        ]
+      ],
+      "ignorar": [
+        [
+          "munck",
+          "guindauto"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "sinaleiro_h",
+      "unit": "h",
+      "contem": [
+        [
+          "sinaleiro",
+          "rigger"
+        ]
+      ],
+      "ignorar": [
+        [
+          "operador"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "mestre_obras_h",
+      "unit": "h",
+      "contem": [
+        [
+          "mestre de obras",
+          "mestre obras"
+        ]
+      ],
+      "ignorar": [
+        [
+          "engenheiro"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "encarregado_h",
+      "unit": "h",
+      "contem": [
+        [
+          "encarregado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mestre de obras"
+        ]
+      ],
+      "dominio": "mao_obra_direta"
+    },
+    {
+      "apelido": "obra_edificacao_un",
+      "unit": "un",
+      "contem": [
+        [
+          "edificacao",
+          "edificacao",
+          "predio",
+          "predio",
+          "edificio",
+          "edificio"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rodovia",
+          "ferrovia",
+          "barragem",
+          "ponte",
+          "viaduto"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_galpao_un",
+      "unit": "un",
+      "contem": [
+        [
+          "galpao",
+          "galpao",
+          "galpao industrial",
+          "galpao industrial"
+        ]
+      ],
+      "ignorar": [
+        [
+          "armazem de graos",
+          "armazem de graos"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_armazem_graos_un",
+      "unit": "un",
+      "contem": [
+        [
+          "armazem",
+          "armazem"
+        ],
+        [
+          "graos",
+          "graos",
+          "soja",
+          "milho"
+        ]
+      ],
+      "ignorar": [
+        [
+          "galpao",
+          "galpao"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_rodovia_un",
+      "unit": "un",
+      "contem": [
+        [
+          "rodovia",
+          "estrada",
+          "pista",
+          "duplicacao",
+          "duplicacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "ferrovia",
+          "aeroporto"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_ferrovia_un",
+      "unit": "un",
+      "contem": [
+        [
+          "ferrovia",
+          "linha ferrea",
+          "linha ferrea",
+          "trilho"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rodovia"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_aeroporto_un",
+      "unit": "un",
+      "contem": [
+        [
+          "aeroporto",
+          "pista de pouso",
+          "terminal aeroportuario"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rodovia",
+          "ferrovia"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_porto_un",
+      "unit": "un",
+      "contem": [
+        [
+          "porto",
+          "terminal portuario",
+          "terminal portuario",
+          "cais",
+          "pier",
+          "pier"
+        ]
+      ],
+      "ignorar": [
+        [
+          "hidrovia"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_hidrovia_un",
+      "unit": "un",
+      "contem": [
+        [
+          "hidrovia",
+          "navegacao interior",
+          "navegacao interior",
+          "canal navegavel"
+        ]
+      ],
+      "ignorar": [
+        [
+          "porto"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_barragem_un",
+      "unit": "un",
+      "contem": [
+        [
+          "barragem",
+          "dique"
+        ]
+      ],
+      "ignorar": [
+        [
+          "canal",
+          "reservatorio pequeno"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_uhe_un",
+      "unit": "un",
+      "contem": [
+        [
+          "uhe",
+          "usina hidreletrica",
+          "usina hidreletrica"
+        ]
+      ],
+      "ignorar": [
+        [
+          "pch"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_pch_un",
+      "unit": "un",
+      "contem": [
+        [
+          "pch",
+          "pequena central hidreletrica",
+          "pequena central hidreletrica"
+        ]
+      ],
+      "ignorar": [
+        [
+          "uhe"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_canal_un",
+      "unit": "un",
+      "contem": [
+        [
+          "canal",
+          "canalizacao",
+          "canalizacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rede",
+          "adutora"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_ute_un",
+      "unit": "un",
+      "contem": [
+        [
+          "ute",
+          "usina termica",
+          "usina termica"
+        ]
+      ],
+      "ignorar": [
+        [
+          "uhe",
+          "pch"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_eolica_un",
+      "unit": "un",
+      "contem": [
+        [
+          "eolica",
+          "eolica",
+          "parque eolico",
+          "parque eolico",
+          "aerogerador"
+        ]
+      ],
+      "ignorar": [
+        [
+          "solar"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_solar_un",
+      "unit": "un",
+      "contem": [
+        [
+          "solar",
+          "usina solar",
+          "parque solar",
+          "fotovoltaica",
+          "fotovoltaico"
+        ]
+      ],
+      "ignorar": [
+        [
+          "eolica",
+          "eolica"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_industrial_un",
+      "unit": "un",
+      "contem": [
+        [
+          "planta industrial",
+          "industria",
+          "industrial"
+        ]
+      ],
+      "ignorar": [
+        [
+          "edificacao residencial"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "obra_terminal_logistico_un",
+      "unit": "un",
+      "contem": [
+        [
+          "terminal logistico",
+          "terminal logistico"
+        ]
+      ],
+      "ignorar": [
+        [
+          "porto"
+        ]
+      ],
+      "dominio": "obra"
+    },
+    {
+      "apelido": "escavacao_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao",
+          "escavar"
+        ]
+      ],
+      "ignorar": [
+        [
+          "bota fora",
+          "botafora",
+          "transporte",
+          "frete"
+        ],
+        [
+          "reaterro",
+          "reaterro",
+          "compactacao",
+          "compactacao"
+        ],
+        [
+          "demolicao",
+          "demolicao"
+        ],
+        [
+          "tunel",
+          "tunel",
+          "subterranea",
+          "subterranea"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_solo_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "solo",
+          "terra"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rocha",
+          "matacao",
+          "matacao",
+          "riprap"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_solo_mole_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "solo mole",
+          "lama",
+          "turfa",
+          "argila mole"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rocha"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_rocha_alterada_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "rocha alterada",
+          "rocha decomposta",
+          "sapa",
+          "saprolito",
+          "saprolito"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rocha sa",
+          "rocha dura"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_rocha_sa_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "rocha sa",
+          "rocha sa",
+          "rocha dura",
+          "matacao",
+          "matacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rocha alterada",
+          "saprolito",
+          "saprolito"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_mecanica_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "mecanica",
+          "mecanica",
+          "com escavadeira",
+          "retroescavadeira"
+        ]
+      ],
+      "ignorar": [
+        [
+          "manual"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_manual_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "manual",
+          "a mao",
+          "a mao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "mecanica",
+          "mecanica"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_com_rompedor_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "rompedor",
+          "martelete",
+          "breaker"
+        ]
+      ],
+      "ignorar": [
+        [
+          "explosivo",
+          "detonacao",
+          "detonacao"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_com_desmonte_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "desmonte",
+          "explosivo",
+          "detonacao",
+          "detonacao",
+          "fogo"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rompedor",
+          "martelete"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_ceu_aberto_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "ceu aberto",
+          "ceu aberto",
+          "vala",
+          "trinchera",
+          "trincheira",
+          "corte"
+        ]
+      ],
+      "ignorar": [
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_subterranea_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel",
+          "galerias",
+          "galeria"
+        ]
+      ],
+      "ignorar": [
+        [
+          "ceu aberto",
+          "ceu aberto",
+          "vala",
+          "trincheira"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_subterranea_rocha_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ],
+        [
+          "rocha"
+        ]
+      ],
+      "ignorar": [
+        [
+          "solo mole",
+          "lama",
+          "turfa"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_subterranea_solo_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ],
+        [
+          "solo",
+          "terra"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rocha"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "escavacao_mole_m3",
+      "unit": "m3",
+      "contem": [
+        [
+          "escavacao",
+          "escavacao"
+        ],
+        [
+          "mole"
+        ]
+      ],
+      "ignorar": [
+        [
+          "rocha"
+        ],
+        [
+          "subterranea",
+          "subterranea",
+          "tunel",
+          "tunel"
+        ]
+      ],
+      "dominio": "servicos_escavacao"
+    }
+  ],
+  "units_map": {
+    "m3": "m3",
+    "m 3": "m3",
+    "metro cubico": "m3",
+    "metros cubicos": "m3",
+    "mc": "m3",
+    "cubic": "m3",
+    "cubic meter": "m3",
+    "cubic metre": "m3",
+    "l": "l",
+    "lt": "l",
+    "litro": "l",
+    "litros": "l",
+    "ml": "m",
+    "mililitro": "ml",
+    "mililitros": "ml",
+    "m2": "m2",
+    "m 2": "m2",
+    "metro quadrado": "m2",
+    "metros quadrados": "m2",
+    "square meter": "m2",
+    "square metre": "m2",
+    "sqm": "m2",
+    "m": "m",
+    "metro": "m",
+    "metros": "m",
+    "metro linear": "m",
+    "metros lineares": "m",
+    "meter": "m",
+    "metre": "m",
+    "mm": "mm",
+    "milimetro": "mm",
+    "milimetros": "mm",
+    "cm": "cm",
+    "centimetro": "cm",
+    "centimetros": "cm",
+    "km": "km",
+    "quilometro": "km",
+    "kilometro": "km",
+    "kilometros": "km",
+    "quilometros": "km",
+    "un": "un",
+    "und": "un",
+    "unidade": "un",
+    "unidades": "un",
+    "peca": "un",
+    "pecas": "un",
+    "pc": "un",
+    "pcs": "un",
+    "unit": "un",
+    "units": "un",
+    "vb": "vb",
+    "verba": "vb",
+    "global": "vb",
+    "pacote": "vb",
+    "lump sum": "vb",
+    "lumpsum": "vb",
+    "kg": "kg",
+    "quilo": "kg",
+    "quilos": "kg",
+    "quilograma": "kg",
+    "quilogramas": "kg",
+    "kilogram": "kg",
+    "kilograms": "kg",
+    "t": "t",
+    "ton": "t",
+    "tonelada": "t",
+    "toneladas": "t",
+    "tonn": "t",
+    "metric ton": "t",
+    "tonne": "t",
+    "tonnes": "t",
+    "g": "g",
+    "grama": "g",
+    "gramas": "g",
+    "h": "h",
+    "hora": "h",
+    "horas": "h",
+    "hr": "h",
+    "hrs": "h",
+    "hour": "h",
+    "hours": "h",
+    "dia": "dia",
+    "dias": "dia",
+    "diaria": "dia",
+    "mes": "mes",
+    "meses": "mes",
+    "month": "mes",
+    "months": "mes",
+    "mpa": "mpa",
+    "mega pascal": "mpa",
+    "megapascals": "mpa",
+    "kpa": "kpa",
+    "kilo pascal": "kpa",
+    "kilopascal": "kpa",
+    "bar": "bar",
+    "kw": "kw",
+    "kilo watt": "kw",
+    "kilowatt": "kw",
+    "kva": "kva",
+    "v": "v",
+    "volt": "v",
+    "volts": "v",
+    "kv": "kv",
+    "kilo volt": "kv",
+    "kilovolt": "kv",
+    "a": "a",
+    "ampere": "a",
+    "amperes": "a",
+    "amp": "a",
+    "amps": "a",
+    "ma": "ma",
+    "miliampere": "ma",
+    "miliamperes": "ma",
+    "ft": "ft",
+    "feet": "ft",
+    "pe": "ft",
+    "in": "in",
+    "inch": "in",
+    "inches": "in",
+    "polegada": "in",
+    "polegadas": "in",
+    "": "in",
+    "yd": "yd",
+    "yard": "yd",
+    "yards": "yd",
+    "jarda": "yd",
+    "jardas": "yd",
+    "ft2": "ft2",
+    "ft 2": "ft2",
+    "sqft": "ft2",
+    "square foot": "ft2",
+    "square feet": "ft2",
+    "pe2": "ft2",
+    "yd3": "yd3",
+    "yd 3": "yd3",
+    "cubic yard": "yd3",
+    "cubic yards": "yd3",
+    "lb": "lb",
+    "lbs": "lb",
+    "libra": "lb",
+    "libras": "lb",
+    "pound": "lb",
+    "pounds": "lb"
+  }
+}

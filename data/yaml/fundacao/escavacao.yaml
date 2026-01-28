@@ -1,46 +1,90 @@
-# Escavação
-- apelido: escavacao_solo_m3
-  unit: m³
-  contem:
-    - escavacao
-    - escavacao solo
-    - escavacao terra
-    - escavacao manual
-    - escavacao mecanica
-  ignorar:
-    - rocha
-    - alterada
-    - sapata
-    - vala
+meta:
+  dominio: fundacao_escavacao
+  versao: "0.1.0"
 
-- apelido: escavacao_rocha_m3
-  unit: m³
-  contem:
-    - escavacao rocha
-    - demolicao rocha
-    - desmonte rocha
-    - perfuracao rocha
-  ignorar:
-    - explosivo
-    - rompedor
+regras:
+  # Escavação - Regras originais
+  - apelido: escavacao_solo_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [solo, terra]
+    ignorar:
+      - [rocha]
+      - [alterada]
+      - [sapata]
+      - [vala]
 
-- apelido: escavacao_solo_alterado_m3
-  unit: m³
-  contem:
-    - escavacao alterada
-    - escavacao solo alterado
-    - solo alterado
-    - material alterado
-  ignorar:
-    - []
+  - apelido: escavacao_rocha_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [rocha]
+    ignorar:
+      - [explosivo]
+      - [rompedor]
 
-- apelido: reaterro_compactado_m3
-  unit: m³
-  contem:
-    - reaterro
-    - aterro compactado
-    - compactacao
-    - reaterro compactado
-  ignorar:
-    - mecanica
-    - manual
+  - apelido: escavacao_solo_alterado_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [alterada, solo alterado, material alterado]
+    ignorar:
+      []
+
+  - apelido: reaterro_compactado_m3
+    unit: m³
+    contem:
+      - [reaterro, aterro compactado, compactacao, compactação]
+    ignorar:
+      - [mecanica, mecânica]
+      - [manual]
+
+  # Novos apelidos do aprendizado
+  - apelido: escavacao_mec_solo_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [mecanica, mecânica, carga]
+      - [1a categoria, 2a categoria, material]
+    ignorar:
+      - [ripper]
+      - [alterada]
+      - [vala]
+      - [lamina, lâmina, agua, água]
+
+  - apelido: escavacao_mec_alterada_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [2a categoria, material]
+      - [ripper]
+    ignorar:
+      - [1a categoria]
+      - [lamina, lâmina]
+
+  - apelido: escavacao_mec_vala_solo_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [drenos, bueiros, vala]
+    ignorar:
+      - [explosivo]
+      - [manual]
+
+  - apelido: escavacao_mec_solo-mole_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [solo mole, lamina, lâmina, agua, água, sob agua, sob água]
+    ignorar:
+      - [manual]
+
+  - apelido: escavacao_manual_solo_m3
+    unit: m³
+    contem:
+      - [escavacao, escavação]
+      - [manual, obras]
+    ignorar:
+      - [mecanica, mecânica]
+      - [explosivo]
