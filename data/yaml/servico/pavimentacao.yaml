@@ -1,0 +1,39 @@
+meta:
+  dominio: pavimentacao
+  versao: "0.1.0"
+
+regras:
+  # Concreto asfáltico binder
+  - apelido: concreto_asfaltico_binder_m3
+    unit: m³
+    contem:
+      - [concreto asfaltico, concreto asfáltico, cbuq]
+      - [binder, graduacao, graduação]
+    ignorar:
+      - [polimero, polímero]
+
+  # Concreto asfáltico genérico
+  - apelido: concreto_asfaltico_m3
+    unit: m³
+    contem:
+      - [concreto asfaltico, concreto asfáltico, cbuq, asfalto]
+    ignorar:
+      - [demolicao, demolição]
+
+  # Calçada de concreto
+  - apelido: calcada_concreto_m3
+    unit: m³
+    contem:
+      - [calcamento, calçamento, calcada, calçada]
+      - [concreto]
+    ignorar:
+      - [asfaltico, asfáltico]
+
+  # Sarjeta
+  - apelido: sarjeta_m3
+    unit: m³
+    contem:
+      - [sarjeta, guia sarjeta]
+      - [concreto]
+    ignorar:
+      []

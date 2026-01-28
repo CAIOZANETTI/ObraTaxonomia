@@ -1,63 +1,67 @@
-# Instalações Elétricas - Tomadas e Pontos
-- apelido: tomada_eletrica_2p_t_10a
-  unit: un
-  contem:
-    - tomada
-    - tomada 2p t
-    - tomada 10a
-    - ponto tomada
-  ignorar:
-    - embutir
-    - sobrepor
-    - caixa
+meta:
+  dominio: instalacao_eletrica
+  versao: "0.1.0"
 
-- apelido: tomada_eletrica_2p_t_20a
-  unit: un
-  contem:
-    - tomada 20a
-    - tomada 2p t 20a
-  ignorar:
-    - embutir
-    - sobrepor
+regras:
+  # Tomada 10A
+  - apelido: tomada_eletrica_2p_t_10a
+    unit: un
+    contem:
+      - [tomada]
+      - [2p t, 10a]
+    ignorar:
+      - [20a, 32a]
 
-- apelido: interruptor_simples
-  unit: un
-  contem:
-    - interruptor simples
-    - interruptor 1 tecla
-    - interruptor uma tecla
-  ignorar:
-    - embutir
-    - sobrepor
-    - caixa
+  # Tomada 20A
+  - apelido: tomada_eletrica_2p_t_20a
+    unit: un
+    contem:
+      - [tomada]
+      - [20a, 2p t 20a]
+    ignorar:
+      - [10a, 32a]
 
-- apelido: interruptor_duplo
-  unit: un
-  contem:
-    - interruptor duplo
-    - interruptor 2 teclas
-    - interruptor duas teclas
-  ignorar:
-    - embutir
-    - sobrepor
+  # Tomada 32A industrial (novo do aprendizado)
+  - apelido: tomada_eletrica_32a_unid
+    unit: un
+    contem:
+      - [tomada]
+      - [32a, 3p t, industrial]
+    ignorar:
+      - [10a, 20a]
 
-- apelido: interruptor_triplo
-  unit: un
-  contem:
-    - interruptor triplo
-    - interruptor 3 teclas
-    - interruptor tres teclas
-  ignorar:
-    - embutir
-    - sobrepor
+  # Interruptor simples
+  - apelido: interruptor_simples
+    unit: un
+    contem:
+      - [interruptor]
+      - [simples, 1 tecla, uma tecla]
+    ignorar:
+      - [duplo, triplo]
 
-- apelido: ponto_luz_teto
-  unit: un
-  contem:
-    - ponto luz
-    - ponto iluminacao
-    - luminaria
-    - ponto teto
-  ignorar:
-    - led
-    - fluorescente
+  # Interruptor duplo
+  - apelido: interruptor_duplo
+    unit: un
+    contem:
+      - [interruptor]
+      - [duplo, 2 teclas, duas teclas]
+    ignorar:
+      - [simples, triplo]
+
+  # Interruptor triplo
+  - apelido: interruptor_triplo
+    unit: un
+    contem:
+      - [interruptor]
+      - [triplo, 3 teclas, tres teclas, três teclas]
+    ignorar:
+      - [simples, duplo]
+
+  # Ponto de luz
+  - apelido: ponto_luz_teto
+    unit: un
+    contem:
+      - [ponto luz, ponto iluminacao, ponto iluminação, luminaria, luminária]
+    ignorar:
+      - [led]
+      - [fluorescente]

@@ -1,0 +1,22 @@
+meta:
+  dominio: alvenaria_vedacao
+  versao: "0.1.0"
+
+regras:
+  # Alvenaria de bloco de concreto
+  - apelido: alvenaria_bloco_concreto_m2
+    unit: m²
+    contem:
+      - [alvenaria]
+      - [bloco concreto, bloco de concreto]
+    ignorar:
+      - [ceramico, cerâmico]
+      - [estrutural]
+
+  # Piso elevado
+  - apelido: piso_elevado_m2
+    unit: m²
+    contem:
+      - [piso elevado]
+    ignorar:
+      - [demolicao, demolição]

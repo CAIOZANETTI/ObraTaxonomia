@@ -1,31 +1,44 @@
-# Aço Estrutural (ASTM)
-- apelido: aco_estrutural_astm_a36
-  unit: kg
-  contem:
-    - aco estrutural
-    - astm a36
-    - a36
-    - perfil metalico
-    - viga metalica
-  ignorar:
-    - galvanizado
-    - pintado
+meta:
+  dominio: estrutura_aco
+  versao: "0.1.0"
 
-- apelido: aco_estrutural_astm_a572
-  unit: kg
-  contem:
-    - astm a572
-    - a572
-    - aco alta resistencia
-  ignorar:
-    - []
+regras:
+  # Aço estrutural genérico (novo do aprendizado)
+  - apelido: aco_estrutural_kg
+    unit: kg
+    contem:
+      - [aco, aço]
+      - [astm, estrutural, perfil, chapa]
+    ignorar:
+      - [galvanizado]
+      - [inox, inoxidavel, inoxidável]
+      - [protendido]
 
-- apelido: chapa_aco_astm
-  unit: kg
-  contem:
-    - chapa aco
-    - chapa metalica
-    - chapa astm
-  ignorar:
-    - galvanizada
-    - inox
+  # Aço ASTM A36
+  - apelido: aco_estrutural_astm_a36
+    unit: kg
+    contem:
+      - [aco, aço]
+      - [astm a36, a36, a 36]
+    ignorar:
+      - [galvanizado]
+      - [pintado]
+
+  # Aço ASTM A572
+  - apelido: aco_estrutural_astm_a572
+    unit: kg
+    contem:
+      - [aco, aço]
+      - [astm a572, a572, a 572, grau 50]
+    ignorar:
+      []
+
+  # Chapa de aço
+  - apelido: chapa_aco_astm
+    unit: kg
+    contem:
+      - [chapa]
+      - [aco, aço, astm, metalica, metálica]
+    ignorar:
+      - [galvanizada]
+      - [inox]

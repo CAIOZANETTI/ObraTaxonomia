@@ -1,6 +1,45 @@
 {
   "rules": [
     {
+      "apelido": "alvenaria_bloco_concreto_m2",
+      "unit": "m²",
+      "contem": [
+        [
+          "alvenaria"
+        ],
+        [
+          "bloco concreto",
+          "bloco de concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "ceramico",
+          "ceramico"
+        ],
+        [
+          "estrutural"
+        ]
+      ],
+      "dominio": "alvenaria_vedacao"
+    },
+    {
+      "apelido": "piso_elevado_m2",
+      "unit": "m²",
+      "contem": [
+        [
+          "piso elevado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "demolicao",
+          "demolicao"
+        ]
+      ],
+      "dominio": "alvenaria_vedacao"
+    },
+    {
       "apelido": "elemento_estrutural_un",
       "unit": "un",
       "contem": [
@@ -627,6 +666,103 @@
         ]
       ],
       "dominio": "elementos_estruturais"
+    },
+    {
+      "apelido": "aco_estrutural_kg",
+      "unit": "kg",
+      "contem": [
+        [
+          "aco",
+          "aco"
+        ],
+        [
+          "astm",
+          "estrutural",
+          "perfil",
+          "chapa"
+        ]
+      ],
+      "ignorar": [
+        [
+          "galvanizado"
+        ],
+        [
+          "inox",
+          "inoxidavel",
+          "inoxidavel"
+        ],
+        [
+          "protendido"
+        ]
+      ],
+      "dominio": "estrutura_aco"
+    },
+    {
+      "apelido": "aco_estrutural_astm_a36",
+      "unit": "kg",
+      "contem": [
+        [
+          "aco",
+          "aco"
+        ],
+        [
+          "astm a36",
+          "a36",
+          "a 36"
+        ]
+      ],
+      "ignorar": [
+        [
+          "galvanizado"
+        ],
+        [
+          "pintado"
+        ]
+      ],
+      "dominio": "estrutura_aco"
+    },
+    {
+      "apelido": "aco_estrutural_astm_a572",
+      "unit": "kg",
+      "contem": [
+        [
+          "aco",
+          "aco"
+        ],
+        [
+          "astm a572",
+          "a572",
+          "a 572",
+          "grau 50"
+        ]
+      ],
+      "ignorar": [],
+      "dominio": "estrutura_aco"
+    },
+    {
+      "apelido": "chapa_aco_astm",
+      "unit": "kg",
+      "contem": [
+        [
+          "chapa"
+        ],
+        [
+          "aco",
+          "aco",
+          "astm",
+          "metalica",
+          "metalica"
+        ]
+      ],
+      "ignorar": [
+        [
+          "galvanizada"
+        ],
+        [
+          "inox"
+        ]
+      ],
+      "dominio": "estrutura_aco"
     },
     {
       "apelido": "tanque_concreto_m3",
@@ -3830,6 +3966,153 @@
       "dominio": "concreto"
     },
     {
+      "apelido": "tomada_eletrica_2p_t_10a",
+      "unit": "un",
+      "contem": [
+        [
+          "tomada"
+        ],
+        [
+          "2p t",
+          "10a"
+        ]
+      ],
+      "ignorar": [
+        [
+          "20a",
+          "32a"
+        ]
+      ],
+      "dominio": "instalacao_eletrica"
+    },
+    {
+      "apelido": "tomada_eletrica_2p_t_20a",
+      "unit": "un",
+      "contem": [
+        [
+          "tomada"
+        ],
+        [
+          "20a",
+          "2p t 20a"
+        ]
+      ],
+      "ignorar": [
+        [
+          "10a",
+          "32a"
+        ]
+      ],
+      "dominio": "instalacao_eletrica"
+    },
+    {
+      "apelido": "tomada_eletrica_32a_unid",
+      "unit": "un",
+      "contem": [
+        [
+          "tomada"
+        ],
+        [
+          "32a",
+          "3p t",
+          "industrial"
+        ]
+      ],
+      "ignorar": [
+        [
+          "10a",
+          "20a"
+        ]
+      ],
+      "dominio": "instalacao_eletrica"
+    },
+    {
+      "apelido": "interruptor_simples",
+      "unit": "un",
+      "contem": [
+        [
+          "interruptor"
+        ],
+        [
+          "simples",
+          "1 tecla",
+          "uma tecla"
+        ]
+      ],
+      "ignorar": [
+        [
+          "duplo",
+          "triplo"
+        ]
+      ],
+      "dominio": "instalacao_eletrica"
+    },
+    {
+      "apelido": "interruptor_duplo",
+      "unit": "un",
+      "contem": [
+        [
+          "interruptor"
+        ],
+        [
+          "duplo",
+          "2 teclas",
+          "duas teclas"
+        ]
+      ],
+      "ignorar": [
+        [
+          "simples",
+          "triplo"
+        ]
+      ],
+      "dominio": "instalacao_eletrica"
+    },
+    {
+      "apelido": "interruptor_triplo",
+      "unit": "un",
+      "contem": [
+        [
+          "interruptor"
+        ],
+        [
+          "triplo",
+          "3 teclas",
+          "tres teclas",
+          "tres teclas"
+        ]
+      ],
+      "ignorar": [
+        [
+          "simples",
+          "duplo"
+        ]
+      ],
+      "dominio": "instalacao_eletrica"
+    },
+    {
+      "apelido": "ponto_luz_teto",
+      "unit": "un",
+      "contem": [
+        [
+          "ponto luz",
+          "ponto iluminacao",
+          "ponto iluminacao",
+          "luminaria",
+          "luminaria"
+        ]
+      ],
+      "ignorar": [
+        [
+          "led"
+        ],
+        [
+          "fluorescente"
+        ]
+      ],
+      "dominio": "instalacao_eletrica"
+    },
+    {
       "apelido": "servente_h",
       "unit": "h",
       "contem": [
@@ -4964,6 +5247,184 @@
         ]
       ],
       "dominio": "servicos_escavacao"
+    },
+    {
+      "apelido": "concreto_asfaltico_binder_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "concreto asfaltico",
+          "concreto asfaltico",
+          "cbuq"
+        ],
+        [
+          "binder",
+          "graduacao",
+          "graduacao"
+        ]
+      ],
+      "ignorar": [
+        [
+          "polimero",
+          "polimero"
+        ]
+      ],
+      "dominio": "pavimentacao"
+    },
+    {
+      "apelido": "concreto_asfaltico_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "concreto asfaltico",
+          "concreto asfaltico",
+          "cbuq",
+          "asfalto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "demolicao",
+          "demolicao"
+        ]
+      ],
+      "dominio": "pavimentacao"
+    },
+    {
+      "apelido": "calcada_concreto_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "calcamento",
+          "calcamento",
+          "calcada",
+          "calcada"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "asfaltico",
+          "asfaltico"
+        ]
+      ],
+      "dominio": "pavimentacao"
+    },
+    {
+      "apelido": "sarjeta_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "sarjeta",
+          "guia sarjeta"
+        ],
+        [
+          "concreto"
+        ]
+      ],
+      "ignorar": [],
+      "dominio": "pavimentacao"
+    },
+    {
+      "apelido": "demolicao_concreto_armado_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "demolicao",
+          "demolicao"
+        ],
+        [
+          "concreto armado",
+          "armado"
+        ]
+      ],
+      "ignorar": [
+        [
+          "simples"
+        ],
+        [
+          "manual"
+        ],
+        [
+          "mecanica",
+          "mecanica"
+        ]
+      ],
+      "dominio": "servicos_demolicao"
+    },
+    {
+      "apelido": "demolicao_concreto_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "demolicao",
+          "demolicao"
+        ],
+        [
+          "concreto simples",
+          "concreto"
+        ]
+      ],
+      "ignorar": [
+        [
+          "armado"
+        ],
+        [
+          "asfaltico",
+          "asfaltico"
+        ]
+      ],
+      "dominio": "servicos_demolicao"
+    },
+    {
+      "apelido": "demolicao_alvenaria_m3",
+      "unit": "m³",
+      "contem": [
+        [
+          "demolicao",
+          "demolicao"
+        ],
+        [
+          "alvenaria",
+          "parede",
+          "tijolo",
+          "bloco"
+        ]
+      ],
+      "ignorar": [
+        [
+          "concreto"
+        ]
+      ],
+      "dominio": "servicos_demolicao"
+    },
+    {
+      "apelido": "demolicao_piso_m2",
+      "unit": "m²",
+      "contem": [
+        [
+          "demolicao",
+          "demolicao"
+        ],
+        [
+          "piso"
+        ]
+      ],
+      "ignorar": [
+        [
+          "ceramica",
+          "ceramica"
+        ],
+        [
+          "porcelanato"
+        ],
+        [
+          "granito"
+        ]
+      ],
+      "dominio": "servicos_demolicao"
     }
   ],
   "units_map": {

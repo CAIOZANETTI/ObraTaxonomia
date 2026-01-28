@@ -1,38 +1,45 @@
-# Demolição
-- apelido: demolicao_concreto_armado_m3
-  unit: m³
-  contem:
-    - demolicao
-    - demolicao concreto
-    - concreto armado
-    - remocao concreto
-    - quebra concreto
-  ignorar:
-    - manual
-    - mecanica
-    - rompedor
+meta:
+  dominio: servicos_demolicao
+  versao: "0.1.0"
 
-- apelido: demolicao_alvenaria_m3
-  unit: m³
-  contem:
-    - demolicao alvenaria
-    - demolicao parede
-    - remocao alvenaria
-    - quebra alvenaria
-    - demolicao tijolo
-    - demolicao bloco
-  ignorar:
-    - manual
-    - mecanica
+regras:
+  # Demolição de concreto armado
+  - apelido: demolicao_concreto_armado_m3
+    unit: m³
+    contem:
+      - [demolicao, demolição]
+      - [concreto armado, armado]
+    ignorar:
+      - [simples]
+      - [manual]
+      - [mecanica, mecânica]
 
-- apelido: demolicao_piso_m2
-  unit: m²
-  contem:
-    - demolicao piso
-    - remocao piso
-    - retirada piso
-    - quebra piso
-  ignorar:
-    - ceramica
-    - porcelanato
-    - granito
+  # Demolição de concreto simples (novo do aprendizado)
+  - apelido: demolicao_concreto_m3
+    unit: m³
+    contem:
+      - [demolicao, demolição]
+      - [concreto simples, concreto]
+    ignorar:
+      - [armado]
+      - [asfaltico, asfáltico]
+
+  # Demolição de alvenaria
+  - apelido: demolicao_alvenaria_m3
+    unit: m³
+    contem:
+      - [demolicao, demolição]
+      - [alvenaria, parede, tijolo, bloco]
+    ignorar:
+      - [concreto]
+
+  # Demolição de piso
+  - apelido: demolicao_piso_m2
+    unit: m²
+    contem:
+      - [demolicao, demolição]
+      - [piso]
+    ignorar:
+      - [ceramica, cerâmica]
+      - [porcelanato]
+      - [granito]
