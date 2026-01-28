@@ -2,4 +2,6 @@
 2. Condições infraestrutura, estarada, aeroporto, capitais, hospitais, agua, saneamento basico, eletricidade, internet
 3. distancia de centro urbano da capital do estado da obra
 4. densidade demografica, renda, escolaridade
-5. 
+5. Hoteis, alojamento
+6. custo de vida (alimentação)
+
