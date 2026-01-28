@@ -11,3 +11,5 @@ considerar os tempos de estrutura de fundação com escavação e impermeabiliza
 considerar os tempos de transporte vertical apoio de grua
 considerar o tempo de lançamento e adensamento de concreto
 considerar para esses tempos as equipes envolvidas no trabalho
+considrar  escoramento de laje
+montagem de andaime para pilares, paredes 
